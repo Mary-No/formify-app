@@ -193,37 +193,33 @@ router.get('/overview', handleRequest(async (req, res) => {
     });
 }));
 
-// Получить теги (облако тегов)
+// Получить облако тегов с их "весом"
 router.get('/tags', handleRequest(async (req, res) => {
-    const tags = await prisma.tag.findMany({
-        take: 30,
-        select: { name: true },
-    })
-    res.json({ tags: tags.map(t => t.name) })
-}))
-
-//автокомплит тегов
-router.get('/tags/autocomplete', handleRequest(async (req, res) => {
-    const query = (req.query.q as string | undefined)?.trim()
-
-    if (!query || query.length === 0) {
-        res.status(400).json({ error: 'Missing query parameter `q`' })
-        return
-    }
+    const limit = parseInt(req.query.limit as string) || 30
 
     const tags = await prisma.tag.findMany({
-        where: {
-            name: {
-                startsWith: query,
-                mode: 'insensitive',
+        select: {
+            name: true,
+            _count: {
+                select: { templates: true },
             },
         },
-        take: 10,
-        select: { name: true },
+        orderBy: {
+            templates: {
+                _count: 'desc',
+            },
+        },
+        take: Math.min(limit, 100),
     })
 
-    res.json({ tags: tags.map(t => t.name) })
+    const formatted = tags.map(tag => ({
+        value: tag.name,
+        count: tag._count.templates,
+    }))
+
+    res.json(formatted)
 }))
+
 
 router.delete('/:id', requireAuth, async (req, res) => {
     const { id } = req.params
