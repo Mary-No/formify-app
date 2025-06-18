@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt'
 import { prisma } from '../prisma'
 import { Request, Response } from 'express'
 import { handleRequest } from '../utils/handleRequest'
+import passport from 'passport'
 
 const router = express.Router()
 
@@ -32,6 +33,17 @@ router.post('/register', handleRequest(async (req, res) => {
             user: { id: user.id, email: user.email, nickname: user.nickname },
         })
 }))
+
+router.get('/auth/google', passport.authenticate('google', {
+    scope: ['profile', 'email'],
+}))
+
+router.get('/auth/google/callback', passport.authenticate('google', {
+    failureRedirect: '/login',
+}), (req, res) => {
+    res.redirect('http://localhost:3000')
+})
+
 
 router.post('/login', handleRequest(async (req, res) => {
         const { email, password } = req.body

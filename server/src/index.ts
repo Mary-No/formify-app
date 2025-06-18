@@ -8,6 +8,7 @@ import adminRoutes from './routes/admin'
 import { config } from 'dotenv'
 import { initSocket } from './socket'
 import http from 'http'
+import passport from 'passport'
 
 config()
 
@@ -30,6 +31,9 @@ app.use(session({
         maxAge: 1000 * 60 * 60 * 24 * 7,
     }
 }))
+
+app.use(passport.initialize())
+app.use(passport.session())
 
 app.use('/auth', authRoutes)
 app.use('/forms', formsRoutes)
