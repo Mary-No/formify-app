@@ -177,14 +177,20 @@ router.get('/overview', handleRequest(async (req, res) => {
             where: { isPublic: true },
             orderBy: { likes: { _count: 'desc' } },
             take: 10,
-            include: { author: { select: { id: true, nickname: true } } },
+            include: {
+                author: { select: { id: true, nickname: true } },
+                _count: { select: { likes: true } },
+            },
         }),
         prisma.template.findMany({
             where: { isPublic: true },
-            orderBy: { createdAt: 'desc' },
+            orderBy: { likes: { _count: 'desc' } },
             take: 10,
-            include: { author: { select: { id: true, nickname: true } } },
-        }),
+            include: {
+                author: { select: { id: true, nickname: true } },
+                _count: { select: { likes: true } },
+            },
+        })
     ]);
 
     res.json({
