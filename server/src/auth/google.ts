@@ -8,22 +8,27 @@ passport.use(new GoogleStrategy({
     clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     callbackURL: 'https://formify-app.onrender.com/auth/google/callback',
 }, async (accessToken, refreshToken, profile, done) => {
-    const email = profile.emails?.[0]?.value
-    if (!email) return done(null, false)
+    try {
+        const email = profile.emails?.[0]?.value
+        if (!email) return done(null, false)
 
-    let user = await prisma.user.findUnique({ where: { email } })
+        let user = await prisma.user.findUnique({ where: { email } })
 
-    if (!user) {
-        user = await prisma.user.create({
-            data: {
-                email,
-                nickname: profile.displayName,
-                password: '',
-            },
-        })
+        if (!user) {
+            user = await prisma.user.create({
+                data: {
+                    email,
+                    nickname: profile.displayName,
+                    password: '',
+                },
+            })
+        }
+
+        return done(null, user)
+    } catch (error) {
+        console.error('Google auth error:', error);
+        return done(error);
     }
-
-    return done(null, user)
 }))
 
 passport.serializeUser((user: any, done) => {
