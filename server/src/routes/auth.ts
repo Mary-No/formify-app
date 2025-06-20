@@ -40,43 +40,55 @@ router.get('/google', passport.authenticate('google', {
 
 router.get('/google/callback', passport.authenticate('google', {
     failureRedirect: '/login',
+    session: true
 }), (req, res) => {
     res.redirect('http://localhost:5173')
 })
 
-
 router.post('/login', handleRequest(async (req, res) => {
-        const { email, password } = req.body
-        if (!email || !password) {
-            res.status(400).json({ error: 'Email and password are required' })
-            return
-        }
+    const { email, password } = req.body;
 
-        const user = await prisma.user.findUnique({ where: { email } })
-        if (!user) {
-            res.status(401).json({ error: 'Invalid credentials' })
-            return
-        }
+    if (!email || !password) {
+        res.status(400).json({
+            error: 'Email and password are both required.'
+        });
+        return;
+    }
 
-        if (user.isBlocked) {
-            res.status(403).json({ error: 'Your account is blocked' })
-            return
-        }
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+        res.status(401).json({
+            error: 'Account not found. Please check your email or sign up.'
+        });
+        return;
+    }
 
-        const isMatch = await bcrypt.compare(password, user.password)
-        if (!isMatch) {
-            res.status(401).json({ error: 'Invalid credentials' })
-            return
-        }
+    if (user.isBlocked) {
+        res.status(403).json({
+            error: 'Your account is temporarily locked. Contact support for help.'
+        });
+        return;
+    }
 
-        req.session.userId = user.id
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+        res.status(401).json({
+            error: 'Incorrect password. Try again or reset your password.'
+        });
+        return;
+    }
 
-        res.json({
-            message: 'Logged in',
-            user: { id: user.id, email: user.email, nickname: user.nickname },
-        })
-}))
+    req.session.userId = user.id;
 
+    res.json({
+        message: 'Welcome back! Login successful.',
+        user: {
+            id: user.id,
+            email: user.email,
+            nickname: user.nickname
+        },
+    });
+}));
 router.get('/me', handleRequest(async (req, res) => {
         const userId = req.session.userId
         if (!userId) {
@@ -95,7 +107,7 @@ router.get('/me', handleRequest(async (req, res) => {
         }
 
         if (user.isBlocked) {
-            res.status(403).json({ error: 'Your account is blocked' })
+            res.status(403).json({ error: 'Your account is temporarily locked. Contact support for help.' })
             return
         }
 
