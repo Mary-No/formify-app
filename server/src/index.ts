@@ -15,6 +15,19 @@ config()
 
 const app = express()
 const PORT = 4000
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            styleSrc: ["'self'", 'https://fonts.googleapis.com', "'unsafe-inline'"],
+            fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+            scriptSrc: ["'self'", 'https://accounts.google.com', "'unsafe-inline'"],
+            connectSrc: ["'self'", 'https://accounts.google.com'],
+            imgSrc: ["'self'", 'data:', 'https://*.googleusercontent.com'],
+            frameSrc: ["'self'", 'https://accounts.google.com'],
+        },
+    },
+}))
 
 app.use(cors({
     origin: [
@@ -45,19 +58,6 @@ app.use('/forms', formsRoutes)
 app.use('/templates', templatesRoutes)
 app.use('/admin', adminRoutes)
 
-app.use(helmet({
-    contentSecurityPolicy: {
-        directives: {
-            defaultSrc: ["'self'"],
-            styleSrc: ["'self'", 'https://fonts.googleapis.com', "'unsafe-inline'"],
-            fontSrc: ["'self'", 'https://fonts.gstatic.com'],
-            scriptSrc: ["'self'", 'https://accounts.google.com', "'unsafe-inline'"],
-            connectSrc: ["'self'", 'https://accounts.google.com'],
-            imgSrc: ["'self'", 'data:', 'https://*.googleusercontent.com'],
-            frameSrc: ["'self'", 'https://accounts.google.com'],
-        },
-    },
-}))
 
 app.get('/', (_, res) => {
     res.send('Formify API is running')
