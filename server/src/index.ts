@@ -9,6 +9,7 @@ import { config } from 'dotenv'
 import { initSocket } from './socket'
 import http from 'http'
 import passport from 'passport'
+import helmet from 'helmet'
 
 config()
 
@@ -29,7 +30,8 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: false,
+        secure: true,
+        sameSite: 'none',
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24 * 7,
     }
@@ -42,6 +44,20 @@ app.use('/auth', authRoutes)
 app.use('/forms', formsRoutes)
 app.use('/templates', templatesRoutes)
 app.use('/admin', adminRoutes)
+
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            styleSrc: ["'self'", 'https://fonts.googleapis.com', "'unsafe-inline'"],
+            fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+            scriptSrc: ["'self'", 'https://accounts.google.com', "'unsafe-inline'"],
+            connectSrc: ["'self'", 'https://accounts.google.com'],
+            imgSrc: ["'self'", 'data:', 'https://*.googleusercontent.com'],
+            frameSrc: ["'self'", 'https://accounts.google.com'],
+        },
+    },
+}))
 
 app.get('/', (_, res) => {
     res.send('Formify API is running')
