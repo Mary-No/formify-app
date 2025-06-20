@@ -1,6 +1,9 @@
 import express from 'express'
 import cors from 'cors'
 import session from 'express-session'
+import passport from 'passport'
+import helmet from 'helmet'
+import './auth/google'
 import authRoutes from './routes/auth'
 import formsRoutes from './routes/forms'
 import templatesRoutes from './routes/templates'
@@ -8,8 +11,7 @@ import adminRoutes from './routes/admin'
 import { config } from 'dotenv'
 import { initSocket } from './socket'
 import http from 'http'
-import passport from 'passport'
-import helmet from 'helmet'
+
 
 config()
 
