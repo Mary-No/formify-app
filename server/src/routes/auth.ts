@@ -118,13 +118,18 @@ router.get('/me', handleRequest(async (req, res) => {
 router.post('/logout', (req: Request, res: Response): void => {
     req.session.destroy(err => {
         if (err) {
-            console.error(err)
+            console.error('Logout error:', err)
             res.status(500).json({ error: 'Logout failed' })
             return
         }
-        res.clearCookie('connect.sid')
-        res.json({ message: 'Logged out' })
+
+        res.clearCookie('connect.sid', {
+            path: '/',
+            sameSite: 'none',
+            secure: true,
+        })
+
+        res.status(200).json({ message: 'Logged out' })
     })
 })
-
 export default router
