@@ -16,6 +16,7 @@ import http from 'http'
 config()
 
 const app = express()
+app.set('trust proxy', 1)
 const PORT = 4000
 app.use(helmet({
     contentSecurityPolicy: {
