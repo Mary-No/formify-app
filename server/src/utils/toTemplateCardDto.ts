@@ -1,15 +1,15 @@
 import {Tag, Template, User } from "@prisma/client"
-import { prisma } from "../prisma"
 
 type AuthorPreview = Pick<User, "id" | "nickname">
-export async function toTemplateCardDto(template: Template & { author: AuthorPreview, tags: Tag[], _count: { likes: number } }, userId?: string) {
-    const liked = userId
-        ? await prisma.like.findFirst({
-            where: { userId, templateId: template.id },
-            select: { id: true },
-        })
-        : null
-
+export function toTemplateCardDto(
+    template: Template & {
+        author: AuthorPreview,
+        tags: Tag[],
+        _count: { likes: number },
+        likes?: { userId: string }[]
+    },
+    userId?: string
+) {
     return {
         id: template.id,
         title: template.title,
@@ -25,6 +25,8 @@ export async function toTemplateCardDto(template: Template & { author: AuthorPre
         },
         tags: template.tags,
         likesCount: template._count.likes,
-        likedByUser: Boolean(liked),
+        likedByUser: userId
+            ? template.likes?.some(like => like.userId === userId) ?? false
+            : false,
     }
 }

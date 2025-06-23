@@ -154,7 +154,7 @@ router.get(
     })
 );
 router.get('/overview', handleRequest(async (req, res) => {
-    const userId = req.session?.userId
+    const userId = req.session?.userId;
 
     const [popularTemplates, latestTemplates] = await Promise.all([
         prisma.template.findMany({
@@ -165,6 +165,7 @@ router.get('/overview', handleRequest(async (req, res) => {
                 author: { select: { id: true, nickname: true } },
                 tags: true,
                 _count: { select: { likes: true } },
+                likes: userId ? { where: { userId }, select: { userId: true } } : false,
             },
         }),
         prisma.template.findMany({
@@ -175,17 +176,16 @@ router.get('/overview', handleRequest(async (req, res) => {
                 author: { select: { id: true, nickname: true } },
                 tags: true,
                 _count: { select: { likes: true } },
+                likes: userId ? { where: { userId }, select: { userId: true } } : false,
             },
         }),
-    ])
+    ]);
 
-    const [popular, latest] = await Promise.all([
-        Promise.all(popularTemplates.map(t => toTemplateCardDto(t, userId))),
-        Promise.all(latestTemplates.map(t => toTemplateCardDto(t, userId))),
-    ])
-
-    res.json({ popular, latest })
-}))
+    res.json({
+        popular: popularTemplates.map(t => toTemplateCardDto(t, userId)),
+        latest: latestTemplates.map(t => toTemplateCardDto(t, userId)),
+    });
+}));
 
 // Получить облако тегов с их "весом"
 router.get('/tags', handleRequest(async (req, res) => {
