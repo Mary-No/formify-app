@@ -9,6 +9,7 @@ import z from 'zod'
 import {QuestionType, Topic } from '@prisma/client'
 import {questionSchema, TopicEnum, updateTemplateSchema } from '../types/templates'
 import { isAuthorOrAdmin } from '../utils/isAuthorOrAdmin'
+import { toTemplateCardDto } from '../utils/toTemplateCardDto'
 
 
 
@@ -75,24 +76,16 @@ router.post('/', requireAuth, requireNotBlocked, handleRequest(async (req, res) 
 
 //получить все шаблоны
 router.get('/', handleRequest(async (req, res) => {
-    const skip = Number(req.query.skip ?? 0);
-    const take = 20;
-    const search = (req.query.search as string) || '';
-    const sortOrder = req.query.order === 'asc' ? 'asc' : 'desc';
+    const userId = req.session?.userId
+    const skip = Number(req.query.skip ?? 0)
+    const take = 20
+    const search = req.query.search as string || ''
+    const sortOrder = req.query.order === 'asc' ? 'asc' : 'desc'
+    const topic = req.query.topic as string | undefined
+    const tags = Array.isArray(req.query.tags) ? req.query.tags : req.query.tags ? [req.query.tags] : []
 
-    const topic = req.query.topic as string | undefined;
-    const tags = req.query.tags
-        ? Array.isArray(req.query.tags)
-            ? req.query.tags
-            : [req.query.tags]
-        : [];
-
-    const filters: any = { isPublic: true };
-
-    if (topic) {
-        filters.topic = topic;
-    }
-
+    const filters: any = { isPublic: true }
+    if (topic) filters.topic = topic
     if (search) {
         filters.AND = [
             ...(filters.AND || []),
@@ -109,39 +102,28 @@ router.get('/', handleRequest(async (req, res) => {
                     },
                 ],
             },
-        ];
+        ]
     }
-
-    if (tags.length > 0) {
-        filters.tags = {
-            some: {
-                name: { in: tags },
-            },
-        };
-    }
+    if (tags.length > 0) filters.tags = { some: { name: { in: tags } } }
 
     const templates = await prisma.template.findMany({
         where: filters,
         skip,
         take,
-        orderBy: {
-            createdAt: sortOrder,
-        },
-        select: {
-            id: true,
-            title: true,
-            description: true,
-            createdAt: true,
-            topic: true,
+        orderBy: { createdAt: sortOrder },
+        include: {
+            author: { select: { id: true, nickname: true } },
             tags: true,
-            author: {
-                select: { nickname: true },
-            },
+            _count: { select: { likes: true } },
         },
-    });
+    })
 
-    res.json({ templates });
-}));
+    const result = await Promise.all(
+        templates.map(t => toTemplateCardDto(t, userId))
+    )
+
+    res.json({ templates: result })
+}))
 
 
 //получить свои шаблоны
@@ -172,6 +154,8 @@ router.get(
     })
 );
 router.get('/overview', handleRequest(async (req, res) => {
+    const userId = req.session?.userId
+
     const [popularTemplates, latestTemplates] = await Promise.all([
         prisma.template.findMany({
             where: { isPublic: true },
@@ -179,6 +163,7 @@ router.get('/overview', handleRequest(async (req, res) => {
             take: 10,
             include: {
                 author: { select: { id: true, nickname: true } },
+                tags: true,
                 _count: { select: { likes: true } },
             },
         }),
@@ -188,16 +173,19 @@ router.get('/overview', handleRequest(async (req, res) => {
             take: 10,
             include: {
                 author: { select: { id: true, nickname: true } },
+                tags: true,
                 _count: { select: { likes: true } },
             },
         }),
-    ]);
+    ])
 
-    res.json({
-        popular: popularTemplates,
-        latest: latestTemplates,
-    });
-}));
+    const [popular, latest] = await Promise.all([
+        Promise.all(popularTemplates.map(t => toTemplateCardDto(t, userId))),
+        Promise.all(latestTemplates.map(t => toTemplateCardDto(t, userId))),
+    ])
+
+    res.json({ popular, latest })
+}))
 
 // Получить облако тегов с их "весом"
 router.get('/tags', handleRequest(async (req, res) => {
@@ -349,6 +337,7 @@ router.get('/:templateId', handleRequest(async (req, res) => {
                 include: { author: { select: { id: true, nickname: true } } },
                 orderBy: { createdAt: 'desc' },
             },
+            tags: true,
             ...(userId && {
                 likes: {
                     where: { userId },
@@ -358,23 +347,19 @@ router.get('/:templateId', handleRequest(async (req, res) => {
         },
     })
 
-    // Проверка существования и доступа
     const isOwner = template?.author?.id === userId
     if (!template || (!template.isPublic && !isOwner)) {
         res.status(404).json({ error: 'Template not found' })
         return
     }
 
-    const likesCount = await prisma.like.count({
-        where: { templateId },
-    })
-
+    const likesCount = await prisma.like.count({ where: { templateId } })
     const likedByUser = userId ? template.likes?.length > 0 : false
-
     if ('likes' in template) delete (template as any).likes
 
-    res.json({ template, likedByUser, likesCount })
+    res.json({ template, likesCount, likedByUser })
 }))
+
 
 
 // Добавить лайк
