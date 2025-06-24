@@ -39,8 +39,6 @@ router.post('/', requireAuth, requireNotBlocked, handleRequest(async (req, res) 
         res.status(400).json({ error: 'You have already submitted this form' })
         return
     }
-
-        // Создаем форму с ответами
         const form = await prisma.form.create({
             data: {
                 templateId,
@@ -91,6 +89,41 @@ router.get('/results/:templateId', requireAuth, requireNotBlocked, handleRequest
 
         res.json({ forms })
 }))
+
+router.get(
+    '/mine',
+    requireAuth,
+    requireNotBlocked,
+    handleRequest(async (req, res) => {
+        const userId = req.session.userId
+
+        const forms = await prisma.form.findMany({
+            take: 20,
+            skip: Number(req.query.skip ?? 0),
+            where: {
+                userId: userId,
+            },
+            select: {
+                id: true,
+                createdAt: true,
+                updatedAt: true,
+                template: {
+                    select: {
+                        id: true,
+                        title: true,
+                    },
+                },
+                emailSent: true,
+            },
+            orderBy: {
+                createdAt: 'desc',
+            },
+        })
+
+        res.json({ forms })
+    })
+)
+
 router.delete('/:id', requireAuth, async (req, res) => {
     const { id } = req.params
     const userId = req.session.userId!
