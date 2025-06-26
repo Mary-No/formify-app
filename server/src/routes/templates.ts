@@ -115,6 +115,7 @@ router.get('/', handleRequest(async (req, res) => {
             author: { select: { id: true, nickname: true } },
             tags: true,
             _count: { select: { likes: true } },
+            likes: userId ? { where: { userId }, select: { userId: true } } : false,
         },
     })
 
