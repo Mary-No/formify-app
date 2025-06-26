@@ -74,7 +74,7 @@ router.post('/', requireAuth, requireNotBlocked, handleRequest(async (req, res) 
     res.status(201).json({ template })
 }))
 
-//получить все шаблоны
+//получить все шаблоны или только свои
 router.get('/', handleRequest(async (req, res) => {
     const userId = req.session?.userId
     const skip = Number(req.query.skip ?? 0)
@@ -84,8 +84,22 @@ router.get('/', handleRequest(async (req, res) => {
     const topic = req.query.topic as string | undefined
     const tags = Array.isArray(req.query.tags) ? req.query.tags : req.query.tags ? [req.query.tags] : []
 
-    const filters: any = { isPublic: true }
+    const mine = req.query.mine === 'true'
+
+    const filters: any = {}
+
+    if (mine) {
+        if (!userId) {
+            res.status(401).json({ error: 'Unauthorized' })
+            return
+        }
+        filters.authorId = userId
+    } else {
+        filters.isPublic = true
+    }
+
     if (topic) filters.topic = topic
+
     if (search) {
         filters.AND = [
             ...(filters.AND || []),
@@ -104,7 +118,10 @@ router.get('/', handleRequest(async (req, res) => {
             },
         ]
     }
-    if (tags.length > 0) filters.tags = { some: { name: { in: tags } } }
+
+    if (tags.length > 0) {
+        filters.tags = { some: { name: { in: tags } } }
+    }
 
     const templates = await prisma.template.findMany({
         where: filters,
@@ -126,34 +143,6 @@ router.get('/', handleRequest(async (req, res) => {
     res.json({ templates: result })
 }))
 
-
-//получить свои шаблоны
-router.get(
-    '/mine',
-    requireAuth,
-    requireNotBlocked,
-    handleRequest(async (req, res) => {
-        const userId = req.session.userId;
-
-        const templates = await prisma.template.findMany({
-            take: 20,
-            skip: Number(req.query.skip ?? 0),
-            where: {
-                authorId: userId,
-            },
-            select: {
-                id: true,
-                title: true,
-                createdAt: true,
-            },
-            orderBy: {
-                createdAt: 'desc',
-            },
-        });
-
-        res.json({ templates });
-    })
-);
 router.get('/overview', handleRequest(async (req, res) => {
     const userId = req.session?.userId;
 
