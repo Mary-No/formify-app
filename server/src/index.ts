@@ -25,7 +25,12 @@ app.use(helmet({
             styleSrc: ["'self'", 'https://fonts.googleapis.com', "'unsafe-inline'"],
             fontSrc: ["'self'", 'https://fonts.gstatic.com'],
             scriptSrc: ["'self'", 'https://accounts.google.com', "'unsafe-inline'"],
-            connectSrc: ["'self'", 'https://accounts.google.com'],
+            connectSrc: [
+                "'self'",
+                'https://formify-app.onrender.com',
+                'wss://formify-app.onrender.com',
+                'https://accounts.google.com',
+            ],
             imgSrc: ["'self'", 'data:', 'https://*.googleusercontent.com'],
             frameSrc: ["'self'", 'https://accounts.google.com'],
         },
