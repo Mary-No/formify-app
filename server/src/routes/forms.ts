@@ -90,6 +90,39 @@ router.get('/results/:templateId', requireAuth, requireNotBlocked, handleRequest
         res.json({ forms })
 }))
 
+router.get('/:formId', requireAuth, requireNotBlocked, handleRequest(async (req, res) => {
+    const userId = getUserId(req)
+    const { formId } = req.params
+
+    const form = await prisma.form.findUnique({
+        where: { id: formId },
+        include: {
+            answers: true,
+            template: {
+                include: {
+                    questions: {
+                        orderBy: { order: 'asc' },
+                    },
+                },
+            },
+        },
+    })
+
+    if (!form) {
+        res.status(404).json({ error: 'Form not found' })
+        return
+    }
+
+    const isAllowed = await isAuthorOrAdmin({ userId, resourceAuthorId: form.userId })
+
+    if (!isAllowed) {
+        res.status(403).json({ error: 'Access denied' })
+        return
+    }
+
+    res.json({ form })
+}))
+
 router.get(
     '/mine',
     requireAuth,
