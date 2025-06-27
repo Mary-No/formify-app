@@ -1,0 +1,18 @@
+@use "../../styles/variables" as *;
+.input{
+  width: 35vw;
+}
+:global{
+  .ant-input {
+    padding: 6px 16px;
+    font-size: $font-size-md;
+  }
+
+  .ant-input-search-button {
+    height: 2.3rem!important;
+  }
+
+  .ant-input-search .ant-input-affix-wrapper {
+  height: 2.3rem;
+}
+}

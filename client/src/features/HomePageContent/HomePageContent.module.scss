@@ -1,0 +1,8 @@
+@use "../../styles/themes" as *;
+
+.content{
+  padding: 0 72px 40px;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-color);
+}

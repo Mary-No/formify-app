@@ -1,0 +1,24 @@
+.container {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1rem;
+  padding: 1.5rem;
+}
+
+.sidebar {
+  grid-column: span 3;
+}
+
+.canvas {
+  grid-column: span 9;
+}
+
+.heading {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.button {
+  margin-top: 1rem;
+}

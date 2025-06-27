@@ -1,0 +1,12 @@
+@use "../../styles/themes" as *;
+
+.container{
+  max-width: 400px;
+  margin: auto;
+  padding: 24px;
+  color: var(--text-color);
+  *:not(.register):not(.google):not(input):not(span):not(:global .ant-form-item-explain-error):not(:global .ant-btn){
+    color: inherit !important;
+  }
+}
+

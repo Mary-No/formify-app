@@ -1,0 +1,141 @@
+export type Tag = {
+    id: string,
+    name: string
+}
+
+export type Topic =
+    | 'TECHNOLOGY'
+    | 'HEALTH'
+    | 'EDUCATION'
+    | 'BUSINESS'
+    | 'ENTERTAINMENT'
+    | 'SCIENCE'
+    | 'LIFESTYLE'
+    | 'ENVIRONMENT'
+    | 'POLITICS'
+    | 'TRAVEL'
+    | 'CULTURE'
+    | 'PERSONAL'
+    | 'RELATIONSHIPS'
+    | 'MARKETING'
+    | 'PRODUCTIVITY'
+    | 'FINANCE'
+    | 'FOOD'
+    | 'SPORT'
+    | 'PSYCHOLOGY'
+    | 'OTHER'
+
+
+export type QuestionType = 'SHORT_TEXT' | 'LONG_TEXT' | 'INTEGER' | 'CHECKBOX'
+
+
+export type Question = {
+    id: string
+    templateId: string
+    text: string
+    type: QuestionType
+    order: number
+    required: boolean
+    updatedAt: string
+}
+
+export type Author = {
+    id: string
+    nickname: string
+}
+export type Template = {
+    id: string
+    title: string
+    description: string
+    topic: Topic
+    createdAt: string
+    updatedAt: string
+    authorId: string
+    isPublic: boolean
+    author: Author
+    tags: Tag[]
+    likesCount: number
+    likedByUser: boolean
+}
+export type TemplateListResponse = {
+    templates: Template[]
+}
+export type SearchTemplatesArgs = {
+    skip?: number
+    search?: string
+    topic?: string
+    tags?: string[]
+    order?: 'asc' | 'desc'
+    mine?: boolean
+}
+
+export type OverviewResponse = {
+    popular: Template[]
+    latest: Template[]
+}
+
+
+export type Comment = {
+    id: string
+    templateId: string
+    authorId: string
+    text: string
+    createdAt: string
+    updatedAt: string
+    author: Author
+}
+
+export type FullTemplate = Template & {
+    questions: Question[]
+    comments: Comment[]
+}
+
+export type TemplateDetailResponse = {
+    template: FullTemplate
+    likesCount: number
+    likedByUser: boolean
+}
+export type CreateTemplatePayload = {
+    title: string
+    description: string
+    topic: Topic
+    tags: string[]
+    isPublic: boolean
+    questions: NewQuestion[]
+}
+export type NewQuestion = Pick<Question, 'text' | 'type' | 'required'>
+
+export type CreateTemplateResponse = {
+    template: FullTemplate
+}
+
+export type RegisterPayload = {
+    email: string
+    password: string
+    nickname: string
+}
+
+export type UserResponse = {
+    message: string
+    user: User
+}
+export type User = {
+    id: string
+    email: string
+    nickname: string
+}
+
+export type AuthUser = User | null
+
+export type MyFormsResponse = {
+    forms: {
+        id: string;
+        createdAt: string;
+        updatedAt: string;
+        emailSent: boolean;
+        template: {
+            id: string;
+            title: string;
+        };
+    }[];
+};

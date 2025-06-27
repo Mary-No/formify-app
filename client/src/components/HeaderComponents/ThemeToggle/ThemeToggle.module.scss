@@ -1,0 +1,27 @@
+.toggleBtn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.icon {
+  font-size: 20px;
+  transition: transform 0.3s ease, color 0.3s ease;
+  color: #010122;
+}
+
+.rotate {
+  transform: rotate(180deg);
+  color: #ffd10a;
+}

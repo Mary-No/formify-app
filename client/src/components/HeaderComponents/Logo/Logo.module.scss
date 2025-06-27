@@ -1,0 +1,6 @@
+@use "../../../styles/variables" as *;
+.logo{
+  color: var(--text-color);
+  font-size: $font-size-xl;
+  margin-left: $spacing-md;
+}

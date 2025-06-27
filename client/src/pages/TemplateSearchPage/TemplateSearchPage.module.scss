@@ -1,0 +1,11 @@
+@use "../../styles/themes" as *;
+.results{
+  color: var(--text-color) !important;
+  margin-top: 0;
+}
+.filters{
+  background-color: var(--bg-card-color);
+}
+.resultsContainer{
+  margin-bottom: 50px;
+}

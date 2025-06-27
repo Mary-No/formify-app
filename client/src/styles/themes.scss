@@ -1,0 +1,17 @@
+@use "./variables" as *;
+
+.light-theme {
+  --bg-color: #{$color-light-bg};
+  --text-color: #{$color-light-text};
+  --primary-color: #{$color-light-primary};
+  --secondary-color: #{$color-light-secondary};
+  --bg-card-color: #{$color-light-card-bg};
+}
+
+.dark-theme {
+  --bg-color: #{$color-dark-bg};
+  --text-color: #{$color-dark-text};
+  --primary-color: #{$color-dark-primary};
+  --secondary-color: #{$color-dark-secondary};
+  --bg-card-color: #{$color-dark-card-bg};
+}

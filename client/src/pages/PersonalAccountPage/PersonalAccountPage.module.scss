@@ -1,0 +1,15 @@
+@use "../../styles/themes" as *;
+
+.container{
+  padding: 0 3rem;
+}
+.title{
+  color: var(--text-color)!important;
+}
+.tabs{
+  :global{
+    .ant-tabs-tab-btn{
+      color: var(--text-color)!important;
+    }
+  }
+}

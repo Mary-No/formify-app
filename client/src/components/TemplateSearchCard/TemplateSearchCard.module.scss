@@ -1,0 +1,60 @@
+@use "../../styles/themes" as *;
+.topic{
+  padding: 4px 10px;
+  font-weight: 500;
+  letter-spacing: 0.8px;
+}
+.author{
+  font-size: 14px;
+  margin: 5px 0;
+}
+.card{
+  width: 100%;
+  margin-bottom: 6px;
+  background-color: var(--bg-card-color);
+  border: var(--bg-color);
+  :global{
+    .ant-card-head{
+      border-bottom-color: rgba(255, 255, 255, 0.48);
+    }
+  }
+}
+  .title{
+    margin: 0;
+  }
+  .date{
+    color: var(--secondary-color);
+    font-weight: 400;
+    font-size: 0.9rem;
+  }
+.header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px
+}
+.card :global .ant-card-body{
+  padding: 5px 24px 24px!important;
+}
+.tagsAndLikes{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px
+}
+.cardLink {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+
+  &:hover {
+    text-decoration: none;
+    color: inherit !important;
+  }
+
+}
+.menuAndDate{
+  display: flex;
+  align-items: center;
+  gap: 20px
+}

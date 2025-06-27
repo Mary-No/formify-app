@@ -1,0 +1,59 @@
+import { Button, Tabs, Typography, Space } from 'antd'
+import { PlusOutlined } from '@ant-design/icons'
+import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { MyTemplates } from '../../components/MyTemplates/MyTemplates.tsx'
+import { MyFilledForms } from '../../components/MyFilledForms/MyFilledForms.tsx'
+import s from './PersonalAccountPage.module.scss'
+import { useTranslation } from 'react-i18next'
+
+const { Title } = Typography
+
+const PersonalAccountPage = () => {
+    const navigate = useNavigate()
+    const { t } = useTranslation()
+
+    const [activeTab, setActiveTab] = useState('my-templates')
+
+    const handleCreateTemplate = () => {
+        navigate('/template-builder')
+    }
+
+    const items = [
+        {
+            key: 'my-templates',
+            label: t('account.myTemplates'),
+            children: activeTab === 'my-templates' ? <MyTemplates /> : null,
+        },
+        {
+            key: 'my-filled-forms',
+            label: t('account.filledForms'),
+            children: activeTab === 'my-filled-forms' ? <MyFilledForms /> : null,
+        },
+    ]
+
+    return (
+        <div className={s.container}>
+            <Space style={{ width: '100%' }} direction="vertical" size="large">
+                <Title className={s.title} level={3}>{t('account.title')}</Title>
+                <Button
+                    type="primary"
+                    icon={<PlusOutlined />}
+                    size="large"
+                    onClick={handleCreateTemplate}
+                >
+                    {t('account.createTemplate')}
+                </Button>
+                <Tabs
+                    activeKey={activeTab}
+                    onChange={setActiveTab}
+                    style={{ width: '100%' }}
+                    items={items}
+                    className={s.tabs}
+                />
+            </Space>
+        </div>
+    )
+}
+
+export default PersonalAccountPage

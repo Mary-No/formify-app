@@ -1,0 +1,25 @@
+.card{
+  height: 280px;
+  margin: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: var(--bg-card-color);
+  :global .ant-card-actions{
+    background-color: var(--bg-card-color);
+  }
+  cursor: pointer;
+  color: inherit;
+}
+.description{
+  margin: 15px 0;
+}
+.bottomPart{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: default;
+}
+.card :global .ant-card-body{
+  padding: 24px 24px 0;
+}

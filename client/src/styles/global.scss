@@ -1,0 +1,38 @@
+@use './variables' as *;
+@use './themes' as *;
+
+body {
+  margin: 0;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: sans-serif;
+}
+
+.slick-track{
+  height: 300px;
+}
+
+.slick-next:before, .slick-prev:before {
+    font-size: 32px;
+    color: var(--primary-color);
+  }
+
+.slick-prev {
+    left: -30px;
+
+  }
+
+.slick-next {
+    right: -30px;
+  }
+
+.slick-dots li button:before {
+  font-size: 10px;
+  color: var(--text-color);
+}
+.slick-dots li.slick-active button:before{
+  color: var(--text-color);
+}
+.slick-disabled{
+  pointer-events: none;
+}

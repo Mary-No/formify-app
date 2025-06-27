@@ -1,0 +1,25 @@
+@use "../../styles/variables" as *;
+@use "../../styles/themes" as *;
+
+.header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--bg-color);
+  padding: 60px;
+}
+.buttons{
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+}
+.account{
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.accountIcon{
+  padding: 10px;
+  border-radius: 50%;
+
+}
