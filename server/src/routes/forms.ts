@@ -186,46 +186,55 @@ router.delete('/:id', requireAuth, async (req, res) => {
 
 //редактировать ответы
 router.patch('/:formId', requireAuth, requireNotBlocked, handleRequest(async (req, res) => {
-    const userId = getUserId(req)
-    const { formId } = req.params
-    const { answers } = req.body
+    const userId = getUserId(req);
+    const { formId } = req.params;
+    const { answers } = req.body;
 
     if (!Array.isArray(answers)) {
-        res.status(400).json({ error: 'answers must be an array' })
+        res.status(400).json({ error: 'Answers must be an array' });
         return
     }
 
     const form = await prisma.form.findUnique({
         where: { id: formId },
         select: { userId: true },
-    })
+    });
 
     if (!form) {
-        res.status(404).json({ error: 'Form not found' })
+        res.status(404).json({ error: 'Form not found' });
         return
     }
 
     const user = await prisma.user.findUnique({
         where: { id: userId },
         select: { isAdmin: true },
-    })
+    });
 
-    const isAllowed = await isAuthorOrAdmin({ userId, resourceAuthorId: form.userId })
+    const isAllowed = await isAuthorOrAdmin({ userId, resourceAuthorId: form.userId });
+
     if (!isAllowed) {
-        res.status(403).json({ error: 'Access denied' })
+        res.status(403).json({ error: 'Access denied' });
         return
     }
 
-    await prisma.answer.deleteMany({
-        where: { formId },
-    })
+    await prisma.$transaction([
+        prisma.answer.deleteMany({
+            where: { formId },
+        }),
+        prisma.answer.createMany({
+            data: answers.map((a: any) => ({
+                formId,
+                questionId: a.questionId,
+                value: a.value,
+            })),
+        }),
+        prisma.form.update({
+            where: { id: formId },
+            data: { updatedAt: new Date() },
+        }),
+    ]);
+    res.status(200).json({ message: 'Form updated', answersCount: answers.length });
+}));
 
-    await prisma.form.update({
-        where: { id: formId },
-        data: { updatedAt: new Date() },
-    })
-
-    res.json({ message: 'Form updated', answersCount: answers.length })
-}))
 
 export default router
