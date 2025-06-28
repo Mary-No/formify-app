@@ -236,5 +236,60 @@ router.patch('/:formId', requireAuth, requireNotBlocked, handleRequest(async (re
     res.status(200).json({ message: 'Form updated', answersCount: answers.length });
 }));
 
+router.get('/aggregated/:templateId', requireAuth, requireNotBlocked, handleRequest(async (req, res) => {
+    const userId = getUserId(req)
+    const { templateId } = req.params
+
+    const template = await prisma.template.findUnique({
+        where: { id: templateId },
+        select: { authorId: true },
+    })
+
+    if (!template) {
+        res.status(404).json({ error: 'Template not found' })
+        return
+    }
+
+    const isAllowed = await isAuthorOrAdmin({ userId, resourceAuthorId: template.authorId })
+    if (!isAllowed) {
+        res.status(403).json({ error: 'Access denied' })
+        return
+    }
+
+    const questionsWithAnswers = await prisma.question.findMany({
+        where: { templateId },
+        orderBy: { order: 'asc' },
+        select: {
+            id: true,
+            text: true,
+            type: true,
+            answers: {
+                select: {
+                    value: true,
+                    form: {
+                        select: {
+                            user: {
+                                select: { id: true, nickname: true }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    const formatted = questionsWithAnswers.map(q => ({
+        id: q.id,
+        text: q.text,
+        type: q.type,
+        answers: q.answers.map(a => ({
+            author: a.form.user.nickname,
+            userId: a.form.user.id,
+            value: a.value,
+        }))
+    }));
+
+    res.json({ questions: formatted });
+}))
 
 export default router
