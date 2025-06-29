@@ -51,7 +51,10 @@ export const MyFilledForms = () => {
                         </div>
                         <ActionMenu
                             onEdit={() => navigate(`/edit-form/${form.id}`)}
-                            onDelete={async () => {await deleteForm(form.id).unwrap()}}
+                            onDelete={async () => {await deleteForm({
+                                formId: form.id,
+                                templateId: form.template.id
+                            }).unwrap()}}
                             loading={isDeleting}
                         />
                     </List.Item>
