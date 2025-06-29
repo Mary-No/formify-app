@@ -85,15 +85,17 @@
   "template.created": "Szablon został pomyślnie utworzony",
   "emptyForms":  "Brak wypełnionych formularzy",
   "myFormsError": "Błąd podczas ładowania formularzy",
+  "formSubmitted": "Twoje odpowiedzi zostały pomyślnie zapisane",
   "action": {
     "edit": "Edytuj",
     "delete": "Usuń",
     "openMenu": "Otwórz menu akcji",
     "deleteConfirmTitle": "Potwierdzenie usunięcia",
-    "deleteConfirmText": "Czy na pewno chcesz usunąć ten szablon? Tej operacji nie można cofnąć.",
+    "deleteConfirmText": "Czy na pewno chcesz usunąć? Tej operacji nie można cofnąć.",
     "cancel": "Anuluj",
-    "deleteSuccess": "Szablon został pomyślnie usunięty",
-    "deleteError": "Nie udało się usunąć szablonu"
+    "deleteSuccess": "Usunięto pomyślnie",
+    "deleteError": "Nie udało się usunąć",
+    "stats": "Statystyki"
   },
   "account": {
     "title": "Konto osobiste",
@@ -101,5 +103,9 @@
     "myTemplates": "Moje szablony",
     "filledForms": "Wypełnione formularze"
   },
-  "mustBeInteger": "Wartość musi być liczbą całkowitą"
+  "mustBeInteger": "Wartość musi być liczbą całkowitą",
+  "fillOrRemoveEmptyQuestions": "Proszę uzupełnić lub usunąć puste pytania przed zapisaniem.",
+  "submitForm": "Wyślij formularz",
+  "updateForm": "Zaktualizuj formularz",
+  "formUpdated": "Formularz został pomyślnie zaktualizowany"
 }

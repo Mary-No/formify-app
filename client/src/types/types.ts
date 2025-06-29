@@ -139,3 +139,45 @@ export type MyFormsResponse = {
         };
     }[];
 };
+export type GetFormResponse = {
+    form: {
+        id: string;
+        templateId: string;
+        createdAt: string;
+        updatedAt: string;
+        answers: {
+            id: string;
+            questionId: string;
+            value: string | number | boolean;
+        }[];
+        template: {
+            id: string;
+            title: string;
+            description: string;
+            questions: {
+                id: string;
+                text: string;
+                type: 'SHORT_TEXT' | 'LONG_TEXT' | 'INTEGER' | 'CHECKBOX';
+                required: boolean;
+                order: number;
+            }[];
+        };
+    };
+};
+
+export type AggregatedAnswer = {
+    author: string;
+    userId: string;
+    value: string | number | boolean;
+};
+
+export type AggregatedQuestion = {
+    id: string;
+    text: string;
+    type: QuestionType
+    answers: AggregatedAnswer[];
+};
+
+export type AggregatedResponse = {
+    questions: AggregatedQuestion[];
+};

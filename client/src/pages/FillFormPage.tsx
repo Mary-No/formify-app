@@ -1,7 +1,7 @@
-import { useParams } from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import {Form, Input, Button, Checkbox, message, Card, Typography, Spin} from 'antd';
 import { useTranslation } from 'react-i18next';
-import { useSubmitFormMutation } from '../app/formApi';
+import { useSubmitFormMutation, useUpdateFormMutation } from '../app/formApi';
 import { handleApiError } from '../utils/handleApiErrror.ts';
 import type { QuestionType } from '../types/types.ts';
 import s from "../components/TemplateDetails/TemplateDetails.module.scss";
@@ -14,15 +14,22 @@ type Question = {
     type: QuestionType;
     required: boolean;
 };
+type FillFormPageProps = {
+    isEdit?: boolean
+    existingAnswers?: Record<string, string | number | boolean>
+    formId?: string
+    templateId?:string
+}
 
-export const FillFormPage = () => {
-    const { templateId } = useParams<{ templateId: string }>();
+export const FillFormPage = ({isEdit, existingAnswers, formId,  templateId: propTemplateId}:FillFormPageProps) => {
+    const params = useParams<{ templateId?: string }>();
+    const templateId = propTemplateId ?? params.templateId;
     const { t } = useTranslation();
     const [submitForm, {  isLoading: isSubmitting }] = useSubmitFormMutation();
     const [form] = Form.useForm();
-
+    const navigate = useNavigate();
     const { data, isLoading, error } = useGetTemplateQuery(templateId!);
-
+    const [updateForm, { isLoading: isUpdating }] = useUpdateFormMutation()
     if (isLoading) return <Spin />;
     if (error || !data) return <div>{t('templateNotFound')}</div>;
     const { title, description, questions } = data.template;
@@ -30,6 +37,19 @@ export const FillFormPage = () => {
     if (!questions) {
         return <div>{t('noQuestions')}</div>;
     }
+    const initialValues: Record<string, string | number | boolean | undefined> = questions.reduce(
+        (acc, q) => {
+            if (q.type === 'CHECKBOX') {
+                const existing = existingAnswers?.[q.id];
+                acc[q.id] = existing === true || existing === 'true';
+            } else if (existingAnswers?.[q.id] !== undefined) {
+                acc[q.id] = existingAnswers[q.id];
+            }
+            return acc;
+        },
+        {} as Record<string, string | number | boolean | undefined>
+    );
+
 
     const getRules = (q: Question) => {
         const requiredRule = q.required
@@ -92,6 +112,7 @@ export const FillFormPage = () => {
         }
     };
 
+
     return (
         <Card bordered className={s.card}>
             <Title level={2}>{title}</Title>
@@ -99,18 +120,26 @@ export const FillFormPage = () => {
         <Form
             form={form}
             layout="vertical"
-            onFinish={async (values: Record<string, any>) => {
-                if (!templateId) return;
+            initialValues={initialValues}
+            onFinish={async (values: Record<string, string | number | boolean>) => {
                 const answers = Object.entries(values).map(([questionId, value]) => ({
                     questionId,
-                    value: typeof value === 'boolean' ? (value ? 'true' : 'false') : value,
+                    value: typeof value === 'boolean' ? String(value) : value,
                 }));
 
                 try {
-                    await submitForm({ templateId, answers }).unwrap();
-                    message.success(t('formSubmitted'));
-                    form.resetFields();
-                } catch (err: any) {
+                    if (isEdit) {
+                        if (!formId || !templateId) return;
+                        await updateForm({ formId, answers, templateId }).unwrap();
+                        message.success(t('formUpdated'));
+                    } else {
+                        if (!templateId) return;
+                        await submitForm({ templateId, answers }).unwrap();
+                        message.success(t('formSubmitted'));
+                        form.resetFields();
+                    }
+                    navigate("/account");
+                } catch (err) {
                     handleApiError(err, t);
                 }
             }}
@@ -132,8 +161,8 @@ export const FillFormPage = () => {
                 )
             )}
             <Form.Item>
-                <Button type="primary" htmlType="submit" loading={isSubmitting}>
-                    {t('fillForm')}
+                <Button type="primary" htmlType="submit" loading={isSubmitting || isUpdating}>
+                    {t(isEdit ? 'updateForm' : 'submitForm')}
                 </Button>
             </Form.Item>
         </Form>

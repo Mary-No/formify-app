@@ -6,11 +6,13 @@ import i18n from "../../i18n/index.ts";
 import {truncateWords} from "../../utils/truncateWords.ts";
 import type { Template } from "../../types/types.ts";
 import {TemplateTag} from "../Tag/Tag.tsx";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {TemplateTopic} from "../Topic/Topic.tsx";
 import {Likes} from "../Likes/Likes.tsx";
 import {ActionMenu} from "../ActionMenu/ActionMenu.tsx";
 import {useAppSelector} from "../../app/hooks.ts";
+import { useDeleteTemplateMutation } from "../../app/templateApi.ts";
+import { useGetMyFormsQuery } from "../../app/formApi.ts";
 
 type Props={
     item: Template
@@ -19,6 +21,9 @@ export const TemplateSearchCard = ({item}:Props) => {
     const { t } = useTranslation()
     const userId = useAppSelector(state => state.auth.user?.id);
     const isAuthor = userId === item.author.id
+    const navigate = useNavigate()
+    const [deleteTemplate, { isLoading }] = useDeleteTemplateMutation()
+    const { refetch } = useGetMyFormsQuery({ skip: 0 });
 
     return <Card className={s.card} key={item.id} title={
             <div className={s.header}>
@@ -27,7 +32,15 @@ export const TemplateSearchCard = ({item}:Props) => {
                 </Link>
                 <div className={s.menuAndDate}>
                     <div className={s.date}>{formatTemplateDate(item.createdAt, i18n.language as 'en' | 'ru' | 'pl')}</div>
-                    { isAuthor && <ActionMenu templateId={item.id}/>}
+                    { isAuthor && <ActionMenu
+                        onEdit={() => navigate(`/edit-template/${item.id}`)}
+                        onDelete={async () => {
+                            await deleteTemplate(item.id).unwrap()
+                            refetch()
+                        }}
+                        onStats={()=> navigate(`/statistic/${item.id}`)}
+                        loading={isLoading}
+                    />}
                 </div>
             </div>
         }>

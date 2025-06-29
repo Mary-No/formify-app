@@ -1,15 +1,18 @@
 import {useEffect, useState } from 'react'
 import { List, Spin, Empty, Card } from 'antd'
-import { useGetMyFormsQuery } from '../../app/formApi'
+import {useDeleteFormMutation, useGetMyFormsQuery } from '../../app/formApi'
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll'
 import type {MyFormsResponse} from "../../types/types.ts";
+import { ActionMenu } from '../ActionMenu/ActionMenu.tsx';
+import {useNavigate} from "react-router-dom";
 
 
 export const MyFilledForms = () => {
     const [skip, setSkip] = useState(0)
     const [forms, setForms] = useState<MyFormsResponse["forms"]>([])
-
+    const navigate = useNavigate()
     const { data, isLoading, error, isFetching } = useGetMyFormsQuery({ skip })
+    const [deleteForm, { isLoading: isDeleting }] = useDeleteFormMutation();
 
     useEffect(() => {
         if (data?.forms) {
@@ -46,6 +49,11 @@ export const MyFilledForms = () => {
                             <strong>{form.template?.title || 'No title'}</strong>
                             <div>{new Date(form.createdAt).toLocaleString()}</div>
                         </div>
+                        <ActionMenu
+                            onEdit={() => navigate(`/edit-form/${form.id}`)}
+                            onDelete={async () => {await deleteForm(form.id).unwrap()}}
+                            loading={isDeleting}
+                        />
                     </List.Item>
                 )}
             />

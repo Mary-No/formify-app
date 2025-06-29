@@ -84,7 +84,22 @@ export const templateApi = createApi({
             }),
             invalidatesTags: (_result, _error, { templateId }) => [{ type: 'Template', id: templateId }],
         }),
+        updateTemplate: build.mutation<void, { id: string; data: CreateTemplatePayload }>({
+            query: ({ id, data }) => ({
+                url: `/templates/${id}`,
+                method: 'PATCH',
+                body: data,
+            }),
+            invalidatesTags: ['TemplatesList', 'Template'],
+        }),
     }),
 })
 
-export const { useSearchTemplatesQuery,  useGetTemplateQuery, useToggleLikeTemplateMutation, useGetOverviewQuery, useAddCommentMutation, useCreateTemplateMutation, useDeleteTemplateMutation } = templateApi
+export const {  useSearchTemplatesQuery,
+                useGetTemplateQuery,
+                useToggleLikeTemplateMutation,
+                useGetOverviewQuery,
+                useAddCommentMutation,
+                useCreateTemplateMutation,
+                useDeleteTemplateMutation,
+                useUpdateTemplateMutation } = templateApi

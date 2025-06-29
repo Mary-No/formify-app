@@ -4,7 +4,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 import {Button, message} from 'antd'
 import { QuestionBlock } from './QuestionBlock/QuestionBlock.tsx'
 import { Canvas } from './Canvas/Canvas.tsx'
-import { useCreateTemplateMutation } from '../../app/templateApi'
+import { useCreateTemplateMutation, useUpdateTemplateMutation } from '../../app/templateApi'
 import s from './TemplateBuilder.module.scss'
 import { QUESTION_TYPES } from '../../constants.ts'
 import type { Question, Topic } from '../../types/types.ts'
@@ -12,37 +12,69 @@ import { useTranslation } from 'react-i18next'
 import {handleApiError} from "../../utils/handleApiErrror.ts";
 import {useNavigate} from "react-router-dom";
 
+type TemplateBuilderProps = {
+    editMode?: boolean;
+    initialData?: {
+        id: string;
+        title: string;
+        description: string;
+        topic: Topic;
+        tags: string[];
+        questions: Question[];
+        isPublic: boolean;
+    };
+};
 
-export const TemplateBuilder = () => {
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
-    const [createTemplate] = useCreateTemplateMutation()
-    const [topic, setTopic] = useState<Topic>('OTHER')
-    const [questions, setQuestions] = useState<Question[]>([])
-    const [tags, setTags] = useState<string[]>([])
+export const TemplateBuilder = ({ editMode = false, initialData }: TemplateBuilderProps) => {
+    const [title, setTitle] = useState(initialData?.title ?? '');
+    const [description, setDescription] = useState(initialData?.description ?? '');
+    const [topic, setTopic] = useState<Topic>(initialData?.topic ?? 'OTHER');
+    const [questions, setQuestions] = useState<Question[]>(initialData?.questions ?? []);
+    const [tags, setTags] = useState<string[]>(initialData?.tags ?? []);
+    const [isPublic] = useState(initialData?.isPublic ?? true);
+
     const { t } = useTranslation()
     const navigate = useNavigate()
 
+    const [createTemplate] = useCreateTemplateMutation()
+    const [updateTemplate] = useUpdateTemplateMutation();
+
     const handleSubmit = async () => {
         try {
-          await createTemplate({
+            const hasEmptyQuestions = questions.some(q => !q.text.trim());
+
+            if (hasEmptyQuestions) {
+                message.error(t('fillOrRemoveEmptyQuestions'));
+                return;
+            }
+
+            const payload = {
                 title,
                 description,
                 topic,
                 tags,
-                isPublic: true,
+                isPublic,
                 questions: questions.map((q) => ({
                     text: q.text,
                     type: q.type,
                     required: q.required,
                 })),
-            }).unwrap()
-            message.success(t('template.created'))
-            navigate("/account")
+            };
+
+            if (editMode && initialData?.id) {
+                await updateTemplate({ id: initialData.id, data: payload }).unwrap();
+                message.success(t('template.updated'));
+            } else {
+                await createTemplate(payload).unwrap();
+                message.success(t('template.created'));
+            }
+
+            navigate("/account");
         } catch (error) {
-           handleApiError(error, t)
+            handleApiError(error, t);
         }
-    }
+    };
+
 
     return (
         <DndProvider backend={HTML5Backend}>
