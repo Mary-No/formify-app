@@ -7,6 +7,7 @@ import passport from 'passport'
 
 const router = express.Router()
 
+const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
 
 router.post('/register', handleRequest(async (req, res) => {
         const { email, password, nickname } = req.body
@@ -39,11 +40,11 @@ router.get('/google', passport.authenticate('google', {
 }))
 
 router.get('/google/callback', passport.authenticate('google', {
-    failureRedirect: '/login',
+    failureRedirect: `${CLIENT_URL}/login`,
     session: true
 }), (req, res) => {
-    res.redirect('http://localhost:5173')
-})
+    res.redirect(`${CLIENT_URL}/auth/callback`);
+});
 
 router.post('/login', handleRequest(async (req, res) => {
     const { email, password } = req.body;
