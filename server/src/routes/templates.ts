@@ -307,9 +307,10 @@ router.patch(
                 data: questions.map((q, index) => ({
                     templateId,
                     text: q.text,
-                    type: q.type,
+                    type: q.type as QuestionType,
                     order: index,
                     required: q.required ?? false,
+                    options: q.type === 'SINGLE_CHOICE' ? q.options ?? [] : [],
                 })),
             });
         }

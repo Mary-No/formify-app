@@ -39,6 +39,7 @@ export const questionSchema = z.object({
     text: z.string().min(1, 'Text is required'),
     type: QuestionTypeEnum,
     required: z.boolean().optional(),
+    options: z.array(z.string()).optional(),
 })
 export type QuestionInput = z.infer<typeof questionSchema>
 
