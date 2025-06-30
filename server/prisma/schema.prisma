@@ -60,7 +60,7 @@ model Template {
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   authorId    String
-  author      User        @relation("AuthorTemplates", fields: [authorId], references: [id])
+  author      User        @relation("AuthorTemplates", fields: [authorId], references: [id], onDelete: Cascade)
   isPublic    Boolean     @default(true)
   questions   Question[]
   comments    Comment[]
@@ -97,7 +97,7 @@ model Form {
   templateId  String
   template    Template    @relation(fields: [templateId], references: [id], onDelete: Cascade)
   userId      String
-  user        User        @relation(fields: [userId], references: [id])
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   answers     Answer[]
@@ -118,7 +118,7 @@ model Comment {
   templateId  String
   template    Template    @relation(fields: [templateId], references: [id], onDelete: Cascade)
   authorId    String
-  author      User        @relation(fields: [authorId], references: [id])
+  author      User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
   text        String
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
@@ -129,7 +129,7 @@ model Like {
   templateId  String
   template    Template    @relation(fields: [templateId], references: [id], onDelete: Cascade)
   userId      String
-  user        User        @relation(fields: [userId], references: [id])
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([templateId, userId])
 }
