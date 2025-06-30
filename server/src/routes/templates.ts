@@ -53,13 +53,17 @@ router.post('/', requireAuth, requireNotBlocked, handleRequest(async (req, res) 
             isPublic,
             authorId: userId,
             questions: {
-                create: questions.map((q, index) => ({
-                    text: q.text,
-                    type: PrismaQuestionType[q.type as keyof typeof PrismaQuestionType],
-                    order: index,
-                    required: q.required ?? false,
-                    options: q.type === 'SINGLE_CHOICE' ? q.options ?? [] : [],
-                })),
+                create: questions.map((q, index) => {
+                    const type = PrismaQuestionType[q.type as keyof typeof PrismaQuestionType]
+                    if (!type) throw new Error(`Invalid question type: ${q.type}`)
+                    return {
+                        text: q.text,
+                        type,
+                        order: index,
+                        required: q.required ?? false,
+                        options: q.type === 'SINGLE_CHOICE' ? q.options ?? [] : [],
+                    }
+                }),
             },
         },
         include: {
