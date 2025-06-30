@@ -6,6 +6,7 @@ const MAX_LIMITS: Record<QuestionType, number> = {
     LONG_TEXT: 4,
     INTEGER: 4,
     CHECKBOX: 4,
+    SINGLE_CHOICE: 4
 }
 
 export function validateQuestionLimits(questions: QuestionInput[]) {
@@ -14,6 +15,7 @@ export function validateQuestionLimits(questions: QuestionInput[]) {
         LONG_TEXT: 0,
         INTEGER: 0,
         CHECKBOX: 0,
+        SINGLE_CHOICE: 4
     }
 
     for (const q of questions) {
