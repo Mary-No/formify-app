@@ -10,8 +10,7 @@ import {QuestionType, Topic } from '@prisma/client'
 import {questionSchema, TopicEnum, updateTemplateSchema } from '../types/templates'
 import { isAuthorOrAdmin } from '../utils/isAuthorOrAdmin'
 import { toTemplateCardDto } from '../utils/toTemplateCardDto'
-
-
+import { QuestionType as PrismaQuestionType } from '@prisma/client'
 
 const router = express.Router()
 
@@ -56,7 +55,7 @@ router.post('/', requireAuth, requireNotBlocked, handleRequest(async (req, res) 
             questions: {
                 create: questions.map((q, index) => ({
                     text: q.text,
-                    type: q.type as QuestionType,
+                    type: PrismaQuestionType[q.type as keyof typeof PrismaQuestionType],
                     order: index,
                     required: q.required ?? false,
                     options: q.type === 'SINGLE_CHOICE' ? q.options ?? [] : [],
