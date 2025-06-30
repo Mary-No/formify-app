@@ -6,6 +6,7 @@ export const QuestionTypeEnum = z.enum([
     'LONG_TEXT',
     'INTEGER',
     'CHECKBOX',
+    'SINGLE_CHOICE'
 ])
 export type QuestionType = z.infer<typeof QuestionTypeEnum>
 
