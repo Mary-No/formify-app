@@ -1,5 +1,5 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type {AggregatedResponse, GetFormResponse, MyFormsResponse } from '../types/types';
+import {api} from "./api.ts";
 
 type SubmitFormArgs = {
     templateId: string;
@@ -24,17 +24,11 @@ type UpdateFormArgs = {
         value: string | number | boolean;
     }[];
 }
-export const formApi = createApi({
-    reducerPath: 'formApi',
-    baseQuery: fetchBaseQuery({
-        baseUrl: 'https://formify-app.onrender.com/forms',
-        credentials: 'include',
-    }),
-    tagTypes: ['Form', 'FormById'],
+export const formApi = api.injectEndpoints({
     endpoints: (build) => ({
         submitForm: build.mutation<SubmitFormResponse, SubmitFormArgs>({
             query: ({ templateId, answers }) => ({
-                url: '/',
+                url: '/forms/',
                 method: 'POST',
                 body: { templateId, answers },
             }),
@@ -44,7 +38,7 @@ export const formApi = createApi({
             ],
         }),
         getMyForms: build.query<MyFormsResponse, { skip?: number }>({
-            query: ({ skip = 0 } = {}) => `/mine?skip=${skip}`,
+            query: ({ skip = 0 } = {}) => `/forms/mine?skip=${skip}`,
             providesTags: (result) =>
                 result?.forms
                     ? [
@@ -55,7 +49,7 @@ export const formApi = createApi({
         }),
         updateForm: build.mutation<{ message: string }, UpdateFormArgs>({
             query: ({ formId, answers }) => ({
-                url: `/${formId}`,
+                url: `/forms/${formId}`,
                 method: 'PATCH',
                 body: { answers },
             }),
@@ -66,12 +60,12 @@ export const formApi = createApi({
             ],
         }),
         getFormById: build.query<GetFormResponse, string>({
-            query: (formId) => `/${formId}`,
+            query: (formId) => `/forms/${formId}`,
             providesTags: (_, __, formId) => [{ type: 'FormById', id: formId }],
         }),
         deleteForm: build.mutation<{ message: string }, { formId: string; templateId: string }>({
             query: ({ formId }) => ({
-                url: `/${formId}`,
+                url: `/forms/${formId}`,
                 method: 'DELETE',
             }),
             invalidatesTags: (_, __, { formId, templateId }) => [
@@ -82,7 +76,7 @@ export const formApi = createApi({
             ],
         }),
         getAggregatedData: build.query<AggregatedResponse, string>({
-            query: (templateId) => `/aggregated/${templateId}`,
+            query: (templateId) => `/forms/aggregated/${templateId}`,
             providesTags: (_, __, templateId) => [{ type: 'Form', id: `AGGREGATED-${templateId}` }],
         }),
     }),

@@ -1,4 +1,4 @@
-import { Button, Tabs, Typography, Space } from 'antd'
+import { Button, Tabs, Typography, Space, Spin } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
@@ -6,18 +6,21 @@ import { MyTemplates } from '../../components/MyTemplates/MyTemplates.tsx'
 import { MyFilledForms } from '../../components/MyFilledForms/MyFilledForms.tsx'
 import s from './PersonalAccountPage.module.scss'
 import { useTranslation } from 'react-i18next'
+import { useAppSelector } from '../../app/hooks.ts'
+import { AdminPanel } from '../../components/AdminPanel/AdminPanel.tsx'
 
 const { Title } = Typography
 
 const PersonalAccountPage = () => {
     const navigate = useNavigate()
     const { t } = useTranslation()
-
+    const { user, isLoading } = useAppSelector((state) => state.auth)
     const [activeTab, setActiveTab] = useState('my-templates')
 
     const handleCreateTemplate = () => {
         navigate('/template-builder')
     }
+    if (isLoading || !user) return <Spin />
 
     const items = [
         {
@@ -30,6 +33,15 @@ const PersonalAccountPage = () => {
             label: t('account.filledForms'),
             children: activeTab === 'my-filled-forms' ? <MyFilledForms /> : null,
         },
+        ...(user?.isAdmin
+            ? [
+                {
+                    key: 'admin-panel',
+                    label: t('account.adminPanel'),
+                    children: activeTab === 'admin-panel' ? <AdminPanel /> : null,
+                },
+            ]
+            : []),
     ]
 
     return (

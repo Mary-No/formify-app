@@ -6,7 +6,7 @@ import { handleApiError } from '../utils/handleApiErrror.ts';
 import type { QuestionType } from '../types/types.ts';
 import s from "../components/TemplateDetails/TemplateDetails.module.scss";
 import { useGetTemplateQuery } from '../app/templateApi.ts';
-const { Title, Paragraph } = Typography
+const { Title } = Typography
 
 type Question = {
     id: string;
@@ -116,11 +116,13 @@ export const FillFormPage = ({isEdit, existingAnswers, formId,  templateId: prop
     return (
         <Card bordered className={s.card}>
             <Title level={2}>{title}</Title>
-            <Paragraph>{description}</Paragraph>
-        <Form
-            form={form}
-            layout="vertical"
-            initialValues={initialValues}
+            <p
+                dangerouslySetInnerHTML={{__html: description}}
+            />
+            <Form
+                form={form}
+                layout="vertical"
+                initialValues={initialValues}
             onFinish={async (values: Record<string, string | number | boolean>) => {
                 const answers = Object.entries(values).map(([questionId, value]) => ({
                     questionId,

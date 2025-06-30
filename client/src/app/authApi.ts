@@ -1,39 +1,34 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import type { RegisterPayload, UserResponse } from '../types/types';
+import type {RegisterPayload, User, UserLogin, UserResponse} from '../types/types';
+import { api } from './api';
 
-export const authApi = createApi({
-    reducerPath: 'authApi',
-    baseQuery: fetchBaseQuery({
-        baseUrl: 'https://formify-app.onrender.com/auth',
-        credentials: 'include',
-    }),
+export const authApi = api.injectEndpoints({
     endpoints: (build) => ({
         register: build.mutation<UserResponse, RegisterPayload>({
             query: (body) => ({
-                url: '/register',
+                url: '/auth/register',
                 method: 'POST',
                 body,
             }),
         }),
         login: build.mutation<
-            { message: string; user: { id: string; email: string; nickname: string } },
+            { message: string; user: UserLogin },
             { email: string; password: string }
         >({
             query: (credentials) => ({
-                url: '/login',
+                url: '/auth/login',
                 method: 'POST',
                 body: credentials,
             }),
         }),
         getMe: build.query<
-            { user: { id: string; email: string; nickname: string; isAdmin: boolean; isBlocked: boolean } },
+            { user: User },
             void
         >({
-            query: () => '/me',
+            query: () => '/auth/me',
         }),
         logout: build.mutation<{ message: string }, void>({
             query: () => ({
-                url: '/logout',
+                url: '/auth/logout',
                 method: 'POST',
             }),
         }),

@@ -11,6 +11,7 @@ import {handleApiError} from "../../utils/handleApiErrror.ts";
 import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
 import { setUser } from '../../app/authSlice.ts';
 import {UserAvatar} from "../../components/Avatar/Avatar.tsx";
+import { api } from '../../app/api.ts';
 
 
 const { Header: AntHeader } = Layout
@@ -28,6 +29,7 @@ export const Header = () => {
         try {
             await logout().unwrap()
             dispatch(setUser(null));
+            dispatch(api.util.resetApiState());
             navigate('/')
         } catch (err) {
             handleApiError(err, t)

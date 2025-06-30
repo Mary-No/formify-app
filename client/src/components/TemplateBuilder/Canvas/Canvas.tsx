@@ -6,12 +6,12 @@ import type { Question, QuestionType, Topic } from '../../../types/types.ts'
 import { Card, Empty, Select, Typography } from 'antd'
 import { Input } from 'antd'
 import { TOPICS } from '../../../constants.ts'
-const { TextArea } = Input
 const { Text } = Typography;
 const { Option } = Select
 import s from './Canvas.module.scss'
-import {useGetTagsQuery} from "../../../app/api.ts";
+import {useGetTagsQuery} from "../../../app/templateApi.ts";
 import {useTranslation} from "react-i18next";
+import {MarkdownDescription} from "../MarkdownDescription.tsx";
 
 type DraggedQuestionItem = {
     type: QuestionType
@@ -79,16 +79,9 @@ export const Canvas = ({ questions, setQuestions, tags, setTags, title, setTitle
                     onChange={(e) => setTitle(e.target.value)}
 
                 />
-
                 <Text strong>{t('description')}</Text>
-                <TextArea
-                    placeholder="Template description"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    autoSize={{minRows: 2}}
-
-                />
-
+                <MarkdownDescription description={description}
+                                      setDescription={setDescription}/>
                 <Text strong>{t('topic')}</Text>
                 <Select
                     placeholder={t('tagsPlaceholder')}

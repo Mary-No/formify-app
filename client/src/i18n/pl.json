@@ -21,6 +21,7 @@
   "registeredSuccess": "Pomyślnie zarejestrowano",
   "title": "Logowanie",
   "submit": "Zaloguj się",
+  "accountBlocked": "Twoje konto zostało zablokowane",
   "unknownError": "Logowanie nie powiodło się. Spróbuj ponownie.",
   "loginSuccess": "Zalogowano pomyślnie",
   "TECHNOLOGY": "Technologia",
@@ -101,11 +102,56 @@
     "title": "Konto osobiste",
     "createTemplate": "Utwórz nowy szablon",
     "myTemplates": "Moje szablony",
-    "filledForms": "Wypełnione formularze"
+    "filledForms": "Wypełnione formularze",
+    "adminPanel": "Panel administratora"
   },
   "mustBeInteger": "Wartość musi być liczbą całkowitą",
   "fillOrRemoveEmptyQuestions": "Proszę uzupełnić lub usunąć puste pytania przed zapisaniem.",
   "submitForm": "Wyślij formularz",
   "updateForm": "Zaktualizuj formularz",
-  "formUpdated": "Formularz został pomyślnie zaktualizowany"
+  "formUpdated": "Formularz został pomyślnie zaktualizowany",
+  "statistics": {
+    "loadingError": "Błąd ładowania statystyk",
+    "user": "Użytkownik",
+    "answer": "Odpowiedź",
+    "answerLabel": "Odpowiedź {{value}}",
+    "amount": "Liczba",
+    "yes": "Tak",
+    "no": "Nie"
+  },
+  "admin": {
+    "searchPlaceholder": "Szukaj po nicku lub emailu",
+    "admin": "Administrator",
+    "blocked": "Zablokowany",
+    "actions": {
+      "block": "Zablokuj",
+      "unblock": "Odblokuj",
+      "promote": "Nadaj admina",
+      "demote": "Odbierz admina",
+      "delete": "Usuń"
+    },
+    "messages": {
+      "success": " zostało pomyślnie wykonane.",
+      "fail": "Nie udało się wykonać akcji",
+      "logout": "Zostałeś wylogowany z powodu akcji "
+    },
+    "modals": {
+      "delete": {
+        "title": "Czy na pewno chcesz usunąć wybranych użytkowników?",
+        "content": "Tej operacji nie można cofnąć.",
+        "ok": "Tak"
+      },
+      "blockSelf": {
+        "title": "Blokujesz sam siebie!",
+        "content": "Zostaniesz wylogowany i nie będziesz mógł się ponownie zalogować.",
+        "ok": "Zablokuj mnie"
+      },
+      "demoteSelf": {
+        "title": "Odbierasz sobie prawa admina!",
+        "content": "Utracisz prawa administratora.",
+        "ok": "Kontynuuj"
+      },
+      "cancel": "Anuluj"
+    }
+  }
 }

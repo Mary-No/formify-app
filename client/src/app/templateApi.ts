@@ -6,16 +6,13 @@ import type {
     TemplateDetailResponse,
     TemplateListResponse
 } from "../types/types"
-import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
+import {api} from "./api.ts";
 
-export const templateApi = createApi({
-    reducerPath: 'templateApi',
-    baseQuery: fetchBaseQuery({
-        baseUrl: 'https://formify-app.onrender.com',
-        credentials: 'include',
-    }),
-    tagTypes: ['Template', 'TemplatesList'],
+export const templateApi  = api.injectEndpoints({
     endpoints: (build) => ({
+        getTags: build.query<{ value: string; count: number }[], number | void>({
+            query: (limit = 30) => `templates/tags?limit=${limit}`,
+        }),
         searchTemplates: build.query<TemplateListResponse, SearchTemplatesArgs>({
             query: ({ skip = 0, search, topic, tags, order = 'desc', mine }) => {
                 const params = new URLSearchParams()
@@ -95,7 +92,8 @@ export const templateApi = createApi({
     }),
 })
 
-export const {  useSearchTemplatesQuery,
+export const {  useGetTagsQuery,
+                useSearchTemplatesQuery,
                 useGetTemplateQuery,
                 useToggleLikeTemplateMutation,
                 useGetOverviewQuery,

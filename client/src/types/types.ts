@@ -1,3 +1,4 @@
+// template types
 export type Tag = {
     id: string,
     name: string
@@ -27,7 +28,6 @@ export type Topic =
 
 
 export type QuestionType = 'SHORT_TEXT' | 'LONG_TEXT' | 'INTEGER' | 'CHECKBOX'
-
 
 export type Question = {
     id: string
@@ -74,7 +74,6 @@ export type OverviewResponse = {
     latest: Template[]
 }
 
-
 export type Comment = {
     id: string
     templateId: string
@@ -109,6 +108,8 @@ export type CreateTemplateResponse = {
     template: FullTemplate
 }
 
+//auth types
+
 export type RegisterPayload = {
     email: string
     password: string
@@ -123,9 +124,15 @@ export type User = {
     id: string
     email: string
     nickname: string
+    isAdmin: boolean
+    isBlocked: boolean
 }
 
 export type AuthUser = User | null
+
+export type UserLogin = { id: string; email: string; nickname: string }
+
+// form types
 
 export type MyFormsResponse = {
     forms: {
@@ -165,6 +172,7 @@ export type GetFormResponse = {
     };
 };
 
+//statistic types
 export type AggregatedAnswer = {
     author: string;
     userId: string;
@@ -180,4 +188,24 @@ export type AggregatedQuestion = {
 
 export type AggregatedResponse = {
     questions: AggregatedQuestion[];
+};
+
+//admin types
+export type BatchAction = 'delete' | 'block' | 'unblock' | 'promote' | 'demote'
+
+export type AdminUser = User & {
+    createdAt: string;
+};
+
+export type UsersResponse = {
+    users: AdminUser[];
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+};
+
+export type BatchActionPayload = {
+    userIds: string[];
+    action: BatchAction;
 };

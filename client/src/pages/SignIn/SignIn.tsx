@@ -1,6 +1,6 @@
 import { Form, Input, Button, Typography, message } from 'antd'
 import { useTranslation } from 'react-i18next'
-import { useLoginMutation } from '../../app/authApi'
+import {useGetMeQuery, useLoginMutation } from '../../app/authApi'
 import {handleApiError} from "../../utils/handleApiErrror.ts";
 import s from "./SignIn.module.scss"
 import {GoogleAuthButton} from "../../components/GoogleAuthButton.tsx";
@@ -15,15 +15,22 @@ export const SignIn = () => {
     const { t } = useTranslation()
     const navigate = useNavigate()
     const [login, { isLoading }] = useLoginMutation()
+    const { refetch: refetchMe } = useGetMeQuery();
 
     const onFinish = async (values: { email: string; password: string }) => {
         try {
-            const userData = await login(values).unwrap()
-            dispatch(setUser(userData.user))
-            message.success(t('loginSuccess'))
-            navigate('/')
+            await login(values).unwrap();
+            const { data } = await refetchMe();
+
+            if (data?.user && !data.user.isBlocked) {
+                dispatch(setUser(data.user));
+                message.success(t('loginSuccess'));
+                navigate('/');
+            } else {
+                message.error(t('accountBlocked'));
+            }
         } catch (err: any) {
-           handleApiError(err, t)
+            handleApiError(err, t);
         }
     }
 

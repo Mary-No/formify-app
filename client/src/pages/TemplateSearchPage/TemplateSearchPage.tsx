@@ -1,6 +1,6 @@
 import { useQueryFilters } from '../../hooks/useQueryFilters'
 import { useSearchTemplatesQuery } from '../../app/templateApi'
-import { useGetTagsQuery } from '../../app/api.ts'
+import { useGetTagsQuery } from '../../app/templateApi.ts'
 import { Card, Select, Spin, List, Typography, Row, Col } from 'antd'
 import {type Topic} from '../../types/types.ts'
 import { useTranslation } from 'react-i18next'
@@ -31,12 +31,13 @@ export const TemplateSearchPage = () => {
 
     const { data: allTags } = useGetTagsQuery(20)
 
-    const { data, isLoading } = useSearchTemplatesQuery({
+    const { data, isLoading} = useSearchTemplatesQuery({
         search,
         topic: selectedTopic,
         tags: selectedTags,
         order: sortOrder,
     })
+
     const { t } = useTranslation()
 
     return (

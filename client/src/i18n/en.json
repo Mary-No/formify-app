@@ -21,6 +21,7 @@
   "registeredSuccess": "Registered successfully",
   "title": "Login",
   "submit": "Log In",
+  "accountBlocked": "Your account has been blocked",
   "unknownError": "Login failed. Please try again.",
   "loginSuccess": "You have successfully logged in",
   "TECHNOLOGY": "Technology",
@@ -101,12 +102,56 @@
     "title": "Personal Account",
     "createTemplate": "Create New Template",
     "myTemplates": "My Templates",
-    "filledForms": "Forms I Filled"
+    "filledForms": "Forms I Filled",
+    "adminPanel": "Admin Panel"
   },
   "mustBeInteger": "The value must be an integer",
   "fillOrRemoveEmptyQuestions": "Please fill in or remove empty questions before saving.",
   "submitForm": "Submit form",
   "updateForm": "Update form",
-  "formUpdated": "Form updated successfully"
-
+  "formUpdated": "Form updated successfully",
+  "statistics": {
+    "loadingError": "Error loading statistics",
+    "user": "User",
+    "answer": "Answer",
+    "answerLabel": "Answer {{value}}",
+    "amount": "Count",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "admin": {
+    "searchPlaceholder": "Search by nickname or email",
+    "admin": "Admin",
+    "blocked": "Blocked",
+    "actions": {
+      "block": "Block",
+      "unblock": "Unblock",
+      "promote": "Promote",
+      "demote": "Demote",
+      "delete": "Delete"
+    },
+    "messages": {
+      "success": "- successfully completed",
+      "fail": "Action failed",
+      "logout": "You have been logged out due to self-"
+    },
+    "modals": {
+      "delete": {
+        "title": "Are you sure you want to delete selected users?",
+        "content": "This action is irreversible.",
+        "ok": "Yes"
+      },
+      "blockSelf": {
+        "title": "You are blocking yourself!",
+        "content": "If you proceed, you will be logged out and unable to log in again.",
+        "ok": "Block myself"
+      },
+      "demoteSelf": {
+        "title": "You are demoting yourself!",
+        "content": "You will lose admin rights and some features may be unavailable.",
+        "ok": "Proceed"
+      },
+      "cancel": "Cancel"
+    }
+  }
 }

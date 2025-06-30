@@ -12,7 +12,7 @@ import dayjs from "dayjs";
 import {useNavigate} from "react-router-dom";
 import {useAppSelector} from "../../app/hooks.ts";
 
-const { Title, Paragraph } = Typography
+const { Title } = Typography
 
 type Props = {
     data:TemplateDetailResponse
@@ -48,10 +48,12 @@ export const TemplateDetails = ({data}:Props) => {
                 </Descriptions.Item>
                 <Descriptions.Item label={t('topic')}> <TemplateTopic topic={template.topic}/></Descriptions.Item>
                 <Descriptions.Item label={t('description')}>
-                    <Paragraph>{template.description}</Paragraph>
+                    <div
+                        dangerouslySetInnerHTML={{__html: template.description}}
+                    />
                 </Descriptions.Item>
                 <Descriptions.Item label={t('tags')}>
-                <TemplateTag tags={template.tags}/>
+                    <TemplateTag tags={template.tags}/>
                 </Descriptions.Item>
             </Descriptions>
             <Likes templateId={template.id} likesCount={likesCount} likedByUser={likedByUser} size="big"/>
