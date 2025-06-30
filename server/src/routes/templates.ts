@@ -59,6 +59,7 @@ router.post('/', requireAuth, requireNotBlocked, handleRequest(async (req, res) 
                     type: q.type as QuestionType,
                     order: index,
                     required: q.required ?? false,
+                    options: q.type === 'SINGLE_CHOICE' ? q.options ?? [] : [],
                 })),
             },
         },
