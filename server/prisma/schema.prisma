@@ -12,6 +12,7 @@ enum QuestionType {
     INTEGER
     CHECKBOX
     SINGLE_CHOICE
+    IMAGE
 }
 
 enum Topic {

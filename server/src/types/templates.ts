@@ -5,7 +5,8 @@ export const QuestionTypeEnum = z.enum([
     'LONG_TEXT',
     'INTEGER',
     'CHECKBOX',
-    'SINGLE_CHOICE'
+    'SINGLE_CHOICE',
+    'IMAGE'
 ])
 
 export const TopicEnum = z.enum([
