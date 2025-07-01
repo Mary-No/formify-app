@@ -13,7 +13,7 @@ import { toTemplateCardDto } from '../utils/toTemplateCardDto'
 import { $Enums } from '@prisma/client'
 
 const router = express.Router()
-
+console.log('Resolved @prisma/client path:', require.resolve('@prisma/client'))
 // Создать новый шаблон
 export const createTemplateSchema = z.object({
     title: z.string().min(1, 'Title is required'),
