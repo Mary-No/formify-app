@@ -24,14 +24,9 @@ export const createTemplateSchema = z.object({
     questions: z.array(questionSchema).optional().default([]),
 })
 
-console.log('Resolved @prisma/client path:', require.resolve('@prisma/client'))
-
 router.post('/', requireAuth, requireNotBlocked, handleRequest(async (req, res) => {
     const parseResult = createTemplateSchema.safeParse(req.body)
-
-    console.log('Parse success:', parseResult.success)
     if (!parseResult.success) {
-        console.log('Zod errors:', JSON.stringify(parseResult.error.format(), null, 2))
         res.status(400).json({ error: parseResult.error.errors })
         return
     }
@@ -59,13 +54,10 @@ router.post('/', requireAuth, requireNotBlocked, handleRequest(async (req, res) 
             authorId: userId,
             questions: {
                 create: questions.map((q, index) => {
-                    console.log('Q.type:', q.type)
-                    console.log('Enum keys:', Object.keys($Enums.QuestionType))
-                    console.log('Enum object:', $Enums.QuestionType)
-
-                    const type = $Enums.QuestionType[q.type as keyof typeof $Enums.QuestionType];
-                    if (!type) throw new Error(`Invalid question type: ${q.type}`)
-
+                    const type = q.type as $Enums.QuestionType; // Простое приведение типа
+                    if (!Object.values($Enums.QuestionType).includes(type)) {
+                        throw new Error(`Invalid question type: ${q.type}`);
+                    }
                     return {
                         text: q.text,
                         type,
@@ -73,7 +65,7 @@ router.post('/', requireAuth, requireNotBlocked, handleRequest(async (req, res) 
                         required: q.required ?? false,
                         options: q.type === 'SINGLE_CHOICE' ? q.options ?? [] : [],
                     }
-                })
+                }),
             },
         },
         include: {
@@ -84,7 +76,7 @@ router.post('/', requireAuth, requireNotBlocked, handleRequest(async (req, res) 
         },
     })
 
-    console.log('Parsed questions:', parseResult.data.questions)
+
     res.status(201).json({ template })
 }))
 
@@ -372,51 +364,46 @@ router.get('/:templateId', handleRequest(async (req, res) => {
     res.json({ template, likesCount, likedByUser })
 }))
 
-
-
 // Добавить лайк
 router.post('/:templateId/like', requireAuth, requireNotBlocked, handleRequest(async (req, res) => {
     const userId = getUserId(req)
-        const { templateId } = req.params
-        const template = await prisma.template.findUnique({ where: { id: templateId }, select: { id: true, isPublic: true } })
-        if (!template || !template.isPublic) {
-            res.status(404).json({ error: 'Template not found' })
-            return
-        }
-        try {
-            await prisma.like.create({
-                data: { userId, templateId },
-            })
-            res.json({ message: 'Liked' })
-        } catch {
-            await prisma.like.deleteMany({
-                where: { userId, templateId },
-            })
-            res.json({ message: 'Unliked' })
-        }
+    const { templateId } = req.params
+    const template = await prisma.template.findUnique({ where: { id: templateId }, select: { id: true, isPublic: true } })
+    if (!template || !template.isPublic) {
+        res.status(404).json({ error: 'Template not found' })
+        return
+    }
+    try {
+        await prisma.like.create({
+            data: { userId, templateId },
+        })
+        res.json({ message: 'Liked' })
+    } catch {
+        await prisma.like.deleteMany({
+            where: { userId, templateId },
+        })
+        res.json({ message: 'Unliked' })
+    }
 }))
 
 // Добавить комментарий
 router.post('/:templateId/comments', requireAuth, requireNotBlocked, handleRequest(async (req, res) => {
     const userId = getUserId(req)
-        const { templateId } = req.params
-        const { text } = req.body
+    const { templateId } = req.params
+    const { text } = req.body
 
-        const template = await prisma.template.findUnique({ where: { id: templateId }, select: { id: true, isPublic: true } })
-        if (!template || !template.isPublic) {
-            res.status(404).json({ error: 'Template not found' })
-            return
-        }
+    const template = await prisma.template.findUnique({ where: { id: templateId }, select: { id: true, isPublic: true } })
+    if (!template || !template.isPublic) {
+        res.status(404).json({ error: 'Template not found' })
+        return
+    }
 
-        const comment = await prisma.comment.create({
-            data: { authorId: userId, templateId, text },
-            include: { author: { select: { id: true, nickname: true } } },
-        })
-        getIO().to(`template-${templateId}`).emit('new-comment', comment)
+    const comment = await prisma.comment.create({
+        data: { authorId: userId, templateId, text },
+        include: { author: { select: { id: true, nickname: true } } },
+    })
+    getIO().to(`template-${templateId}`).emit('new-comment', comment)
 
-        res.status(201).json({ comment })
+    res.status(201).json({ comment })
 }))
-
-
-
 export default router
