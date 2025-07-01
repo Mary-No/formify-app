@@ -242,11 +242,9 @@ router.patch('/:formId', requireAuth, requireNotBlocked, handleRequest(async (re
         select: { id: true, type: true },
     });
 
-
     const imageQuestionIds = new Set(
-        questions.filter(q => (String(q.type) !== 'IMAGE')).map(q => q.id)
+        questions.filter(q => String(q.type) === 'IMAGE').map(q => q.id)
     );
-
 
     const filteredAnswers = answers.filter(a => !imageQuestionIds.has(a.questionId));
 
