@@ -25,6 +25,10 @@ router.post('/', requireAuth, requireNotBlocked, handleRequest(async (req, res) 
             res.status(404).json({ error: 'Template not found' })
             return
         }
+    const questions = await prisma.question.findMany({
+        where: { templateId },
+        select: { id: true, type: true },
+    });
 
     const existingForm = await prisma.form.findFirst({
         where: {
@@ -36,12 +40,16 @@ router.post('/', requireAuth, requireNotBlocked, handleRequest(async (req, res) 
         res.status(400).json({ error: 'You have already submitted this form' })
         return
     }
+    const filteredAnswers = answers.filter(ans => {
+        const question = questions.find(q => q.id === ans.questionId);
+        return question && (String(question.type) !== 'IMAGE');
+    });
         const form = await prisma.form.create({
             data: {
                 templateId,
                 userId,
                 answers: {
-                    create: answers.map((ans: any) => ({
+                    create: filteredAnswers.map(ans => ({
                         questionId: ans.questionId,
                         value: ans.value,
                     })),
@@ -89,42 +97,54 @@ router.get(
 
 
 router.get('/results/:templateId', requireAuth, requireNotBlocked, handleRequest(async (req, res) => {
-    const userId = getUserId(req)
-        const { templateId } = req.params
+    const userId = getUserId(req);
+    const { templateId } = req.params;
 
-        const template = await prisma.template.findUnique({
-            where: { id: templateId },
-            select: { authorId: true },
-        })
+    const template = await prisma.template.findUnique({
+        where: { id: templateId },
+        select: { authorId: true },
+    });
 
-        if (!template) {
-            res.status(404).json({ error: 'Template not found' })
-            return
-        }
+    if (!template) {
+        res.status(404).json({ error: 'Template not found' });
+        return;
+    }
 
-        const user = await prisma.user.findUnique({ where: { id: userId }, select: { isAdmin: true } })
+    const user = await prisma.user.findUnique({ where: { id: userId }, select: { isAdmin: true } });
 
-        if (template.authorId !== userId && !user?.isAdmin) {
-            res.status(403).json({ error: 'Access denied' })
-            return
-        }
+    if (template.authorId !== userId && !user?.isAdmin) {
+        res.status(403).json({ error: 'Access denied' });
+        return;
+    }
 
-        // Получим все формы с ответами
-        const forms = await prisma.form.findMany({
-            where: { templateId },
-            include: {
-                user: { select: { id: true, nickname: true } },
-                answers: true,
-            },
-        })
+    const questions = await prisma.question.findMany({
+        where: { templateId },
+        select: { id: true, type: true },
+    });
 
-        res.json({ forms })
-}))
+    const forms = await prisma.form.findMany({
+        where: { templateId },
+        include: {
+            user: { select: { id: true, nickname: true } },
+            answers: true,
+        },
+    });
+
+    const filteredForms = forms.map(form => ({
+        ...form,
+        answers: form.answers.filter(answer => {
+            const question = questions.find(q => q.id === answer.questionId);
+            return (String(question?.type) !== 'IMAGE');
+        }),
+    }));
+
+    res.json({ forms: filteredForms });
+}));
 
 
 router.get('/:formId', requireAuth, requireNotBlocked, handleRequest(async (req, res) => {
-    const userId = getUserId(req)
-    const { formId } = req.params
+    const userId = getUserId(req);
+    const { formId } = req.params;
 
     const form = await prisma.form.findUnique({
         where: { id: formId },
@@ -133,27 +153,36 @@ router.get('/:formId', requireAuth, requireNotBlocked, handleRequest(async (req,
             template: {
                 include: {
                     questions: {
-                        orderBy: { order: 'asc' }
+                        orderBy: { order: 'asc' },
                     },
                 },
             },
         },
-    })
+    });
 
     if (!form) {
-        res.status(404).json({ error: 'Form not found' })
-        return
+        res.status(404).json({ error: 'Form not found' });
+        return;
     }
 
-    const isAllowed = await isAuthorOrAdmin({ userId, resourceAuthorId: form.userId })
+    const isAllowed = await isAuthorOrAdmin({ userId, resourceAuthorId: form.userId });
 
     if (!isAllowed) {
-        res.status(403).json({ error: 'Access denied' })
-        return
+        res.status(403).json({ error: 'Access denied' });
+        return;
     }
 
-    res.json({ form })
-}))
+    const filteredAnswers = form.answers.filter(answer => {
+        const question = form.template.questions.find(q => q.id === answer.questionId);
+        return (String(question?.type) !== 'IMAGE');
+    });
+
+    res.json({
+        ...form,
+        answers: filteredAnswers,
+    });
+}));
+
 
 
 router.delete('/:id', requireAuth, async (req, res) => {
@@ -180,7 +209,6 @@ router.delete('/:id', requireAuth, async (req, res) => {
 
     res.status(200).json({ message: 'Form deleted successfully' })
 })
-
 router.patch('/:formId', requireAuth, requireNotBlocked, handleRequest(async (req, res) => {
     const userId = getUserId(req);
     const { formId } = req.params;
@@ -188,32 +216,46 @@ router.patch('/:formId', requireAuth, requireNotBlocked, handleRequest(async (re
 
     if (!Array.isArray(answers)) {
         res.status(400).json({ error: 'Answers must be an array' });
-        return
+        return;
     }
 
     const form = await prisma.form.findUnique({
         where: { id: formId },
-        select: { userId: true },
+        select: { userId: true, templateId: true },
     });
 
     if (!form) {
         res.status(404).json({ error: 'Form not found' });
-        return
+        return;
     }
 
     const isAllowed = await isAuthorOrAdmin({ userId, resourceAuthorId: form.userId });
 
     if (!isAllowed) {
         res.status(403).json({ error: 'Access denied' });
-        return
+        return;
     }
+
+    const questionIds = answers.map(a => a.questionId);
+    const questions = await prisma.question.findMany({
+        where: { id: { in: questionIds } },
+        select: { id: true, type: true },
+    });
+
+
+    const imageQuestionIds = new Set(
+        questions.filter(q => (String(q.type) !== 'IMAGE')).map(q => q.id)
+    );
+
+
+    const filteredAnswers = answers.filter(a => !imageQuestionIds.has(a.questionId));
 
     await prisma.$transaction([
         prisma.answer.deleteMany({
             where: { formId },
         }),
         prisma.answer.createMany({
-            data: answers.map((a: any) => ({
+            data: filteredAnswers.map((a: any) => ({
                 formId,
                 questionId: a.questionId,
                 value: a.value,
@@ -224,7 +266,8 @@ router.patch('/:formId', requireAuth, requireNotBlocked, handleRequest(async (re
             data: { updatedAt: new Date() },
         }),
     ]);
-    res.status(200).json({ message: 'Form updated', answersCount: answers.length });
+
+    res.status(200).json({ message: 'Form updated', answersCount: filteredAnswers.length });
 }));
 
 router.get('/aggregated/:templateId', requireAuth, requireNotBlocked, handleRequest(async (req, res) => {
