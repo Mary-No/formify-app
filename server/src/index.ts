@@ -40,7 +40,7 @@ app.use(helmet({
 app.use(cors({
     origin: [
         'http://localhost:5173',
-        'https://mary-no.github.io',
+        'https://formify-app-chi.vercel.app',
     ],
     credentials: true,
 }))
