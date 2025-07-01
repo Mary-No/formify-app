@@ -1,19 +1,13 @@
 import {useNavigate, useParams} from 'react-router-dom';
-import {Form, Input, Button, Checkbox, message, Card, Typography, Spin} from 'antd';
+import {Form, Input, Button, Checkbox, message, Card, Typography, Spin, Select} from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useSubmitFormMutation, useUpdateFormMutation } from '../app/formApi';
 import { handleApiError } from '../utils/handleApiErrror.ts';
-import type { QuestionType } from '../types/types.ts';
 import s from "../components/TemplateDetails/TemplateDetails.module.scss";
 import { useGetTemplateQuery } from '../app/templateApi.ts';
+import type { Question } from '../types/types.ts';
 const { Title } = Typography
 
-type Question = {
-    id: string;
-    text: string;
-    type: QuestionType;
-    required: boolean;
-};
 type FillFormPageProps = {
     isEdit?: boolean
     existingAnswers?: Record<string, string | number | boolean>
@@ -106,6 +100,16 @@ export const FillFormPage = ({isEdit, existingAnswers, formId,  templateId: prop
                     <Checkbox>
                         {q.text}
                     </Checkbox>
+                );
+            case 'SINGLE_CHOICE':
+                return (
+                    <Select placeholder={t('selectOption')}>
+                        {q.options?.map((opt, idx) => (
+                            <Select.Option key={idx} value={opt}>
+                                {opt}
+                            </Select.Option>
+                        ))}
+                    </Select>
                 );
             default:
                 return <Input />;

@@ -73,6 +73,7 @@
   "longText": "Text (paragraph)",
   "number": "Number",
   "checkbox": "Checkbox",
+  "singleChoice": "Single Choice",
   "templateBuilderTitle": "Title",
   "answerType": "Answer type",
   "template": "Template",
@@ -153,5 +154,8 @@
       },
       "cancel": "Cancel"
     }
-  }
+  },
+  "addOption": "Add option",
+  "option": "Option",
+  "remove": "Remove"
 }

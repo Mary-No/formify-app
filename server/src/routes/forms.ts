@@ -6,11 +6,8 @@ import { handleRequest } from '../utils/handleRequest'
 import { getUserId } from '../utils/getUserId'
 import { isAuthorOrAdmin } from '../utils/isAuthorOrAdmin'
 
-
-
 const router = express.Router()
 
-// Отправить ответы по форме (заполнить форму)
 router.post('/', requireAuth, requireNotBlocked, handleRequest(async (req, res) => {
     const userId = getUserId(req)
         const { templateId, answers } = req.body
@@ -90,7 +87,7 @@ router.get(
     })
 )
 
-// Получить все ответы по шаблону (доступно автору шаблона и админам)
+
 router.get('/results/:templateId', requireAuth, requireNotBlocked, handleRequest(async (req, res) => {
     const userId = getUserId(req)
         const { templateId } = req.params
@@ -184,7 +181,6 @@ router.delete('/:id', requireAuth, async (req, res) => {
     res.status(200).json({ message: 'Form deleted successfully' })
 })
 
-//редактировать ответы
 router.patch('/:formId', requireAuth, requireNotBlocked, handleRequest(async (req, res) => {
     const userId = getUserId(req);
     const { formId } = req.params;
@@ -204,11 +200,6 @@ router.patch('/:formId', requireAuth, requireNotBlocked, handleRequest(async (re
         res.status(404).json({ error: 'Form not found' });
         return
     }
-
-    const user = await prisma.user.findUnique({
-        where: { id: userId },
-        select: { isAdmin: true },
-    });
 
     const isAllowed = await isAuthorOrAdmin({ userId, resourceAuthorId: form.userId });
 

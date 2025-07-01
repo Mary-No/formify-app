@@ -27,7 +27,7 @@ export type Topic =
     | 'OTHER'
 
 
-export type QuestionType = 'SHORT_TEXT' | 'LONG_TEXT' | 'INTEGER' | 'CHECKBOX'
+export type QuestionType = 'SHORT_TEXT' | 'LONG_TEXT' | 'INTEGER' | 'CHECKBOX' | 'SINGLE_CHOICE'
 
 export type Question = {
     id: string
@@ -37,6 +37,7 @@ export type Question = {
     order: number
     required: boolean
     updatedAt: string
+    options?: string[];
 }
 
 export type Author = {

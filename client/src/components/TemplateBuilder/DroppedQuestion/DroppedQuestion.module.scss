@@ -1,10 +1,10 @@
 .card {
   position: relative;
-  margin-top: 16px;
+  margin-top: 10px;
 
   .removeBtn {
     position: absolute;
-    top: 12px;
+    top: 20px;
     right: 12px;
     opacity: 0;
     transition: opacity 0.2s ease-in-out;
@@ -20,4 +20,18 @@
 }
 .select{
   margin-right: 20px;
+}
+.addOptionBtn{
+  padding: 15px 15px;
+  border-radius: 5px;
+  margin-top: 8px;
+}
+.optionInput{
+  width: 96%;
+  margin: 10px 0;
+}
+.optionRow{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

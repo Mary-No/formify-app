@@ -90,6 +90,7 @@ router.post('/login', handleRequest(async (req, res) => {
         },
     });
 }));
+
 router.get('/me', handleRequest(async (req, res) => {
         const userId = req.session.userId
         if (!userId) {

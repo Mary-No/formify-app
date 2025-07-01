@@ -5,6 +5,7 @@ export const QUESTION_TYPES = [
     { label: 'longText', value: 'LONG_TEXT' },
     { label: 'number', value: 'INTEGER' },
     { label: 'checkbox', value: 'CHECKBOX' },
+    { label: 'singleChoice', value: 'SINGLE_CHOICE' },
 ]
 
 export const TOPICS: Topic[] = [

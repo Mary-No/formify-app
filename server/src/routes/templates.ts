@@ -13,8 +13,7 @@ import { toTemplateCardDto } from '../utils/toTemplateCardDto'
 import { $Enums } from '@prisma/client'
 
 const router = express.Router()
-console.log('Resolved @prisma/client path:', require.resolve('@prisma/client'))
-// Создать новый шаблон
+
 export const createTemplateSchema = z.object({
     title: z.string().min(1, 'Title is required'),
     description: z.string().min(1, 'Description is required'),
@@ -53,19 +52,10 @@ router.post('/', requireAuth, requireNotBlocked, handleRequest(async (req, res) 
             authorId: userId,
             questions: {
                 create: questions.map((q, index) => {
-                    // Добавьте логирование здесь
-                    console.log('Processing question:', q);
-                    console.log('Incoming question type:', q.type);
-
                     const type = q.type as $Enums.QuestionType;
-                    console.log('Type after conversion:', type);
-
-                    console.log('Available enum values:', Object.values($Enums.QuestionType));
-
                     if (!Object.values($Enums.QuestionType).includes(type)) {
                         throw new Error(`Invalid question type: ${q.type}`);
                     }
-
                     return {
                         text: q.text,
                         type,
@@ -87,7 +77,7 @@ router.post('/', requireAuth, requireNotBlocked, handleRequest(async (req, res) 
     res.status(201).json({ template })
 }))
 
-//получить все шаблоны или только свои
+
 router.get('/', handleRequest(async (req, res) => {
     const userId = req.session?.userId
     const skip = Number(req.query.skip ?? 0)
@@ -190,7 +180,7 @@ router.get('/overview', handleRequest(async (req, res) => {
     });
 }));
 
-// Получить облако тегов с их "весом"
+
 router.get('/tags', handleRequest(async (req, res) => {
     const limit = parseInt(req.query.limit as string) || 30
 
@@ -251,7 +241,6 @@ router.delete('/:id', requireAuth, async (req, res) => {
 })
 
 
-//обновить шаблон
 router.patch(
     '/:templateId',
     requireAuth,requireNotBlocked,
@@ -333,8 +322,6 @@ router.patch(
 );
 
 
-
-// Получить шаблон по ID с вопросами, комментариями и лайками (если пользователь авторизован - показывать, есть ли лайк)
 router.get('/:templateId', handleRequest(async (req, res) => {
     const { templateId } = req.params
     const userId = req.session?.userId
@@ -371,7 +358,6 @@ router.get('/:templateId', handleRequest(async (req, res) => {
     res.json({ template, likesCount, likedByUser })
 }))
 
-// Добавить лайк
 router.post('/:templateId/like', requireAuth, requireNotBlocked, handleRequest(async (req, res) => {
     const userId = getUserId(req)
     const { templateId } = req.params
@@ -393,7 +379,6 @@ router.post('/:templateId/like', requireAuth, requireNotBlocked, handleRequest(a
     }
 }))
 
-// Добавить комментарий
 router.post('/:templateId/comments', requireAuth, requireNotBlocked, handleRequest(async (req, res) => {
     const userId = getUserId(req)
     const { templateId } = req.params

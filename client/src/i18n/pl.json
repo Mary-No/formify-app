@@ -73,6 +73,7 @@
   "longText": "Tekst (akapit)",
   "number": "Liczba",
   "checkbox": "Pole wyboru",
+  "singleChoice": "Wybór pojedynczy",
   "templateBuilderTitle": "Tytuł",
   "answerType": "Typ odpowiedzi",
   "template": "Szablon",
@@ -153,5 +154,8 @@
       },
       "cancel": "Anuluj"
     }
-  }
+  },
+  "addOption": "Dodaj opcję",
+  "option": "Opcja",
+  "remove": "Usuń"
 }

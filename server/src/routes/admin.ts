@@ -12,7 +12,6 @@ const router = express.Router()
 
 router.use(requireAuth, requireNotBlocked, requireAdmin)
 
-//получить список всех пользователей
 router.get('/users', async (req: Request, res: Response) => {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;

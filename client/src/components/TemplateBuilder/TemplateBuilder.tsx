@@ -58,8 +58,11 @@ export const TemplateBuilder = ({ editMode = false, initialData }: TemplateBuild
                     text: q.text,
                     type: q.type,
                     required: q.required,
+                    options: q.type === 'SINGLE_CHOICE' ? q.options || [] : undefined,
                 })),
             };
+
+            console.log('Payload before sending:', JSON.stringify(payload, null, 2));
 
             if (editMode && initialData?.id) {
                 await updateTemplate({ id: initialData.id, data: payload }).unwrap();

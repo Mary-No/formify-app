@@ -73,6 +73,7 @@
   "longText": "Текст (абзац)",
   "number": "Число",
   "checkbox": "Чекбокс",
+  "singleChoice": "Один из списка",
   "templateBuilderTitle": "Название",
   "answerType": "Ответ вида",
   "template": "Шаблон",
@@ -153,5 +154,8 @@
       },
       "cancel": "Отмена"
     }
-  }
+  },
+  "addOption": "Добавить вариант",
+  "option": "Вариант",
+  "remove": "Удалить"
 }
