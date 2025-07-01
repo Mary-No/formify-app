@@ -254,6 +254,7 @@ router.get('/aggregated/:templateId', requireAuth, requireNotBlocked, handleRequ
             id: true,
             text: true,
             type: true,
+            options: true,
             answers: {
                 select: {
                     value: true,
@@ -273,6 +274,7 @@ router.get('/aggregated/:templateId', requireAuth, requireNotBlocked, handleRequ
         id: q.id,
         text: q.text,
         type: q.type,
+        options: q.options,
         answers: q.answers.map(a => ({
             author: a.form.user.nickname,
             userId: a.form.user.id,
