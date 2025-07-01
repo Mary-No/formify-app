@@ -24,6 +24,8 @@ export const createTemplateSchema = z.object({
     questions: z.array(questionSchema).optional().default([]),
 })
 
+console.log('Resolved @prisma/client path:', require.resolve('@prisma/client'))
+
 router.post('/', requireAuth, requireNotBlocked, handleRequest(async (req, res) => {
     const parseResult = createTemplateSchema.safeParse(req.body)
 
