@@ -32,7 +32,7 @@ export const TopicEnum = z.enum([
 ])
 
 export const questionSchema = z.object({
-    text: z.string().min(1, 'Text is required'),
+    text: z.string(),
     type: QuestionTypeEnum,
     required: z.boolean().optional(),
     options: z.array(z.string()).optional(),
