@@ -10,7 +10,7 @@ import {QuestionType, Topic } from '@prisma/client'
 import {questionSchema, TopicEnum, updateTemplateSchema } from '../types/templates'
 import { isAuthorOrAdmin } from '../utils/isAuthorOrAdmin'
 import { toTemplateCardDto } from '../utils/toTemplateCardDto'
-import { QuestionType as PrismaQuestionType } from '@prisma/client'
+import { $Enums } from '@prisma/client'
 
 const router = express.Router()
 
@@ -54,7 +54,7 @@ router.post('/', requireAuth, requireNotBlocked, handleRequest(async (req, res) 
             authorId: userId,
             questions: {
                 create: questions.map((q, index) => {
-                    const type = PrismaQuestionType[q.type as keyof typeof PrismaQuestionType]
+                    const type = $Enums.QuestionType[q.type as keyof typeof $Enums.QuestionType]
                     if (!type) throw new Error(`Invalid question type: ${q.type}`)
                     return {
                         text: q.text,
