@@ -53,8 +53,14 @@ router.post('/', requireAuth, requireNotBlocked, handleRequest(async (req, res) 
             authorId: userId,
             questions: {
                 create: questions.map((q, index) => {
-                    // Исправленный код
+                    // Добавьте логирование здесь
+                    console.log('Processing question:', q);
+                    console.log('Incoming question type:', q.type);
+
                     const type = q.type as $Enums.QuestionType;
+                    console.log('Type after conversion:', type);
+
+                    console.log('Available enum values:', Object.values($Enums.QuestionType));
 
                     if (!Object.values($Enums.QuestionType).includes(type)) {
                         throw new Error(`Invalid question type: ${q.type}`);
