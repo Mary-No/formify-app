@@ -26,6 +26,7 @@ export const createTemplateSchema = z.object({
 
 router.post('/', requireAuth, requireNotBlocked, handleRequest(async (req, res) => {
     const parseResult = createTemplateSchema.safeParse(req.body)
+
     if (!parseResult.success) {
         res.status(400).json({ error: parseResult.error.errors })
         return
@@ -33,8 +34,6 @@ router.post('/', requireAuth, requireNotBlocked, handleRequest(async (req, res) 
 
     const { title, description, topic, tags, isPublic, questions } = parseResult.data
     const userId = getUserId(req)
-
-    const prismaTopic: Topic = topic as Topic
 
     const template = await prisma.template.create({
         data: {
@@ -54,10 +53,13 @@ router.post('/', requireAuth, requireNotBlocked, handleRequest(async (req, res) 
             authorId: userId,
             questions: {
                 create: questions.map((q, index) => {
-                    const type = q.type as $Enums.QuestionType; // Простое приведение типа
+                    // Исправленный код
+                    const type = q.type as $Enums.QuestionType;
+
                     if (!Object.values($Enums.QuestionType).includes(type)) {
                         throw new Error(`Invalid question type: ${q.type}`);
                     }
+
                     return {
                         text: q.text,
                         type,
@@ -65,7 +67,7 @@ router.post('/', requireAuth, requireNotBlocked, handleRequest(async (req, res) 
                         required: q.required ?? false,
                         options: q.type === 'SINGLE_CHOICE' ? q.options ?? [] : [],
                     }
-                }),
+                })
             },
         },
         include: {
@@ -75,7 +77,6 @@ router.post('/', requireAuth, requireNotBlocked, handleRequest(async (req, res) 
             },
         },
     })
-
 
     res.status(201).json({ template })
 }))
