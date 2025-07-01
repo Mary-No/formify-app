@@ -62,6 +62,7 @@ router.post('/', requireAuth, requireNotBlocked, handleRequest(async (req, res) 
                         order: index,
                         required: q.required ?? false,
                         options: q.type === 'SINGLE_CHOICE' ? q.options ?? [] : [],
+                        imageUrl: q.imageUrl ?? null,
                     }
                 })
             },
@@ -313,6 +314,7 @@ router.patch(
                     order: index,
                     required: q.required ?? false,
                     options: q.type === 'SINGLE_CHOICE' ? q.options ?? [] : [],
+                    imageUrl: q.imageUrl ?? null,
                 })),
             });
         }

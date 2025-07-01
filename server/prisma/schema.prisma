@@ -92,6 +92,7 @@ model Question {
   updatedAt   DateTime    @updatedAt
   answers     Answer[]
   options     String[]    @default([])
+  imageUrl    String?
 }
 
 model Form {

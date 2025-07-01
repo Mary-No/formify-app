@@ -36,6 +36,7 @@ export const questionSchema = z.object({
     type: QuestionTypeEnum,
     required: z.boolean().optional(),
     options: z.array(z.string()).optional(),
+    imageUrl: z.string().url('Invalid URL').optional(),
 })
 
 export const updateTemplateSchema = z.object({

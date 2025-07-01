@@ -133,7 +133,7 @@ router.get('/:formId', requireAuth, requireNotBlocked, handleRequest(async (req,
             template: {
                 include: {
                     questions: {
-                        orderBy: { order: 'asc' },
+                        orderBy: { order: 'asc' }
                     },
                 },
             },
@@ -255,6 +255,7 @@ router.get('/aggregated/:templateId', requireAuth, requireNotBlocked, handleRequ
             text: true,
             type: true,
             options: true,
+            imageUrl: true,
             answers: {
                 select: {
                     value: true,
@@ -275,6 +276,7 @@ router.get('/aggregated/:templateId', requireAuth, requireNotBlocked, handleRequ
         text: q.text,
         type: q.type,
         options: q.options,
+        imageUrl: q.imageUrl,
         answers: q.answers.map(a => ({
             author: a.form.user.nickname,
             userId: a.form.user.id,
