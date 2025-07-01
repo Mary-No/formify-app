@@ -1,27 +1,26 @@
-import { useCallback, useMemo } from "react"
-import { useSearchParams } from "react-router-dom"
+import { useSearchParams } from 'react-router-dom'
+import { useCallback, useMemo } from 'react'
 
 export function useQueryFilters<T extends Record<string, unknown>>() {
     const [searchParams, setSearchParams] = useSearchParams()
 
     const getFilters = useCallback(() => {
         const entries = Array.from(searchParams.entries())
-        const filters: Partial<Record<keyof T, string | string[]>> = {}
+        const filters: Record<string, unknown> = {}
 
         for (const [key, value] of entries) {
             if (key in filters) {
-                const existing = filters[key as keyof T]
-                if (Array.isArray(existing)) {
-                    existing.push(value)
+                if (Array.isArray(filters[key])) {
+                    filters[key].push(value)
                 } else {
-                    filters[key as keyof T] = [existing as string, value]
+                    filters[key] = [filters[key], value]
                 }
             } else {
-                filters[key as keyof T] = value
+                filters[key] = value
             }
         }
 
-        return filters
+        return filters as T
     }, [searchParams])
 
     const setFilters = useCallback((filters: Partial<T>) => {
