@@ -72,7 +72,7 @@ export const DroppedQuestion = ({
                 value={question.text}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange({ text: e.target.value })}
         />}
-            <Select
+            <div className={s.blockForImage}> <Select
                 options={QUESTION_TYPES.map(({ label, value }) => ({
                     label: t(label),
                     value,
@@ -86,6 +86,14 @@ export const DroppedQuestion = ({
                 }}
                 className={s.select}
             />
+                {question.type === 'IMAGE' && (
+                    <UploadImageBlock
+                        imageUrl={question.imageUrl}
+                        onChange={(url) => onChange({ imageUrl: url })}
+                    />
+                )}
+            </div>
+
             {question.type !== 'IMAGE' &&
             <Checkbox
                 checked={question.required}
@@ -131,12 +139,6 @@ export const DroppedQuestion = ({
                         </div>
                     ))}
                 </div>
-            )}
-            {question.type === 'IMAGE' && (
-                <UploadImageBlock
-                    imageUrl={question.imageUrl}
-                    onChange={(url) => onChange({ imageUrl: url })}
-                />
             )}
 
             <div><Button

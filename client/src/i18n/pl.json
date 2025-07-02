@@ -159,5 +159,7 @@
   "addOption": "Dodaj opcję",
   "option": "Opcja",
   "remove": "Usuń",
-  "image": "Obraz"
+  "image": "Obraz",
+  "changeImage": "Zmień obraz",
+  "uploadImage": "Prześlij obraz"
 }

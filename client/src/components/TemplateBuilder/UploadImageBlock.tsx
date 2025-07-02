@@ -1,5 +1,6 @@
 import {Button, Upload, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
+import {useTranslation} from "react-i18next";
 
 type Props = {
     imageUrl?: string;
@@ -7,6 +8,7 @@ type Props = {
 };
 
 export const UploadImageBlock = ({ imageUrl, onChange }: Props) => {
+    const { t } = useTranslation();
     return (
         <div>
             <Upload
@@ -33,7 +35,7 @@ export const UploadImageBlock = ({ imageUrl, onChange }: Props) => {
                 }}
             >
                 <Button icon={<UploadOutlined />}>
-                    {imageUrl ? 'Change image' : 'Upload image'}
+                    {t(imageUrl ? 'changeImage' : 'uploadImage')}
                 </Button>
             </Upload>
             {imageUrl && (
