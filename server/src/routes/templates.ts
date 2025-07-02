@@ -7,7 +7,7 @@ import { getUserId } from '../utils/getUserId'
 import { getIO } from '../socket'
 import z from 'zod'
 import {QuestionType, Topic } from '@prisma/client'
-import {questionSchema, TopicEnum, updatableQuestionSchema, updateTemplateSchema } from '../types/templates'
+import {questionSchema, TopicEnum, updateTemplateSchema } from '../types/templates'
 import { isAuthorOrAdmin } from '../utils/isAuthorOrAdmin'
 import { toTemplateCardDto } from '../utils/toTemplateCardDto'
 import { $Enums } from '@prisma/client'
@@ -241,6 +241,7 @@ router.delete('/:id', requireAuth, async (req, res) => {
     res.status(200).json({ message: 'Template deleted successfully' })
 })
 
+// PATCH /:templateId — safe update without losing answers
 router.patch(
     '/:templateId',
     requireAuth,
@@ -249,7 +250,6 @@ router.patch(
         const { templateId } = req.params;
         const userId = getUserId(req);
 
-        // Validate input using Zod schema
         const parseResult = updateTemplateSchema.safeParse(req.body);
         if (!parseResult.success) {
             res.status(400).json({ error: parseResult.error.errors });
@@ -258,7 +258,6 @@ router.patch(
 
         const { title, description, topic, isPublic, tags = [], questions = [] } = parseResult.data;
 
-        // Check if template exists and user is allowed to update it
         const existingTemplate = await prisma.template.findUnique({
             where: { id: templateId },
             select: { authorId: true },
@@ -275,7 +274,6 @@ router.patch(
             return;
         }
 
-        // Update basic template data
         const updatedTemplate = await prisma.template.update({
             where: { id: templateId },
             data: {
@@ -296,18 +294,16 @@ router.patch(
             },
         });
 
-        // Fetch all existing questions of this template
         const existingQuestions = await prisma.question.findMany({ where: { templateId } });
-        const existingIds = new Set(existingQuestions.map(q => q.id));
+        const existingMap = new Map(existingQuestions.map(q => [q.id, q]));
 
-        // Determine which questions to update, create, or delete
-        const toUpdate: any[] = [];
-        const toCreate: any[] = [];
         const incomingIds = new Set<string>();
+        const toCreate: any[] = [];
+        const updatePromises: Promise<any>[] = [];
 
-        type UpdatableQuestion = z.infer<typeof updatableQuestionSchema>;
+        for (let index = 0; index < questions.length; index++) {
+            const q = questions[index];
 
-        questions.forEach((q: UpdatableQuestion, index) => {
             const base = {
                 text: q.text,
                 type: q.type as $Enums.QuestionType,
@@ -317,46 +313,44 @@ router.patch(
                 order: index,
             };
 
-            if ('id' in q && q.id && existingIds.has(q.id)) {
+            if (typeof q.id === 'string' && existingMap.has(q.id)) {
+                const existing = existingMap.get(q.id)!;
                 incomingIds.add(q.id);
-                toUpdate.push({ id: q.id, ...base });
+
+                if (existing.type !== q.type) {
+                    res.status(400).json({
+                        error: `Cannot change question type from ${existing.type} to ${q.type}`,
+                    });
+                    return;
+                }
+
+                updatePromises.push(
+                    prisma.question.update({
+                        where: { id: q.id },
+                        data: base,
+                    })
+                );
             } else {
                 toCreate.push({ ...base, templateId });
             }
-        });
+        }
+        await Promise.all(updatePromises);
 
-        // Delete questions that are no longer present in the updated list
-        const idsToDelete = [...existingIds].filter(id => !incomingIds.has(id));
+        if (toCreate.length > 0) {
+            await prisma.question.createMany({ data: toCreate });
+        }
+
+        const idsToDelete = existingQuestions
+            .map(q => q.id)
+            .filter(id => !incomingIds.has(id));
+
         if (idsToDelete.length > 0) {
             await prisma.question.deleteMany({ where: { id: { in: idsToDelete } } });
         }
 
-        // Update existing questions
-        await Promise.all(
-            toUpdate.map(q =>
-                prisma.question.update({
-                    where: { id: q.id },
-                    data: {
-                        text: q.text,
-                        type: q.type,
-                        required: q.required,
-                        options: q.options,
-                        imageUrl: q.imageUrl,
-                        order: q.order,
-                    },
-                })
-            )
-        );
-
-        // Create new questions
-        if (toCreate.length > 0) {
-            await prisma.question.createMany({ data: toCreate });
-        }
         res.json({ template: updatedTemplate });
     })
 );
-
-
 
 router.get('/:templateId', handleRequest(async (req, res) => {
     const { templateId } = req.params
