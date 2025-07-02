@@ -39,6 +39,9 @@ export const questionSchema = z.object({
     options: z.array(z.string()).optional(),
     imageUrl: z.string().url('Invalid URL').optional(),
 })
+export const updatableQuestionSchema = questionSchema.extend({
+    id: z.string().uuid().optional(),
+})
 
 export const updateTemplateSchema = z.object({
     title: z.string().min(1),

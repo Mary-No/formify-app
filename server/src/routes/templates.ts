@@ -7,7 +7,7 @@ import { getUserId } from '../utils/getUserId'
 import { getIO } from '../socket'
 import z from 'zod'
 import {QuestionType, Topic } from '@prisma/client'
-import {questionSchema, TopicEnum, updateTemplateSchema } from '../types/templates'
+import {questionSchema, TopicEnum, updatableQuestionSchema, updateTemplateSchema } from '../types/templates'
 import { isAuthorOrAdmin } from '../utils/isAuthorOrAdmin'
 import { toTemplateCardDto } from '../utils/toTemplateCardDto'
 import { $Enums } from '@prisma/client'
@@ -241,24 +241,15 @@ router.delete('/:id', requireAuth, async (req, res) => {
     res.status(200).json({ message: 'Template deleted successfully' })
 })
 
-
 router.patch(
     '/:templateId',
-    requireAuth,requireNotBlocked,
+    requireAuth,
+    requireNotBlocked,
     handleRequest(async (req, res) => {
         const { templateId } = req.params;
         const userId = getUserId(req);
 
-        const user = await prisma.user.findUnique({
-            where: { id: userId },
-            select: { isAdmin: true, isBlocked: true },
-        });
-
-        if (!user) {
-            res.status(404).json({ error: 'User not found' });
-            return;
-        }
-
+        // Validate input using Zod schema
         const parseResult = updateTemplateSchema.safeParse(req.body);
         if (!parseResult.success) {
             res.status(400).json({ error: parseResult.error.errors });
@@ -267,6 +258,7 @@ router.patch(
 
         const { title, description, topic, isPublic, tags = [], questions = [] } = parseResult.data;
 
+        // Check if template exists and user is allowed to update it
         const existingTemplate = await prisma.template.findUnique({
             where: { id: templateId },
             select: { authorId: true },
@@ -277,14 +269,13 @@ router.patch(
             return;
         }
 
-        const isAllowed = await isAuthorOrAdmin({ userId, resourceAuthorId: existingTemplate.authorId })
+        const isAllowed = await isAuthorOrAdmin({ userId, resourceAuthorId: existingTemplate.authorId });
         if (!isAllowed) {
-            res.status(403).json({ error: 'Forbidden: not the author or admin' })
-            return
+            res.status(403).json({ error: 'Forbidden: not the author or admin' });
+            return;
         }
 
-        await prisma.question.deleteMany({ where: { templateId } });
-
+        // Update basic template data
         const updatedTemplate = await prisma.template.update({
             where: { id: templateId },
             data: {
@@ -305,23 +296,66 @@ router.patch(
             },
         });
 
-        if (questions.length > 0) {
-            await prisma.question.createMany({
-                data: questions.map((q, index) => ({
-                    templateId,
-                    text: q.text,
-                    type: q.type as QuestionType,
-                    order: index,
-                    required: q.required ?? false,
-                    options: q.type === 'SINGLE_CHOICE' ? q.options ?? [] : [],
-                    imageUrl: q.imageUrl ?? null,
-                })),
-            });
+        // Fetch all existing questions of this template
+        const existingQuestions = await prisma.question.findMany({ where: { templateId } });
+        const existingIds = new Set(existingQuestions.map(q => q.id));
+
+        // Determine which questions to update, create, or delete
+        const toUpdate: any[] = [];
+        const toCreate: any[] = [];
+        const incomingIds = new Set<string>();
+
+        type UpdatableQuestion = z.infer<typeof updatableQuestionSchema>;
+
+        questions.forEach((q: UpdatableQuestion, index) => {
+            const base = {
+                text: q.text,
+                type: q.type as $Enums.QuestionType,
+                required: q.required ?? false,
+                options: q.type === 'SINGLE_CHOICE' ? q.options ?? [] : [],
+                imageUrl: q.imageUrl ?? null,
+                order: index,
+            };
+
+            if ('id' in q && q.id && existingIds.has(q.id)) {
+                incomingIds.add(q.id);
+                toUpdate.push({ id: q.id, ...base });
+            } else {
+                toCreate.push({ ...base, templateId });
+            }
+        });
+
+        // Delete questions that are no longer present in the updated list
+        const idsToDelete = [...existingIds].filter(id => !incomingIds.has(id));
+        if (idsToDelete.length > 0) {
+            await prisma.question.deleteMany({ where: { id: { in: idsToDelete } } });
         }
 
+        // Update existing questions
+        await Promise.all(
+            toUpdate.map(q =>
+                prisma.question.update({
+                    where: { id: q.id },
+                    data: {
+                        text: q.text,
+                        type: q.type,
+                        required: q.required,
+                        options: q.options,
+                        imageUrl: q.imageUrl,
+                        order: q.order,
+                    },
+                })
+            )
+        );
+
+        // Create new questions
+        if (toCreate.length > 0) {
+            await prisma.question.createMany({ data: toCreate });
+        }
         res.json({ template: updatedTemplate });
     })
 );
+
 
 
 router.get('/:templateId', handleRequest(async (req, res) => {
