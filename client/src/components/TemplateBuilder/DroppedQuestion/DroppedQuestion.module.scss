@@ -1,3 +1,5 @@
+@use "../../../styles/variables" as *;
+
 .card {
   position: relative;
   margin-top: 10px;
@@ -17,6 +19,22 @@
 .blockForImage{
   display: flex;
   margin-bottom: 10px;
+}
+@media (max-width: $breakpoint-md) {
+  .blockForImage{
+    flex-direction: column;
+    width: 80%;
+    gap: 16px
+  }
+  .removeBtn {
+    top: 15px!important;
+  }
+  .input{
+    width: 84%!important;
+  }
+  .optionInput{
+    width: 84%!important;
+  }
 }
 .input{
   width: 96%;
