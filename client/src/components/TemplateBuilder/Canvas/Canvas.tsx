@@ -5,7 +5,7 @@ import { DroppedQuestion } from '../DroppedQuestion/DroppedQuestion.tsx'
 import type { Question, QuestionType, Topic } from '../../../types/types.ts'
 import { Card, Empty, Select, Typography } from 'antd'
 import { Input } from 'antd'
-import { TOPICS } from '../../../constants.ts'
+import { TOPICS } from '../../../constants'
 const { Text } = Typography;
 const { Option } = Select
 import s from './Canvas.module.scss'

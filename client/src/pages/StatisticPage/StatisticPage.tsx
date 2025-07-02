@@ -1,5 +1,5 @@
 import { useParams, useLocation } from 'react-router-dom';
-import { Typography, Table, Spin, Alert, Divider, Card, Row, Col } from 'antd';
+import {Typography, Table, Spin, Alert, Divider, Card, Row, Col, Image} from 'antd';
 import { Pie, Column } from '@ant-design/charts';
 import { useGetAggregatedDataQuery } from '../../app/formApi';
 import {useEffect} from "react";
@@ -7,6 +7,7 @@ import { aggregateInteger } from '../../utils/aggregateInteger.ts';
 import { aggregateBoolean } from '../../utils/aggregateBoolean.ts';
 import s from './StatisticPage.module.scss'
 import { useTranslation } from 'react-i18next';
+import { aggregateSingleChoice } from '../../utils/aggregateSingleChoice.ts';
 
 const { Title } = Typography;
 
@@ -21,6 +22,7 @@ export const StatisticPage = () => {
     const location = useLocation();
     const { title, description } = location.state || {};
     const { data, isLoading, error, refetch } = useGetAggregatedDataQuery(templateId!);
+    console.log(data)
     useEffect(() => {
         if (location.state?.refetch) {
             refetch();
@@ -28,8 +30,12 @@ export const StatisticPage = () => {
     }, [location.state, refetch]);
 
     if (isLoading) return <Spin style={{ display: 'block', marginTop: 64 }} size="large" />;
-    if (error || !data) return <Alert message={t('statistics.loadingError')} type="error" showIcon />;
 
+    if (error || !data) return <Alert message={t('statistics.loadingError')} type="error" showIcon />;
+    const COLORS = [
+        '#1890ff', '#f04864', '#2fc25b', '#facc14', '#223273',
+        '#8543e0', '#13c2c2', '#3436c7', '#f04864', '#bfbfbf',
+    ];
 
     return (
         <div style={{padding: '24px'}}>
@@ -69,15 +75,16 @@ export const StatisticPage = () => {
                 return (
                     <Card key={q.id} className={s.card}>
                         <Title level={4}>{q.text}</Title>
-                        <Table
+                        {q.type === 'IMAGE' ? <Image width={200} src={q.imageUrl} alt="Image" /> : <Table
                             dataSource={dataSource}
                             columns={columns}
                             pagination={false}
                             scroll={{y: 240}}
                             style={{marginBottom: 24}}
-                        />
+                        />}
 
-                        {(q.type === 'INTEGER' || q.type === 'CHECKBOX') && (
+
+                        {(q.type === 'INTEGER' || q.type === 'CHECKBOX' || q.type === 'SINGLE_CHOICE') && (
                             <Row gutter={16}>
                                 {q.type === 'INTEGER' && (
                                     <Col span={24}>
@@ -136,6 +143,44 @@ export const StatisticPage = () => {
                                             }}
                                             legend={{position: 'right'}}
                                             interactions={[{type: 'element-active'}]}
+                                            height={300}
+                                        />
+                                    </Col>
+                                )}
+                                {q.type === 'SINGLE_CHOICE' && q.options && (
+                                    <Col span={24}>
+                                        <Pie
+                                            data={aggregateSingleChoice(q.answers, q.options).map((item, idx) => ({
+                                                ...item,
+                                                color: COLORS[idx % COLORS.length],
+                                            }))}
+                                            angleField="value"
+                                            colorField="type"
+                                            radius={1}
+                                            label={{
+                                                type: 'spider',
+                                                labelHeight: 28,
+                                                content: '{type} ({percentage})',
+                                                style: { fontWeight: 'bold' },
+                                            }}
+                                            legend={{
+                                                position: 'right',
+                                                itemName: {
+                                                    style: {
+                                                        fill: '#595959',
+                                                        fontSize: 14,
+                                                    },
+                                                },
+                                                marker: (_:any, index: number) => ({
+                                                    symbol: 'square',
+                                                    style: {
+                                                        fill: COLORS[index % COLORS.length],
+                                                        r: 5,
+                                                    },
+                                                }),
+                                            }}
+                                            color={COLORS}
+                                            interactions={[{ type: 'element-active' }]}
                                             height={300}
                                         />
                                     </Col>

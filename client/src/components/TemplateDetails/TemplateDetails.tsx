@@ -11,6 +11,8 @@ import i18n from "../../i18n";
 import dayjs from "dayjs";
 import {useNavigate} from "react-router-dom";
 import {useAppSelector} from "../../app/hooks.ts";
+import { Image } from 'antd'
+import {TemplateActionsMenu} from "../TemplateActionsMenu.tsx";
 
 const { Title } = Typography
 
@@ -30,12 +32,15 @@ export const TemplateDetails = ({data}:Props) => {
         <Card bordered className={s.card}>
             <div className={s.title}>
                 <Title level={2}>{template.title}</Title>
-                {isAuthenticated && <Button
+                {isAuthenticated && <div className={s.buttons}>
+                    <Button
                     onClick={() => navigate(`/fill-form/${template.id}`)}
                     type="primary"
                 >
                     {t('fillForm')}
-                </Button>}
+                </Button>
+                    <TemplateActionsMenu item={template}/>
+                </div>}
 
             </div>
 
@@ -63,12 +68,17 @@ export const TemplateDetails = ({data}:Props) => {
                 dataSource={template.questions}
                 renderItem={(q) => (
                     <List.Item key={q.id}>
-                        <List.Item.Meta
-                            title={`Q${q.order + 1}: ${q.text}`}
-                        />
+                        {q.imageUrl ? (
+                            <Image width={200} src={q.imageUrl} alt="Image" />
+                        ) : (
+                            <List.Item.Meta
+                                title={`Q${q.order + 1}: ${q.text}`}
+                            />
+                        )}
                     </List.Item>
                 )}
             />
+
 
             <Divider orientation="left">{t('comments')}</Divider>
             <Comments comments={template.comments} templateId={template.id}/>

@@ -1,5 +1,5 @@
 import {useNavigate, useParams} from 'react-router-dom';
-import {Form, Input, Button, Checkbox, message, Card, Typography, Spin, Select} from 'antd';
+import {Form, Input, Button, Checkbox, message, Card, Typography, Spin, Select, Image} from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useSubmitFormMutation, useUpdateFormMutation } from '../app/formApi';
 import { handleApiError } from '../utils/handleApiErrror.ts';
@@ -47,7 +47,7 @@ export const FillFormPage = ({isEdit, existingAnswers, formId,  templateId: prop
 
     const getRules = (q: Question) => {
         const requiredRule = q.required
-            ? [{ required: true, message: t('fieldRequired') }]
+            ? [{ required: true, message: t('required') }]
             : [];
 
         if (q.type === 'CHECKBOX') {
@@ -58,7 +58,7 @@ export const FillFormPage = ({isEdit, existingAnswers, formId,  templateId: prop
                             if (value === true) {
                                 return Promise.resolve();
                             }
-                            return Promise.reject(new Error(t('fieldRequired')));
+                            return Promise.reject(new Error(t('required')));
                         },
                     },
                 ]
@@ -111,6 +111,8 @@ export const FillFormPage = ({isEdit, existingAnswers, formId,  templateId: prop
                         ))}
                     </Select>
                 );
+            case "IMAGE":
+                return  <Image width={200} src={q.imageUrl} alt="Image" />
             default:
                 return <Input />;
         }

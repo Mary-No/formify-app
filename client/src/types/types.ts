@@ -27,7 +27,7 @@ export type Topic =
     | 'OTHER'
 
 
-export type QuestionType = 'SHORT_TEXT' | 'LONG_TEXT' | 'INTEGER' | 'CHECKBOX' | 'SINGLE_CHOICE'
+export type QuestionType = 'SHORT_TEXT' | 'LONG_TEXT' | 'INTEGER' | 'CHECKBOX' | 'SINGLE_CHOICE'| 'IMAGE';
 
 export type Question = {
     id: string
@@ -38,6 +38,7 @@ export type Question = {
     required: boolean
     updatedAt: string
     options?: string[];
+    imageUrl?: string
 }
 
 export type Author = {
@@ -148,7 +149,6 @@ export type MyFormsResponse = {
     }[];
 };
 export type GetFormResponse = {
-    form: {
         id: string;
         templateId: string;
         createdAt: string;
@@ -168,9 +168,9 @@ export type GetFormResponse = {
                 type: 'SHORT_TEXT' | 'LONG_TEXT' | 'INTEGER' | 'CHECKBOX';
                 required: boolean;
                 order: number;
+                options?: string[];
             }[];
         };
-    };
 };
 
 //statistic types
@@ -185,6 +185,8 @@ export type AggregatedQuestion = {
     text: string;
     type: QuestionType
     answers: AggregatedAnswer[];
+    options?: string[];
+    imageUrl?: string
 };
 
 export type AggregatedResponse = {

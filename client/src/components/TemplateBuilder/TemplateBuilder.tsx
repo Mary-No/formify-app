@@ -6,7 +6,7 @@ import { QuestionBlock } from './QuestionBlock/QuestionBlock.tsx'
 import { Canvas } from './Canvas/Canvas.tsx'
 import { useCreateTemplateMutation, useUpdateTemplateMutation } from '../../app/templateApi'
 import s from './TemplateBuilder.module.scss'
-import { QUESTION_TYPES } from '../../constants.ts'
+import { QUESTION_TYPES } from '../../constants'
 import type { Question, Topic } from '../../types/types.ts'
 import { useTranslation } from 'react-i18next'
 import {handleApiError} from "../../utils/handleApiErrror.ts";
@@ -41,7 +41,7 @@ export const TemplateBuilder = ({ editMode = false, initialData }: TemplateBuild
 
     const handleSubmit = async () => {
         try {
-            const hasEmptyQuestions = questions.some(q => !q.text.trim());
+            const hasEmptyQuestions = questions.some(q => !q.text.trim() && q.type !== 'IMAGE') ;
 
             if (hasEmptyQuestions) {
                 message.error(t('fillOrRemoveEmptyQuestions'));
@@ -54,12 +54,21 @@ export const TemplateBuilder = ({ editMode = false, initialData }: TemplateBuild
                 topic,
                 tags,
                 isPublic,
-                questions: questions.map((q) => ({
-                    text: q.text,
-                    type: q.type,
-                    required: q.required,
-                    options: q.type === 'SINGLE_CHOICE' ? q.options || [] : undefined,
-                })),
+                questions: questions.map((q) => {
+                    const base = {
+                        text: q.text,
+                        type: q.type,
+                        required: q.required,
+                        options: q.type === 'SINGLE_CHOICE' ? q.options || [] : undefined,
+                        imageUrl: q.type === 'IMAGE' ? q.imageUrl : undefined,
+                    };
+
+                    if (q.id) {
+                        return { id: q.id, ...base };
+                    }
+
+                    return base;
+                }),
             };
 
             console.log('Payload before sending:', JSON.stringify(payload, null, 2));

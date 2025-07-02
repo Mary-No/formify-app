@@ -9,10 +9,9 @@ export const FormEditor = () => {
     const { t } = useTranslation();
 
     const { data, isLoading, error } = useGetFormByIdQuery(formId!);
-
     if (isLoading) return <Spin />;
-    if (error || !data?.form) return <div>{t('templateNotFound')}</div>;
-    const existingAnswers = data.form.answers.reduce((acc, answer) => {
+    if (!data || error) {return <div>{t('templateNotFound')}</div>};
+    const existingAnswers = data.answers.reduce((acc, answer) => {
         acc[answer.questionId] = answer.value;
         return acc;
     }, {} as Record<string, string | number | boolean>);
@@ -22,7 +21,7 @@ export const FormEditor = () => {
             isEdit
             existingAnswers={existingAnswers}
             formId={formId}
-            templateId={data.form.templateId}
+            templateId={data.templateId}
         />
     );
 };

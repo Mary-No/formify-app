@@ -2,10 +2,11 @@ import { useRef } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 import { Card, Input, Select, Checkbox, Button } from 'antd'
 import { type Question, type QuestionType } from '../../../types/types.ts'
-import { QUESTION_TYPES } from '../../../constants.ts'
+import { QUESTION_TYPES } from '../../../constants'
 import { CloseOutlined, PlusOutlined } from '@ant-design/icons'
 import s from './DroppedQuestion.module.scss'
 import {useTranslation} from "react-i18next";
+import { UploadImageBlock } from '../UploadImageBlock.tsx'
 
 type DroppedQuestionProps = {
     question: Question
@@ -64,27 +65,34 @@ export const DroppedQuestion = ({
             className={s.card}
             style={{ opacity: isDragging ? 0.5 : 1, cursor: 'move' }}
         >
-            <Input
+            {question.type !== 'IMAGE' &&
+                <Input
                 className={s.input}
                 placeholder={t('questionText')}
                 value={question.text}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange({ text: e.target.value })}
-        />
+        />}
             <Select
                 options={QUESTION_TYPES.map(({ label, value }) => ({
                     label: t(label),
                     value,
                 }))}
                 value={question.type}
-                onChange={(value: QuestionType) => onChange({ type: value })}
+                onChange={(value: QuestionType) => {
+                    onChange({
+                        type: value,
+                        required: value === 'IMAGE' ? false : question.required,
+                    });
+                }}
                 className={s.select}
             />
+            {question.type !== 'IMAGE' &&
             <Checkbox
                 checked={question.required}
                 onChange={(e) => onChange({ required: e.target.checked })}
             >
                 {t('required')}
-            </Checkbox>
+            </Checkbox>}
             {question.type === 'SINGLE_CHOICE' && (
                 <div className={s.optionsBlock}>
                     <Button
@@ -123,6 +131,12 @@ export const DroppedQuestion = ({
                         </div>
                     ))}
                 </div>
+            )}
+            {question.type === 'IMAGE' && (
+                <UploadImageBlock
+                    imageUrl={question.imageUrl}
+                    onChange={(url) => onChange({ imageUrl: url })}
+                />
             )}
 
             <div><Button

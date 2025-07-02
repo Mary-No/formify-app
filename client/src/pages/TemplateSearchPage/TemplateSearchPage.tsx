@@ -6,7 +6,7 @@ import {type Topic} from '../../types/types.ts'
 import { useTranslation } from 'react-i18next'
 import { TemplateSearchCard } from '../../components/TemplateSearchCard/TemplateSearchCard.tsx'
 import s from "./TemplateSearchPage.module.scss"
-import { TOPICS } from '../../constants.ts'
+import { TOPICS } from '../../constants'
 const { Title } = Typography
 const { Option } = Select
 
