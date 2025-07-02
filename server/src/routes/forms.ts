@@ -219,6 +219,7 @@ router.patch('/:formId', requireAuth, requireNotBlocked, handleRequest(async (re
         return;
     }
 
+    // Проверяем, существует ли форма и получаем userId и templateId
     const form = await prisma.form.findUnique({
         where: { id: formId },
         select: { userId: true, templateId: true },
@@ -230,7 +231,6 @@ router.patch('/:formId', requireAuth, requireNotBlocked, handleRequest(async (re
     }
 
     const isAllowed = await isAuthorOrAdmin({ userId, resourceAuthorId: form.userId });
-
     if (!isAllowed) {
         res.status(403).json({ error: 'Access denied' });
         return;
@@ -248,17 +248,39 @@ router.patch('/:formId', requireAuth, requireNotBlocked, handleRequest(async (re
 
     const filteredAnswers = answers.filter(a => !imageQuestionIds.has(a.questionId));
 
-    await prisma.$transaction([
-        prisma.answer.deleteMany({
-            where: { formId },
-        }),
-        prisma.answer.createMany({
-            data: filteredAnswers.map((a: any) => ({
+    const existingAnswers = await prisma.answer.findMany({
+        where: { formId },
+        select: { id: true, questionId: true },
+    });
+
+    const existingAnswersMap = new Map(existingAnswers.map(a => [a.questionId, a.id]));
+
+    const toUpdate = [];
+    const toCreate = [];
+
+    for (const a of filteredAnswers) {
+        if (existingAnswersMap.has(a.questionId)) {
+            toUpdate.push({
+                id: existingAnswersMap.get(a.questionId)!,
+                value: a.value,
+            });
+        } else {
+            toCreate.push({
                 formId,
                 questionId: a.questionId,
                 value: a.value,
-            })),
-        }),
+            });
+        }
+    }
+
+    await prisma.$transaction([
+        ...toUpdate.map(u =>
+            prisma.answer.update({
+                where: { id: u.id },
+                data: { value: u.value },
+            })
+        ),
+        ...(toCreate.length > 0 ? [prisma.answer.createMany({ data: toCreate })] : []),
         prisma.form.update({
             where: { id: formId },
             data: { updatedAt: new Date() },
@@ -267,6 +289,7 @@ router.patch('/:formId', requireAuth, requireNotBlocked, handleRequest(async (re
 
     res.status(200).json({ message: 'Form updated', answersCount: filteredAnswers.length });
 }));
+
 
 router.get('/aggregated/:templateId', requireAuth, requireNotBlocked, handleRequest(async (req, res) => {
     const userId = getUserId(req)
