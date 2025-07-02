@@ -1,4 +1,16 @@
+@use "../../../styles/variables" as *;
 .select{
   height: 2.3rem;
   width: 150px;
+}
+@media (max-width: $breakpoint-xl) {
+  .select{
+    height: 2.3rem;
+    width: 110px;
+  }
+}
+@media (max-width: $breakpoint-lg) {
+  .select{
+    width: 60px;
+  }
 }

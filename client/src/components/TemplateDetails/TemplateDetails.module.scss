@@ -1,4 +1,5 @@
 @use "../../styles/themes" as *;
+@use "../../styles/variables" as *;
 
 .descriptions{
   margin-bottom: 10px;
@@ -19,3 +20,18 @@
   display: flex;
   gap: 10px;
 }
+.title_text{
+  font-size: $font-size-lg!important;
+}
+
+@media (max-width: $breakpoint-sm) {
+  .card :global .ant-card-body{
+    padding: 5px 12px 12px;
+  }
+  .card{
+    margin-top: 20px;
+  }
+  .tags :global .ant-tag{
+    margin-top: 5px;
+  }
+ }

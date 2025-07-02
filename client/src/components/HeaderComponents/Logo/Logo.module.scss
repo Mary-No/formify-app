@@ -4,3 +4,9 @@
   font-size: $font-size-xl;
   margin-left: $spacing-md;
 }
+
+@media (max-width: $breakpoint-md) {
+  .logo {
+    margin-left: 0;
+  }
+}

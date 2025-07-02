@@ -2,7 +2,10 @@ import { Select } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { GlobalOutlined } from '@ant-design/icons'
 import s from "./LanguageSelector.module.scss"
+import { Grid } from 'antd';
+
 const { Option } = Select
+const { useBreakpoint } = Grid;
 
 const languages = [
     { code: 'en', label: '🇬🇧 English' },
@@ -17,7 +20,7 @@ export const LanguageSelector = () => {
         i18n.changeLanguage(lng)
         localStorage.setItem('lng', lng) // сохранить выбор
     }
-
+    const screens = useBreakpoint();
     return (
         <Select
             size="middle"
@@ -28,7 +31,11 @@ export const LanguageSelector = () => {
         >
             {languages.map(lang => (
                 <Option key={lang.code} value={lang.code}>
-                    {lang.label}
+                    {screens.lg ? (
+                        <div className={s.label}>{lang.label}</div>
+                    ) : (
+                        lang.code
+                    )}
                 </Option>
             ))}
         </Select>

@@ -15,12 +15,33 @@ const settings = {
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 4,
-
+    responsive: [
+        {
+            breakpoint: 1200,
+            settings: {
+                slidesToShow: 3,
+                slidesToScroll: 3,
+            },
+        },
+        {
+            breakpoint: 992,
+            settings: {
+                slidesToShow: 2,
+                slidesToScroll: 2,
+            },
+        },
+        {
+            breakpoint: 576,
+            settings: {
+                slidesToShow: 1,
+                slidesToScroll: 1,
+            },
+        },
+    ],
 }
 
 export const TemplatesCarousel = ({ templates }: Props) => {
     if (!templates || templates.length === 0) return null
-
     return (
         <Slider className={s.slider} {...settings} >
                 {templates.map(t => (

@@ -1,4 +1,4 @@
-@use "../../styles/variables" as *;
+@use "../../../styles/variables" as *;
 .input{
   width: 35vw;
 }
@@ -16,3 +16,7 @@
   height: 2.3rem;
 }
 }
+@media (max-width: $breakpoint-lg) {
+  .input{
+  margin: 0 24px;
+}}

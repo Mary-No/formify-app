@@ -1,15 +1,15 @@
 import { useQueryFilters } from '../../hooks/useQueryFilters'
 import { useSearchTemplatesQuery } from '../../app/templateApi'
 import { useGetTagsQuery } from '../../app/templateApi.ts'
-import { Card, Select, Spin, List, Typography, Row, Col } from 'antd'
+import {Card, Select, Spin, List, Typography, Row, Col} from 'antd'
 import {type Topic} from '../../types/types.ts'
 import { useTranslation } from 'react-i18next'
 import { TemplateSearchCard } from '../../components/TemplateSearchCard/TemplateSearchCard.tsx'
 import s from "./TemplateSearchPage.module.scss"
-import { TOPICS } from '../../constants'
+import {TOPICS} from '../../constants'
+
 const { Title } = Typography
 const { Option } = Select
-
 
 const isTopic = (value: unknown): value is Topic =>
     typeof value === 'string' && TOPICS.includes(value as Topic)
@@ -39,10 +39,9 @@ export const TemplateSearchPage = () => {
     })
 
     const { t } = useTranslation()
-
     return (
-        <Row gutter={16}>
-            <Col span={6}>
+        <Row gutter={16} className={s.container}>
+            <Col xs={24} sm={10} md={10} lg={6} xl={6}>
                 <Card title={t('filters')} className={s.filters}>
                     <div style={{ marginBottom: 16 }}>
                         <label>{t('topic')}:</label>
@@ -89,7 +88,7 @@ export const TemplateSearchPage = () => {
                 </Card>
             </Col>
 
-            <Col span={18} className={s.resultsContainer}>
+            <Col xs={24} sm={14} md={14} lg={18} xl={18} className={s.resultsContainer}>
                 <Title className={s.results} level={4}>{t('results')}</Title>
                 {isLoading ? (
                     <Spin />

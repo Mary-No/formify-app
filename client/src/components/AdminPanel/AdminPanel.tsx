@@ -9,6 +9,7 @@ import { BatchActionButton } from './BatchActionButton/BatchActionButton'
 import type {BatchAction} from "../../types/types.ts";
 import { useTranslation } from 'react-i18next'
 import {getAdminColumns} from "./constants.ts";
+import s from './AdminPanel.module.scss'
 
 const { Search } = Input
 
@@ -59,19 +60,19 @@ export const AdminPanel = () => {
     }
     const { t } = useTranslation()
     return (
-        <div style={{ padding: 24 }}>
-            <Space direction="vertical" style={{ width: '100%' }} size="middle">
+        <div className={s.container}>
+            <Space direction="vertical" style={{width: '100%'}} size="middle">
                 <Search
                     placeholder={t('admin.searchPlaceholder')}
-                    enterButton={<SearchOutlined />}
+                    enterButton={<SearchOutlined/>}
                     allowClear
                     onSearch={onSearch}
                     loading={isLoading}
-                    style={{ maxWidth: 400 }}
+                    style={{maxWidth: 400}}
                 />
                 <Space>
                     <BatchActionButton
-                        icon={<LockOutlined />}
+                        icon={<LockOutlined/>}
                         action="block"
                         label={t('admin.actions.block')}
                         onConfirm={handleBatchAction}
@@ -80,7 +81,7 @@ export const AdminPanel = () => {
                         isLoading={isBatchLoading}
                     />
                     <BatchActionButton
-                        icon={<UnlockOutlined />}
+                        icon={<UnlockOutlined/>}
                         action="unblock"
                         label={t('admin.actions.unblock')}
                         onConfirm={handleBatchAction}
@@ -89,7 +90,7 @@ export const AdminPanel = () => {
                         isLoading={isBatchLoading}
                     />
                     <BatchActionButton
-                        icon={<ArrowUpOutlined />}
+                        icon={<ArrowUpOutlined/>}
                         action="promote"
                         label={t('admin.actions.promote')}
                         onConfirm={handleBatchAction}
@@ -98,39 +99,42 @@ export const AdminPanel = () => {
                         isLoading={isBatchLoading}
                     />
                     <BatchActionButton
-                        icon={<ArrowDownOutlined />}
+                        icon={<ArrowDownOutlined/>}
                         action="demote"
-                        label={t('admin.actions.demote') }
+                        label={t('admin.actions.demote')}
                         onConfirm={handleBatchAction}
                         selectedRowKeys={selectedRowKeys}
                         isSelfAffected={isSelfAffected}
                         isLoading={isBatchLoading}
                     />
                     <BatchActionButton
-                        icon={<DeleteOutlined />}
+                        icon={<DeleteOutlined/>}
                         action="delete"
-                        label={t('admin.actions.delete') }
+                        label={t('admin.actions.delete')}
                         onConfirm={handleBatchAction}
                         selectedRowKeys={selectedRowKeys}
                         isSelfAffected={isSelfAffected}
                         isLoading={isBatchLoading}
                     />
                 </Space>
-
-                <Table
-                    rowKey="id"
-                    loading={isLoading}
-                    columns={getAdminColumns(t)}
-                    dataSource={data?.users || []}
-                    pagination={{
-                        current: page,
-                        pageSize: limit,
-                        total: data?.total || 0,
-                        onChange: (pageNum) => setPage(pageNum),
-                    }}
-                    rowSelection={rowSelection}
-                />
+                <div className={s.tableWrapper}>
+                    <Table
+                        scroll={{x: 'max-content'}}
+                        className={s.table}
+                        rowKey="id"
+                        loading={isLoading}
+                        columns={getAdminColumns(t)}
+                        dataSource={data?.users || []}
+                        pagination={{
+                            current: page,
+                            pageSize: limit,
+                            total: data?.total || 0,
+                            onChange: (pageNum) => setPage(pageNum),
+                        }}
+                        rowSelection={rowSelection}
+                    />
+                </div>
             </Space>
         </div>
-    )
+)
 }

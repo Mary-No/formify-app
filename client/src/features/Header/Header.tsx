@@ -1,6 +1,6 @@
-import {Button, Layout } from 'antd'
+import {Button, Grid, Layout} from 'antd'
 import { Logo } from '../../components/HeaderComponents/Logo/Logo.tsx'
-import { GlobalSearchInput } from '../../components/GlobalSearchInput/GlobalSearchInput.tsx'
+import { GlobalSearchInput } from '../../components/HeaderComponents/GlobalSearchInput/GlobalSearchInput.tsx'
 import { LanguageSelector } from '../../components/HeaderComponents/LanguageSelector/LanguageSelector.tsx'
 import {useLocation, useNavigate} from "react-router-dom";
 import { useTranslation } from 'react-i18next';
@@ -12,7 +12,8 @@ import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
 import { setUser } from '../../app/authSlice.ts';
 import {UserAvatar} from "../../components/Avatar/Avatar.tsx";
 import { api } from '../../app/api.ts';
-
+import { SearchOutlined } from '@ant-design/icons';
+const { useBreakpoint } = Grid;
 
 const { Header: AntHeader } = Layout
 
@@ -35,12 +36,13 @@ export const Header = () => {
             handleApiError(err, t)
         }
     }
-
+    const screens = useBreakpoint();
     return (
         <AntHeader className={s.header}>
             <Logo />
-            {showSearchInput && <GlobalSearchInput />}
-            <div className={s.buttons} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            {showSearchInput && screens.lg && <GlobalSearchInput />}
+            <div className={s.buttons} >
+                {!screens.lg && (showSearchInput && <Button onClick={()=>navigate('/search')} className={s.searchIcon} icon={<SearchOutlined />}/>)}
                 <LanguageSelector />
                 <ThemeToggle />
                 {user ? (
@@ -54,7 +56,7 @@ export const Header = () => {
                 ) : (
                     <>
                         {pathname !== '/register' && (
-                            <Button type="link" onClick={() => navigate('/register')}>
+                            <Button type="link" style={{ display: (!screens.lg && pathname !== '/login')  ? 'none' : "flex" }} className={s.registerBtn} onClick={() => navigate('/register')}>
                                 {t('signUp')}
                             </Button>
                         )}

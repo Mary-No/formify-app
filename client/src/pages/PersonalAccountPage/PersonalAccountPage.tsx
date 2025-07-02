@@ -11,11 +11,14 @@ import { AdminPanel } from '../../components/AdminPanel/AdminPanel.tsx'
 
 const { Title } = Typography
 
+
 const PersonalAccountPage = () => {
-    const navigate = useNavigate()
-    const { t } = useTranslation()
     const { user, isLoading } = useAppSelector((state) => state.auth)
     const [activeTab, setActiveTab] = useState('my-templates')
+
+    const navigate = useNavigate()
+    const { t } = useTranslation()
+
 
     const handleCreateTemplate = () => {
         navigate('/template-builder')
@@ -44,6 +47,7 @@ const PersonalAccountPage = () => {
             : []),
     ]
 
+
     return (
         <div className={s.container}>
             <Space style={{ width: '100%' }} direction="vertical" size="large">
@@ -62,6 +66,7 @@ const PersonalAccountPage = () => {
                     style={{ width: '100%' }}
                     items={items}
                     className={s.tabs}
+                    type="line"
                 />
             </Space>
         </div>

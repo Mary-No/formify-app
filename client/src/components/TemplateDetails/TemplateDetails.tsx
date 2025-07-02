@@ -1,4 +1,4 @@
-import { Card, Descriptions, List, Typography, Divider, Tooltip, Button } from 'antd'
+import {Card, Descriptions, List, Typography, Divider, Tooltip, Button, Grid} from 'antd'
 import {Comments} from "../Comments/Comments.tsx";
 import {Likes} from "../Likes/Likes.tsx";
 import type {TemplateDetailResponse} from "../../types/types.ts";
@@ -15,6 +15,7 @@ import { Image } from 'antd'
 import {TemplateActionsMenu} from "../TemplateActionsMenu.tsx";
 
 const { Title } = Typography
+const { useBreakpoint } = Grid;
 
 type Props = {
     data:TemplateDetailResponse
@@ -28,23 +29,32 @@ export const TemplateDetails = ({data}:Props) => {
     const { t } = useTranslation()
     const navigate = useNavigate()
     const isAuthenticated = useAppSelector(state => state.auth.isAuthenticated);
+    const screens = useBreakpoint();
     return (
         <Card bordered className={s.card}>
             <div className={s.title}>
-                <Title level={2}>{template.title}</Title>
+                <Title className={s.title_text}>{template.title}</Title>
                 {isAuthenticated && <div className={s.buttons}>
-                    <Button
+                    {screens.lg &&
+                        <Button
                     onClick={() => navigate(`/fill-form/${template.id}`)}
                     type="primary"
                 >
                     {t('fillForm')}
                 </Button>
+                    }
                     <TemplateActionsMenu item={template}/>
                 </div>}
-
             </div>
+            {!screens.lg &&  <Button
+                onClick={() => navigate(`/fill-form/${template.id}`)}
+                type="primary"
+                style={{marginBottom:20}}
+            >
+                {t('fillForm')}
+            </Button>}
 
-            <Descriptions className={s.descriptions} column={1} bordered size="small">
+                <Descriptions className={s.descriptions} column={1} bordered size="small">
                 <Descriptions.Item label={t('author')}>{template.author.nickname}</Descriptions.Item>
                 <Descriptions.Item label={t('created')}>
                     <Tooltip placement="right" title={dayjs(template.createdAt).format('DD-MM-YYYY HH:mm')}>
@@ -57,7 +67,7 @@ export const TemplateDetails = ({data}:Props) => {
                         dangerouslySetInnerHTML={{__html: template.description}}
                     />
                 </Descriptions.Item>
-                <Descriptions.Item label={t('tags')}>
+                <Descriptions.Item className={s.tags} label={t('tags')}>
                     <TemplateTag tags={template.tags}/>
                 </Descriptions.Item>
             </Descriptions>
@@ -78,7 +88,6 @@ export const TemplateDetails = ({data}:Props) => {
                     </List.Item>
                 )}
             />
-
 
             <Divider orientation="left">{t('comments')}</Divider>
             <Comments comments={template.comments} templateId={template.id}/>

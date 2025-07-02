@@ -1,0 +1,31 @@
+@use "../../styles/themes" as *;
+@use "../../styles/variables" as *;
+
+.container{
+  padding: 20px 0;
+}
+.table :global .ant-table-tbody{
+  background-color: var(--bg-card-color);
+}
+@media (max-width: $breakpoint-md) {
+  .container :global .ant-space{
+    display: flex;
+    width: 80vw;
+    flex-wrap: wrap;
+  }
+  .container{
+    padding: 0;
+  }
+  .table {
+    overflow-x: auto;
+    width: 82%;
+  }
+}
+@media (max-width: $breakpoint-sm) {
+  .container :global .ant-space-item{
+    width: 98%;
+  }
+  .table {
+    width: 98%;
+  }
+}

@@ -1,3 +1,5 @@
+@use "../../../styles/variables" as *;
+
 .tagcloud{
   width: 60%;
   margin: 0 auto 28px;
@@ -6,4 +8,21 @@
   align-items: center;
   cursor: pointer;
   flex-wrap: wrap;
+}
+@media (max-width: $breakpoint-xl) {
+  .tagcloud {
+    width: 84%;
+  }
+}
+@media (max-width: $breakpoint-lg) {
+  .tagcloud {
+    width: 90%;
+    padding-top: 10px;
+  }
+}
+@media (max-width: $breakpoint-sm) {
+  .tagcloud {
+    width: 100%;
+    margin: 10px 0 40px;
+  }
 }

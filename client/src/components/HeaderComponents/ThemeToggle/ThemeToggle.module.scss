@@ -1,8 +1,9 @@
+@use "../../../styles/variables" as *;
 .toggleBtn {
   background: transparent;
   border: none;
   cursor: pointer;
-  padding: 4px;
+  padding: 4px 6px 4px 12px;
   border-radius: 6px;
   transition: background-color 0.3s ease;
 
@@ -24,4 +25,9 @@
 .rotate {
   transform: rotate(180deg);
   color: #ffd10a;
+}
+@media (max-width: $breakpoint-md) {
+  .toggleBtn {
+    padding: 4px 10px;
+  }
 }

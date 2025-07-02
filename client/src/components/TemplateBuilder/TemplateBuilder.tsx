@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
-import {Button, message} from 'antd'
+import {Button, Col, message, Row} from 'antd'
 import { QuestionBlock } from './QuestionBlock/QuestionBlock.tsx'
 import { Canvas } from './Canvas/Canvas.tsx'
 import { useCreateTemplateMutation, useUpdateTemplateMutation } from '../../app/templateApi'
@@ -90,14 +90,14 @@ export const TemplateBuilder = ({ editMode = false, initialData }: TemplateBuild
 
     return (
         <DndProvider backend={HTML5Backend}>
-            <div className={s.container}>
-                <div className={s.sidebar}>
+            <Row gutter={16} className={s.container}>
+                <Col xs={6} sm={8} md={8} lg={6} xl={6} className={s.sidebar}>
                     <h2 className={s.heading}>{t('answerType')}</h2>
                     {QUESTION_TYPES.map((q) => (
                         <QuestionBlock key={q.value} type={q.value} />
                     ))}
-                </div>
-                <div className={s.canvas}>
+                </Col>
+                <Col xs={18} sm={16} md={16} lg={18} xl={18}  className={s.canvas}>
                     <h2 className={s.heading}>{t('template')}</h2>
                     <Canvas questions={questions} setQuestions={setQuestions} title={title}
                             setTitle={setTitle}
@@ -111,8 +111,8 @@ export const TemplateBuilder = ({ editMode = false, initialData }: TemplateBuild
                     <Button type="primary" className={s.button} onClick={handleSubmit}>
                         {t('saveTemplate')}
                     </Button>
-                </div>
-            </div>
+                </Col>
+            </Row>
         </DndProvider>
     )
 }

@@ -1,8 +1,14 @@
 @use "../../styles/themes" as *;
+@use "../../styles/variables" as *;
 
 .content{
   padding: 0 72px 40px;
   display: flex;
   flex-direction: column;
   background-color: var(--bg-color);
+}
+@media (max-width: $breakpoint-md) {
+  .content {
+    padding: 0 18px 18px;
+  }
 }

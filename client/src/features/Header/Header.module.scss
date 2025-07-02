@@ -21,5 +21,30 @@
 .accountIcon{
   padding: 10px;
   border-radius: 50%;
-
+}
+.searchIcon{
+  height: 2.3rem;
+  width: 37px!important;
+  margin-right: 10px;
+}
+@media (max-width: $breakpoint-lg) {
+  .buttons{
+    gap: 0;
+  }
+}
+@media (max-width: $breakpoint-md) {
+  .header {
+    padding: 50px;
+  }
+}
+@media (max-width: $breakpoint-sm) {
+  .header {
+    padding: 40px;
+  }
+}
+@media (max-width: $breakpoint-xs) {
+  .header {
+    padding: 24px;
+    margin-top: 20px;
+  }
 }

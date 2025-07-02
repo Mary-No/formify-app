@@ -1,7 +1,8 @@
 @use "../../styles/themes" as *;
+@use "../../styles/variables" as *;
 
 .container{
-  padding: 0 3rem;
+  padding: 0 5rem;
 }
 .title{
   color: var(--text-color)!important;
@@ -12,4 +13,10 @@
       color: var(--text-color)!important;
     }
   }
+}
+@media (max-width: $breakpoint-md) {
+  .container {
+    padding: 1rem;
+  }
+
 }
