@@ -38,5 +38,6 @@ export const authApi = api.injectEndpoints({
 export const {  useRegisterMutation,
                 useLoginMutation,
                 useGetMeQuery,
-                useLogoutMutation, } = authApi
+                useLogoutMutation,
+                useLazyGetMeQuery} = authApi
 

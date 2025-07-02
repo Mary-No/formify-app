@@ -1,4 +1,4 @@
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {BrowserRouter, Route, Routes, useLocation} from "react-router-dom";
 import { HomePage } from './pages/HomePage';
 import { GlobalLoader } from './components/GlobalLoader';
 import { SignUp } from "./pages/SignUp/SignUp.tsx";
@@ -20,41 +20,51 @@ import { StatisticPage } from "./pages/StatisticPage/StatisticPage.tsx";
 import { OAuthCallback } from "./pages/OAuthCallback.tsx";
 
 function App() {
-    const { data } = useGetMeQuery();
+    return (
+        <BrowserRouter>
+            <AppWithAuth />
+        </BrowserRouter>
+    );
+}
 
+function AppWithAuth() {
     const dispatch = useAppDispatch();
+    const location = useLocation();
+
+    const skipMeQuery = location.pathname.startsWith("/auth/callback");
+    const { data } = useGetMeQuery(undefined, { skip: skipMeQuery });
 
     useEffect(() => {
         if (data?.user && !data?.user.isBlocked) {
             dispatch(setUser(data.user));
-        } else {
+        } else if (!skipMeQuery) {
             dispatch(setUser(null));
         }
-    }, [data, dispatch]);
+    }, [data, dispatch, skipMeQuery]);
 
-  return (
-      <BrowserRouter>
-          <GlobalLoader />
-          <Routes>
-              <Route element={<MainLayout />}>
-                <Route path="/" element={<HomePage />} />
-                  <Route path="/auth/callback" element={<OAuthCallback />} />
-                <Route path="/register" element={<SignUp />} />
-                <Route path="/login" element={<SignIn />} />
-                <Route path="/search" element={<TemplateSearchPage />} />
-                  <Route path="/templates/:templateId" element={<TemplatePage />} />
-                  <Route element={<PrivateRoute />}>
-                      <Route path="/account" element={<PersonalAccountPage/>}/>
-                      <Route path="/template-builder" element={<TemplateBuilder/>}/>
-                      <Route path="/fill-form/:templateId" element={<FillFormPage/>}/>
-                      <Route path="/edit-template/:templateId" element={<TemplateEditor/>}/>
-                      <Route path="/edit-form/:formId" element={<FormEditor/>}/>
-                      <Route path="/statistic/:templateId" element={<StatisticPage/>}/>
-                  </Route>
-              </Route>
-          </Routes>
-      </BrowserRouter>
-  )
+    return (
+        <>
+            <GlobalLoader />
+            <Routes>
+                <Route element={<MainLayout />}>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/auth/callback" element={<OAuthCallback />} />
+                    <Route path="/register" element={<SignUp />} />
+                    <Route path="/login" element={<SignIn />} />
+                    <Route path="/search" element={<TemplateSearchPage />} />
+                    <Route path="/templates/:templateId" element={<TemplatePage />} />
+                    <Route element={<PrivateRoute />}>
+                        <Route path="/account" element={<PersonalAccountPage />} />
+                        <Route path="/template-builder" element={<TemplateBuilder />} />
+                        <Route path="/fill-form/:templateId" element={<FillFormPage />} />
+                        <Route path="/edit-template/:templateId" element={<TemplateEditor />} />
+                        <Route path="/edit-form/:formId" element={<FormEditor />} />
+                        <Route path="/statistic/:templateId" element={<StatisticPage />} />
+                    </Route>
+                </Route>
+            </Routes>
+        </>
+    );
 }
 
-export default App
+export default App;
