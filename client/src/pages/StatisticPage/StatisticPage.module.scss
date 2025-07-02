@@ -1,9 +1,27 @@
 @use "../../styles/themes" as *;
+@use "../../styles/variables" as *;
 
+.container{
+  padding: 28px 80px;
+}
 .card{
   margin-bottom: 32px;
   background-color: var(--bg-card-color);
 }
 .title, .description{
   color: var(--text-color)!important;
+}
+@media (max-width: $breakpoint-sm) {
+  .container {
+    padding: 0;
+    margin-top: 20px;
+  }
+}
+.pie :global [data-chart-source-type="Ant Design Charts"] {
+  left: 50%;
+}
+@media (max-width: $breakpoint-sm) {
+  .pie :global [data-chart-source-type="Ant Design Charts"] {
+    left: auto;
+  }
 }

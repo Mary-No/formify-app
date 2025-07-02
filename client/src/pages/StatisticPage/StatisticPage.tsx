@@ -38,7 +38,7 @@ export const StatisticPage = () => {
     ];
 
     return (
-        <div style={{padding: '24px'}}>
+        <div className={s.container}>
             <Title className={s.title} level={2}>{title}</Title>
             <div className={s.description}
                 dangerouslySetInnerHTML={{__html: description}}
@@ -75,7 +75,7 @@ export const StatisticPage = () => {
                 return (
                     <Card key={q.id} className={s.card}>
                         <Title level={4}>{q.text}</Title>
-                        {q.type === 'IMAGE' ? <Image width={200} src={q.imageUrl} alt="Image" /> : <Table
+                        {q.type === 'IMAGE' ? <div style={{ display: 'flex', justifyContent: 'center' }}><Image width={300} src={q.imageUrl} alt="Image" /></div> : <Table
                             dataSource={dataSource}
                             columns={columns}
                             pagination={false}
@@ -126,65 +126,72 @@ export const StatisticPage = () => {
                                 )}
                                 {q.type === 'CHECKBOX' && (
                                     <Col span={12}>
-                                        <Pie
-                                            data={aggregateBoolean(q.answers).map(item => ({
-                                                ...item,
-                                                type: item.value === 'true' ? t('statistics.yes') : t('statistics.no'),
-                                                value: item.count,
-                                            }))}
-                                            angleField="value"
-                                            colorField="type"
-                                            radius={1}
-                                            label={{
-                                                type: 'spider',
-                                                labelHeight: 28,
-                                                content: '{type} ({percentage})',
-                                                style: {fontWeight: 'bold'},
-                                            }}
-                                            legend={{position: 'right'}}
-                                            interactions={[{type: 'element-active'}]}
-                                            height={300}
-                                        />
+                                        <div className={s.pie}>
+                                            <Pie
+                                                data={aggregateBoolean(q.answers).map(item => ({
+                                                    ...item,
+                                                    type: item.value === 'true' ? t('statistics.yes') : t('statistics.no'),
+                                                    value: item.count,
+                                                }))}
+                                                angleField="value"
+                                                colorField="type"
+                                                radius={1}
+                                                label={{
+                                                    type: 'spider',
+                                                    labelHeight: 28,
+                                                    content: '{type} ({percentage})',
+                                                    style: {fontWeight: 'bold'},
+                                                }}
+                                                legend={{ position: 'bottom' }}
+                                                interactions={[{type: 'element-active'}]}
+                                                height={300}
+                                                width={300}
+                                            />
+                                        </div>
                                     </Col>
-                                )}
+                                   )}
                                 {q.type === 'SINGLE_CHOICE' && q.options && (
                                     <Col span={24}>
-                                        <Pie
-                                            data={aggregateSingleChoice(q.answers, q.options).map((item, idx) => ({
-                                                ...item,
-                                                color: COLORS[idx % COLORS.length],
-                                            }))}
-                                            angleField="value"
-                                            colorField="type"
-                                            radius={1}
-                                            label={{
-                                                type: 'spider',
-                                                labelHeight: 28,
-                                                content: '{type} ({percentage})',
-                                                style: { fontWeight: 'bold' },
-                                            }}
-                                            legend={{
-                                                position: 'right',
-                                                itemName: {
-                                                    style: {
-                                                        fill: '#595959',
-                                                        fontSize: 14,
+                                        <div className={s.pie}>
+                                            <Pie
+                                                data={aggregateSingleChoice(q.answers, q.options).map((item, idx) => ({
+                                                    ...item,
+                                                    color: COLORS[idx % COLORS.length],
+                                                }))}
+                                                angleField="value"
+                                                colorField="type"
+                                                radius={1}
+                                                label={{
+                                                    type: 'spider',
+                                                    labelHeight: 28,
+                                                    content: '{type} ({percentage})',
+                                                    style: {fontWeight: 'bold'},
+                                                }}
+                                                legend={{
+                                                    position: 'right',
+                                                    itemName: {
+                                                        style: {
+                                                            fill: '#595959',
+                                                            fontSize: 14,
+                                                        },
                                                     },
-                                                },
-                                                marker: (_:any, index: number) => ({
-                                                    symbol: 'square',
-                                                    style: {
-                                                        fill: COLORS[index % COLORS.length],
-                                                        r: 5,
-                                                    },
-                                                }),
-                                            }}
-                                            color={COLORS}
-                                            interactions={[{ type: 'element-active' }]}
-                                            height={300}
-                                        />
+                                                    marker: (_: any, index: number) => ({
+                                                        symbol: 'square',
+                                                        style: {
+                                                            fill: COLORS[index % COLORS.length],
+                                                            r: 5,
+                                                        },
+                                                    }),
+                                                }}
+                                                color={COLORS}
+                                                interactions={[{type: 'element-active'}]}
+                                                height={300}
+                                                width={300}
+
+                                            />
+                                        </div>
                                     </Col>
-                                )}
+                                    )}
                             </Row>
                         )}
                     </Card>
