@@ -1,4 +1,5 @@
 @use "../../styles/themes" as *;
+@use "../../styles/variables" as *;
 .container {
   padding: 0 1.5rem 1.5rem;
 }
@@ -12,4 +13,17 @@
 
 .button {
   margin-top: 1rem;
+}
+@media (max-width: $breakpoint-lg) {
+  .container{
+    padding: 0;
+    margin-top: 20px;
+  }
+ }
+@media (max-width: $breakpoint-sm) {
+  .question_types{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
 }

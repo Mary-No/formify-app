@@ -91,13 +91,15 @@ export const TemplateBuilder = ({ editMode = false, initialData }: TemplateBuild
     return (
         <DndProvider backend={HTML5Backend}>
             <Row gutter={16} className={s.container}>
-                <Col xs={6} sm={8} md={8} lg={6} xl={6} className={s.sidebar}>
+                <Col xs={24} sm={8} md={8} lg={6} xl={6} className={s.sidebar}>
                     <h2 className={s.heading}>{t('answerType')}</h2>
+                    <div className={s.question_types}>
                     {QUESTION_TYPES.map((q) => (
                         <QuestionBlock key={q.value} type={q.value} />
                     ))}
+                    </div>
                 </Col>
-                <Col xs={18} sm={16} md={16} lg={18} xl={18}  className={s.canvas}>
+                <Col xs={24} sm={16} md={16} lg={18} xl={18}  className={s.canvas}>
                     <h2 className={s.heading}>{t('template')}</h2>
                     <Canvas questions={questions} setQuestions={setQuestions} title={title}
                             setTitle={setTitle}
