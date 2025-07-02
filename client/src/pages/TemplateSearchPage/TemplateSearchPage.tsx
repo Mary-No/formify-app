@@ -1,20 +1,24 @@
 import { useQueryFilters } from '../../hooks/useQueryFilters'
 import { useSearchTemplatesQuery } from '../../app/templateApi'
 import { useGetTagsQuery } from '../../app/templateApi.ts'
-import {Card, Select, Spin, List, Typography, Row, Col} from 'antd'
+import {Card, Select, Spin, List, Typography, Row, Col, Grid} from 'antd'
 import {type Topic} from '../../types/types.ts'
 import { useTranslation } from 'react-i18next'
 import { TemplateSearchCard } from '../../components/TemplateSearchCard/TemplateSearchCard.tsx'
 import s from "./TemplateSearchPage.module.scss"
 import {TOPICS} from '../../constants'
+import {GlobalSearchInput} from "../../components/HeaderComponents/GlobalSearchInput/GlobalSearchInput.tsx";
 
 const { Title } = Typography
 const { Option } = Select
+const { useBreakpoint } = Grid;
 
 const isTopic = (value: unknown): value is Topic =>
     typeof value === 'string' && TOPICS.includes(value as Topic)
 
+
 export const TemplateSearchPage = () => {
+    const screens = useBreakpoint();
     const { filters, setFilters } = useQueryFilters<{
         q?: string
         topic?: string
@@ -89,6 +93,7 @@ export const TemplateSearchPage = () => {
             </Col>
 
             <Col xs={24} sm={14} md={14} lg={18} xl={18} className={s.resultsContainer}>
+                {!screens.lg && <GlobalSearchInput/>}
                 <Title className={s.results} level={4}>{t('results')}</Title>
                 {isLoading ? (
                     <Spin />
