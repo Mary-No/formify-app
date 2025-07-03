@@ -1,7 +1,7 @@
 @use "../../styles/themes" as *;
 @use "../../styles/variables" as *;
 .container {
-  padding: 0 1.5rem 1.5rem;
+  padding: 0 1.5rem 2rem;
 }
 
 .heading {
@@ -16,7 +16,7 @@
 }
 @media (max-width: $breakpoint-lg) {
   .container{
-    padding: 0;
+    padding: 0 0 2rem;
     margin-top: 20px;
   }
  }
