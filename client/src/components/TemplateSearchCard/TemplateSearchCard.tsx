@@ -18,8 +18,8 @@ export const TemplateSearchCard = ({item}:Props) => {
 
     return <Card className={s.card} key={item.id} title={
             <div className={s.header}>
-                <Link to={`/templates/${item.id}`} className={s.cardLink}>
-                <h3 className={s.title}>{item.title}</h3>
+               <Link to={`/templates/${item.id}`} className={s.cardLink}>
+                    <h3 className={s.title}>{item.title}</h3>
                 </Link>
                 <div className={s.menuAndDate}>
                     <div className={s.date}>{formatTemplateDate(item.createdAt, i18n.language as 'en' | 'ru' | 'pl')}</div>
