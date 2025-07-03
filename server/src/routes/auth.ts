@@ -4,6 +4,7 @@ import { prisma } from '../prisma'
 import { Request, Response } from 'express'
 import { handleRequest } from '../utils/handleRequest'
 import passport from 'passport'
+import { User } from '@prisma/client'
 
 const router = express.Router()
 
@@ -39,12 +40,18 @@ router.get('/google', passport.authenticate('google', {
     scope: ['profile', 'email'],
 }))
 
-router.get('/google/callback', passport.authenticate('google', {
-    failureRedirect: `${CLIENT_URL}/login`,
-    session: true
-}), (req, res) => {
-    res.redirect(`${CLIENT_URL}/auth/callback`);
-});
+router.get('/google/callback',
+    passport.authenticate('google', {
+        failureRedirect: `${CLIENT_URL}/login`,
+        session: true,
+    }),
+    (req, res) => {
+        if (req.user) {
+            req.session.userId = (req.user as User).id;
+        }
+        res.redirect(`${CLIENT_URL}/auth/callback`);
+    }
+);
 
 router.post('/login', handleRequest(async (req, res) => {
     const { email, password } = req.body;
