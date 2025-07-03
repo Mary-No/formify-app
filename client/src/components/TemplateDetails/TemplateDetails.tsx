@@ -77,10 +77,8 @@ export const TemplateDetails = ({data}:Props) => {
             <List
                 dataSource={template.questions}
                 renderItem={(q) => (
-                    <List.Item key={q.id}>
-                        {q.imageUrl ? (
-                            <Image width={200} src={q.imageUrl} alt="Image" />
-                        ) : (
+                    <List.Item style={{display: 'flex', justifyContent: 'center'}} key={q.id}>
+                        {q.imageUrl ? (<Image width={300} src={q.imageUrl} alt="Image"/>) : (
                             <List.Item.Meta
                                 title={`Q${q.order + 1}: ${q.text}`}
                             />

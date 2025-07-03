@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Dropdown, Menu, Button, Modal, message } from 'antd'
 import { MoreOutlined, EditOutlined, DeleteOutlined, BarChartOutlined } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
+import {useNavigate} from "react-router-dom";
 
 type Props = {
     onEdit: () => void
@@ -14,60 +15,47 @@ export const ActionMenu = ({ onEdit, onDelete, onStats, loading = false }: Props
     const { t } = useTranslation()
     const [modalVisible, setModalVisible] = useState(false)
 
-    const showDeleteConfirm = () => {
-        setModalVisible(true)
-    }
+    const navigate = useNavigate()
+    const showDeleteConfirm = () => setModalVisible(true)
 
     const handleDelete = async () => {
         try {
             await onDelete()
             message.success(t('action.deleteSuccess'))
-            setModalVisible(false)
+            navigate("/")
         } catch {
             message.error(t('action.deleteError'))
+        } finally {
+            setModalVisible(false)
         }
     }
 
+    const createMenuItem = (
+        key: string,
+        icon: React.ReactNode,
+        label: string,
+        onClick: () => void,
+        danger = false
+    ) => (
+        <Menu.Item
+            key={key}
+            icon={icon}
+            onClick={(e) => {
+                e.domEvent.preventDefault()
+                e.domEvent.stopPropagation()
+                onClick()
+            }}
+            danger={danger}
+        >
+            {label}
+        </Menu.Item>
+    )
+
     const menu = (
         <Menu>
-            <Menu.Item
-                key="edit"
-                icon={<EditOutlined />}
-                onClick={(e) => {
-                    e.domEvent.preventDefault()
-                    e.domEvent.stopPropagation()
-                    onEdit()
-                }}
-            >
-                {t('action.edit')}
-            </Menu.Item>
-
-            {onStats && (
-                <Menu.Item
-                    key="stats"
-                    icon={<BarChartOutlined />}
-                    onClick={(e) => {
-                        e.domEvent.preventDefault()
-                        e.domEvent.stopPropagation()
-                        onStats()
-                    }}
-                >
-                    {t('action.stats')}
-                </Menu.Item>
-            )}
-
-            <Menu.Item
-                key="delete"
-                icon={<DeleteOutlined />}
-                onClick={(e) => {
-                    e.domEvent.preventDefault()
-                    e.domEvent.stopPropagation()
-                    showDeleteConfirm()
-                }}
-                danger
-            >
-                {t('action.delete')}
-            </Menu.Item>
+            {createMenuItem('edit', <EditOutlined />, t('action.edit'), onEdit)}
+            {onStats && createMenuItem('stats', <BarChartOutlined />, t('action.stats'), onStats)}
+            {createMenuItem('delete', <DeleteOutlined />, t('action.delete'), showDeleteConfirm, true)}
         </Menu>
     )
 

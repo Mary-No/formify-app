@@ -9,7 +9,7 @@ export const TemplatePage = () => {
     const { data, isLoading, error } = useGetTemplateQuery(templateId!)
     const { t } = useTranslation()
     if (isLoading) return <Spin/>
-    if (error || !data) return <div>{t("templateNotFound")}</div>
+    if (error || !data) return <div className="templateNotFound">{t("templateNotFound")}</div>
 
     return <TemplateDetails data={data}/>
 }

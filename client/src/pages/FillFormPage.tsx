@@ -25,7 +25,7 @@ export const FillFormPage = ({isEdit, existingAnswers, formId,  templateId: prop
     const { data, isLoading, error } = useGetTemplateQuery(templateId!);
     const [updateForm, { isLoading: isUpdating }] = useUpdateFormMutation()
     if (isLoading) return <Spin />;
-    if (error || !data) return <div>{t('templateNotFound')}</div>;
+    if (error || !data) return <div className="templateNotFound">{t('templateNotFound')}</div>;
     const { title, description, questions } = data.template;
 
     if (!questions) {
@@ -112,7 +112,7 @@ export const FillFormPage = ({isEdit, existingAnswers, formId,  templateId: prop
                     </Select>
                 );
             case "IMAGE":
-                return  <Image width={200} src={q.imageUrl} alt="Image" />
+                return  <div style={{ display: 'flex', justifyContent: 'center' }}><Image width={300} src={q.imageUrl} alt="Image" /></div>
             default:
                 return <Input />;
         }

@@ -71,8 +71,6 @@ export const TemplateBuilder = ({ editMode = false, initialData }: TemplateBuild
                 }),
             };
 
-            console.log('Payload before sending:', JSON.stringify(payload, null, 2));
-
             if (editMode && initialData?.id) {
                 await updateTemplate({ id: initialData.id, data: payload }).unwrap();
                 message.success(t('template.updated'));

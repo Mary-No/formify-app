@@ -81,7 +81,7 @@ export const DroppedQuestion = ({
                 onChange={(value: QuestionType) => {
                     onChange({
                         type: value,
-                        required: value === 'IMAGE' ? false : question.required,
+                        required: value === 'IMAGE' || value === 'CHECKBOX' ? false : question.required,
                     });
                 }}
                 className={s.select}
@@ -94,7 +94,7 @@ export const DroppedQuestion = ({
                 )}
             </div>
 
-            {question.type !== 'IMAGE' &&
+            {question.type !== 'IMAGE' && question.type !== 'CHECKBOX' &&
             <Checkbox
                 checked={question.required}
                 onChange={(e) => onChange({ required: e.target.checked })}
