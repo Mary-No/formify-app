@@ -60,7 +60,11 @@ app.use(session({
 
 app.use(passport.initialize())
 app.use(passport.session())
-
+app.use((req, res, next) => {
+    console.log('Session ID:', req.sessionID);
+    console.log('Session userId:', req.session.userId);
+    next();
+});
 app.use('/auth', authRoutes)
 app.use('/forms', formsRoutes)
 app.use('/templates', templatesRoutes)

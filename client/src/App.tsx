@@ -33,7 +33,6 @@ function AppWithAuth() {
 
     const skipMeQuery = location.pathname.startsWith("/auth/callback");
     const { data } = useGetMeQuery(undefined, { skip: skipMeQuery });
-
     useEffect(() => {
         if (data?.user && !data?.user.isBlocked) {
             dispatch(setUser(data.user));
