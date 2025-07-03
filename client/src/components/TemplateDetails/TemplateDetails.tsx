@@ -46,7 +46,7 @@ export const TemplateDetails = ({data}:Props) => {
                     <TemplateActionsMenu item={template}/>
                 </div>}
             </div>
-            {!screens.lg &&  <Button
+            {isAuthenticated &&  <Button
                 onClick={() => navigate(`/fill-form/${template.id}`)}
                 type="primary"
                 style={{marginBottom:20}}
