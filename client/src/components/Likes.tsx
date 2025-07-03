@@ -1,7 +1,7 @@
 import { HeartOutlined, HeartFilled } from '@ant-design/icons';
 import { Button } from 'antd';
-import {useToggleLikeTemplateMutation } from '../../app/templateApi';
-import {useAppSelector} from "../../app/hooks.ts";
+import {useToggleLikeTemplateMutation } from '../app/templateApi.ts';
+import {useAppSelector} from "../app/hooks.ts";
 
 type Props = {
     templateId: string;
@@ -29,7 +29,7 @@ export const Likes = ({ templateId, likesCount, likedByUser, size }: Props) => {
             onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                onClick();
+                onClick().catch(console.error);
             }}
             loading={isLoading}
             disabled={isLoading || !isAuthenticated}

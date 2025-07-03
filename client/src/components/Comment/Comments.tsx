@@ -1,14 +1,15 @@
 import { List, Typography, Avatar, Space } from 'antd'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppSelector } from '../../app/hooks'
-import { AddCommentForm } from '../AddCommentForm/AddCommentForm'
-import { socket } from '../../socket'
-import { formatTemplateDate } from '../../utils/formatDate'
-import type { Comment } from '../../types/types'
+import { useAppSelector } from '../../app/hooks.ts'
+import { AddCommentForm } from './AddCommentForm/AddCommentForm.tsx'
+import { socket } from '../../socket.ts'
+import { formatTemplateDate } from '../../utils/formatDate.ts'
+import type { Comment } from '../../types/types.ts'
 import i18n from '../../i18n'
+import s from './Comments.module.scss'
 
 dayjs.extend(relativeTime)
 
@@ -25,29 +26,25 @@ export const Comments = ({ comments, templateId }: Props) => {
 
     const [localComments, setLocalComments] = useState<Comment[]>(comments)
 
+    const handleNewComment = useCallback((comment: Comment) => {
+        setLocalComments(prev => [...prev, comment])
+    }, [])
+
     useEffect(() => {
         setLocalComments(comments)
-    }, [comments])
-
-    useEffect(() => {
         socket.connect()
         socket.emit('join-template', templateId)
-
-        const handleNewComment = (comment: Comment) => {
-            setLocalComments(prev => [...prev, comment])
-        }
-
         socket.on('new-comment', handleNewComment)
-
         return () => {
             socket.off('new-comment', handleNewComment)
             socket.disconnect()
         }
-    }, [templateId])
+    }, [comments, templateId, handleNewComment])
 
     return (
         <div>
             <List
+                className={s.list}
                 itemLayout="horizontal"
                 dataSource={localComments}
                 locale={{ emptyText: t('noComments') }}

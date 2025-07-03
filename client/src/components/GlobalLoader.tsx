@@ -1,12 +1,13 @@
 import { useSelector } from 'react-redux'
 import NProgress from 'nprogress'
 import { useEffect } from 'react'
+import type { RootState } from '../app/store'
 
 export const GlobalLoader = () => {
-    const isFetching = useSelector((state: any) => {
+    const isFetching = useSelector((state: RootState) => {
         const queries = state.api.queries
         return Object.values(queries).some(
-            (q: any) => q?.status === 'pending'
+            (q) => q?.status === 'pending'
         )
     })
 

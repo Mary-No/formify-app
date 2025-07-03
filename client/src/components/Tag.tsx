@@ -1,6 +1,6 @@
 import { Tag as AntTag } from "antd";
-import {getRandomColor} from "../../utils/getRandomColor.ts";
-import type { Tag } from "../../types/types.ts";
+import {getRandomColor} from "../utils/getRandomColor.ts";
+import type { Tag } from "../types/types.ts";
 
 type Props = {
     tags: Tag[]

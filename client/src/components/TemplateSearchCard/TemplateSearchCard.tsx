@@ -4,10 +4,10 @@ import {useTranslation} from "react-i18next";
 import {formatTemplateDate} from "../../utils/formatDate.ts";
 import i18n from "../../i18n/index.ts";
 import type { Template } from "../../types/types.ts";
-import {TemplateTag} from "../Tag/Tag.tsx";
+import {TemplateTag} from "../Tag.tsx";
 import {Link} from "react-router-dom";
-import {TemplateTopic} from "../Topic/Topic.tsx";
-import {Likes} from "../Likes/Likes.tsx";
+import {TemplateTopic} from "../Topic.tsx";
+import {Likes} from "../Likes.tsx";
 import { TemplateActionsMenu } from "../TemplateActionsMenu.tsx";
 
 type Props={

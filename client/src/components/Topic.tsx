@@ -1,6 +1,6 @@
-import {getRandomColor} from "../../utils/getRandomColor.ts";
-import type {Topic} from "../../types/types.ts";
-import s from "../TemplateSearchCard/TemplateSearchCard.module.scss";
+import {getRandomColor} from "../utils/getRandomColor.ts";
+import type {Topic} from "../types/types.ts";
+import s from "./TemplateSearchCard/TemplateSearchCard.module.scss";
 import { Tag } from "antd";
 import {useTranslation} from "react-i18next";
 

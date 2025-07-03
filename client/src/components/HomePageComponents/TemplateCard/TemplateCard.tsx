@@ -5,7 +5,7 @@ import { formatTemplateDate } from '../../../utils/formatDate.ts'
 import s from './TemplateCard.module.scss'
 import { truncateWords } from '../../../utils/truncateWords.ts'
 import type {Template} from "../../../types/types.ts";
-import {Likes} from "../../Likes/Likes.tsx";
+import {Likes} from "../../Likes.tsx";
 import truncate from 'html-truncate'
 
 type Props = {

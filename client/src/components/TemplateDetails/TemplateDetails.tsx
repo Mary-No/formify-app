@@ -1,10 +1,10 @@
 import {Card, Descriptions, List, Typography, Divider, Tooltip, Button, Grid} from 'antd'
-import {Comments} from "../Comments/Comments.tsx";
-import {Likes} from "../Likes/Likes.tsx";
+import {Comments} from "../Comment/Comments.tsx";
+import {Likes} from "../Likes.tsx";
 import type {TemplateDetailResponse} from "../../types/types.ts";
-import {TemplateTag} from "../Tag/Tag.tsx";
+import {TemplateTag} from "../Tag.tsx";
 import s from "./TemplateDetails.module.scss"
-import {TemplateTopic} from "../Topic/Topic.tsx";
+import {TemplateTopic} from "../Topic.tsx";
 import {useTranslation} from "react-i18next";
 import {formatTemplateDate} from "../../utils/formatDate.ts";
 import i18n from "../../i18n";

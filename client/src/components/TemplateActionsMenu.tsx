@@ -3,7 +3,7 @@ import { useAppSelector } from "../app/hooks";
 import { useDeleteTemplateMutation } from "../app/templateApi";
 import type { Template } from "../types/types";
 import { useGetMyFormsQuery } from "../app/formApi";
-import { ActionMenu } from "./ActionMenu/ActionMenu";
+import { ActionMenu } from "./ActionMenu.tsx";
 
 
 type Props = {

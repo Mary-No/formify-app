@@ -7,7 +7,7 @@ import NProgress from 'nprogress'
 import 'antd/dist/reset.css';
 import 'nprogress/nprogress.css'
 import './styles/global.scss'
-import { ThemeProvider } from './components/ThemeProvider.tsx';
+import { ThemeProvider } from './components/ThemeProvider/ThemeProvider.tsx';
 
 NProgress.configure({
     showSpinner: false,

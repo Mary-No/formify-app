@@ -10,7 +10,7 @@ export const FormEditor = () => {
 
     const { data, isLoading, error } = useGetFormByIdQuery(formId!);
     if (isLoading) return <Spin />;
-    if (!data || error) {return <div>{t('templateNotFound')}</div>};
+    if (!data || error) {return <div>{t('templateNotFound')}</div>}
     const existingAnswers = data.answers.reduce((acc, answer) => {
         acc[answer.questionId] = answer.value;
         return acc;

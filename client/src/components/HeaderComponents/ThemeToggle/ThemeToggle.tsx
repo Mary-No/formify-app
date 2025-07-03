@@ -1,8 +1,8 @@
 import { Tooltip } from 'antd'
 import { SunOutlined, MoonOutlined } from '@ant-design/icons'
 import s from './ThemeToggle.module.scss'
-import { useTheme } from '../../ThemeProvider.tsx'
 import { useTranslation } from 'react-i18next'
+import { useTheme } from '../../../hooks/useTheme'
 
 export const ThemeToggle = () => {
     const { theme, toggleTheme } = useTheme()

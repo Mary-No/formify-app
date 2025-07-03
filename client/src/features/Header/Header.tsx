@@ -10,7 +10,7 @@ import {useLogoutMutation } from '../../app/authApi.ts';
 import {handleApiError} from "../../utils/handleApiErrror.ts";
 import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
 import { setUser } from '../../app/authSlice.ts';
-import {UserAvatar} from "../../components/Avatar/Avatar.tsx";
+import {UserAvatar} from "../../components/Avatar.tsx";
 import { api } from '../../app/api.ts';
 import { SearchOutlined } from '@ant-design/icons';
 const { useBreakpoint } = Grid;

@@ -1,8 +1,8 @@
-import {useTheme} from "../ThemeProvider.tsx";
-import {getRandomColor} from "../../utils/getRandomColor.ts";
+import {getRandomColor} from "../utils/getRandomColor.ts";
 import {Avatar, Tooltip} from "antd";
-import type {User} from "../../types/types.ts";
+import type {User} from "../types/types.ts";
 import {Link} from "react-router-dom";
+import { useTheme } from "../hooks/useTheme.ts";
 
 
 type Props = {
