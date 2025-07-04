@@ -219,7 +219,6 @@ router.patch('/:formId', requireAuth, requireNotBlocked, handleRequest(async (re
         return;
     }
 
-    // Проверяем, существует ли форма и получаем userId и templateId
     const form = await prisma.form.findUnique({
         where: { id: formId },
         select: { userId: true, templateId: true },

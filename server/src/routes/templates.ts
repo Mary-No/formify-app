@@ -6,7 +6,7 @@ import { handleRequest } from '../utils/handleRequest'
 import { getUserId } from '../utils/getUserId'
 import { getIO } from '../socket'
 import z from 'zod'
-import {QuestionType, Topic } from '@prisma/client'
+import { Topic } from '@prisma/client'
 import {questionSchema, TopicEnum, updateTemplateSchema } from '../types/templates'
 import { isAuthorOrAdmin } from '../utils/isAuthorOrAdmin'
 import { toTemplateCardDto } from '../utils/toTemplateCardDto'
@@ -241,7 +241,6 @@ router.delete('/:id', requireAuth, async (req, res) => {
     res.status(200).json({ message: 'Template deleted successfully' })
 })
 
-// PATCH /:templateId — safe update without losing answers
 router.patch(
     '/:templateId',
     requireAuth,
