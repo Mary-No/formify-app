@@ -12,6 +12,7 @@ import s from './Canvas.module.scss'
 import {useGetTagsQuery} from "../../../app/templateApi.ts";
 import {useTranslation} from "react-i18next";
 import {MarkdownDescription} from "../MarkdownDescription.tsx";
+import type React from 'react';
 
 type DraggedQuestionItem = {
     type: QuestionType
@@ -67,7 +68,6 @@ export const Canvas = ({ questions, setQuestions, tags, setTags, title, setTitle
     return (
         <Card
             ref={refHandler}
-            bordered
             className={s.canvas}
             style={{background: '#fafafa'}}
         >

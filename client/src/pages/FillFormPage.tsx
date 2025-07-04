@@ -54,8 +54,8 @@ export const FillFormPage = ({isEdit, existingAnswers, formId,  templateId: prop
             return q.required
                 ? [
                     {
-                        validator(_: any, value: boolean) {
-                            if (value === true) {
+                        validator(_: unknown, value: boolean) {
+                            if (value) {
                                 return Promise.resolve();
                             }
                             return Promise.reject(new Error(t('required')));
@@ -69,8 +69,8 @@ export const FillFormPage = ({isEdit, existingAnswers, formId,  templateId: prop
             return [
                 ...requiredRule,
                 {
-                    validator(_: any, value: any) {
-                        if (value === undefined || value === null || value === '') {
+                    validator(_: unknown, value: number) {
+                        if (value === undefined || value === null) {
                             return Promise.resolve();
                         }
                         const number = Number(value);
@@ -120,7 +120,7 @@ export const FillFormPage = ({isEdit, existingAnswers, formId,  templateId: prop
 
 
     return (
-        <Card bordered className={s.card}>
+        <Card className={s.card}>
             <Title level={2}>{title}</Title>
             <p
                 dangerouslySetInnerHTML={{__html: description}}

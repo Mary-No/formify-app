@@ -23,7 +23,6 @@ export const QuestionBlock = ({ type }: QuestionBlockProps) => {
                 hoverable
                 size="small"
                 style={{ marginBottom: 12, cursor: 'move' }}
-                bodyStyle={{ padding: '12px 16px' }}
             >
                 {t(QUESTION_TYPES.find((q) => q.value === type)?.label || '')}
             </Card>

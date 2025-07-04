@@ -7,6 +7,7 @@ import { CloseOutlined, PlusOutlined } from '@ant-design/icons'
 import s from './DroppedQuestion.module.scss'
 import {useTranslation} from "react-i18next";
 import { UploadImageBlock } from '../UploadImageBlock.tsx'
+import type React from 'react';
 
 type DroppedQuestionProps = {
     question: Question

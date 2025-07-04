@@ -52,7 +52,7 @@ export const Comments = ({ comments, templateId }: Props) => {
                     <List.Item key={comment.id}>
                         <List.Item.Meta
                             avatar={
-                                <Avatar style={{ backgroundColor: '#1677ff' }}>
+                                <Avatar>
                                     {comment.author.nickname[0].toUpperCase()}
                                 </Avatar>
                             }

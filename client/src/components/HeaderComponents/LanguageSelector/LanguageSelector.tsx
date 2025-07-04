@@ -17,8 +17,8 @@ export const LanguageSelector = () => {
     const { i18n } = useTranslation()
 
     const handleChange = (lng: string) => {
-        i18n.changeLanguage(lng)
-        localStorage.setItem('lng', lng) // сохранить выбор
+        void i18n.changeLanguage(lng);
+        localStorage.setItem('lng', lng)
     }
     const screens = useBreakpoint();
     return (

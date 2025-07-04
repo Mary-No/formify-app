@@ -1,5 +1,5 @@
 import { useRef } from "react"
-
+import type React from 'react';
 
 type UseInfiniteScrollProps = {
     loadMore: () => Promise<void> | void

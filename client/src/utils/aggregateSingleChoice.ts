@@ -7,7 +7,7 @@ export function aggregateSingleChoice(answers: AggregatedAnswer[], options: stri
     }, {});
 
     answers.forEach(({ value }) => {
-        const stringValue = String(value); // приведение к строке
+        const stringValue = String(value);
         if (stringValue in counts) {
             counts[stringValue]++;
         }

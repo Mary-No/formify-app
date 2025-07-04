@@ -22,7 +22,7 @@ export const StatisticPage = () => {
     const location = useLocation();
     const { title, description } = location.state || {};
     const { data, isLoading, error, refetch } = useGetAggregatedDataQuery(templateId!);
-    console.log(data)
+
     useEffect(() => {
         if (location.state?.refetch) {
             refetch();
@@ -97,12 +97,6 @@ export const StatisticPage = () => {
                                             legend={{
                                                 position: 'top-left',
                                             }}
-                                            tooltip={{
-                                                formatter: (datum: BarChartDatum) => ({
-                                                    name: t('statistics.answerLabel', {value: datum.value}),
-                                                    value: `${datum.count}`,
-                                                }),
-                                            }}
                                             label={{
                                                 position: 'top',
                                                 content: (originData: BarChartDatum) => `${originData.count}`,
@@ -174,14 +168,7 @@ export const StatisticPage = () => {
                                                             fill: '#595959',
                                                             fontSize: 14,
                                                         },
-                                                    },
-                                                    marker: (_: any, index: number) => ({
-                                                        symbol: 'square',
-                                                        style: {
-                                                            fill: COLORS[index % COLORS.length],
-                                                            r: 5,
-                                                        },
-                                                    }),
+                                                    }
                                                 }}
                                                 color={COLORS}
                                                 interactions={[{type: 'element-active'}]}

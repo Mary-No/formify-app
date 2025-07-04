@@ -31,7 +31,7 @@ export const TemplateDetails = ({data}:Props) => {
     const isAuthenticated = useAppSelector(state => state.auth.isAuthenticated);
     const screens = useBreakpoint();
     return (
-        <Card bordered className={s.card}>
+        <Card className={s.card}>
             <div className={s.title}>
                 <Title className={s.title_text}>{template.title}</Title>
                 {isAuthenticated && <div className={s.buttons}>
