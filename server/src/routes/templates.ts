@@ -34,6 +34,27 @@ router.post('/', requireAuth, requireNotBlocked, handleRequest(async (req, res) 
     const { title, description, topic, tags, isPublic, questions } = parseResult.data
     const userId = getUserId(req)
 
+    const user = await prisma.user.findUnique({
+        where: { id: userId },
+        include: { company: true }
+    });
+
+    if (!user) {
+        res.status(404).json({ message: "User not found" });
+        return
+    }
+
+    if (!user.company) {
+        const templateCount = await prisma.template.count({
+            where: { authorId: userId }
+        });
+
+        if (templateCount >= 3) {
+           res.status(400).json({ message: "You’ve reached the limit of 3 templates on the Basic plan. Upgrade your account to add more." });
+           return
+        }
+    }
+
     const template = await prisma.template.create({
         data: {
             title,
