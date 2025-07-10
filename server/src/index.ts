@@ -8,6 +8,7 @@ import authRoutes from './routes/auth'
 import formsRoutes from './routes/forms'
 import templatesRoutes from './routes/templates'
 import adminRoutes from './routes/admin'
+import companyRoutes from './routes/company'
 import { config } from 'dotenv'
 import { initSocket } from './socket'
 import http from 'http'
@@ -66,6 +67,7 @@ app.use('/auth', authRoutes)
 app.use('/forms', formsRoutes)
 app.use('/templates', templatesRoutes)
 app.use('/admin', adminRoutes)
+app.use('/company', companyRoutes)
 
 
 app.get('/', (_, res) => {

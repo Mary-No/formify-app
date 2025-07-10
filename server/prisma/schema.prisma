@@ -14,6 +14,11 @@ enum QuestionType {
     SINGLE_CHOICE
     IMAGE
 }
+enum AccountType {
+  BASIC
+  BUSINESS
+  PREMIUM
+}
 
 enum Topic {
   TECHNOLOGY
@@ -38,19 +43,32 @@ enum Topic {
   OTHER
 }
 
+model CompanyAccount {
+  id        String     @id @default(uuid())
+  type      AccountType
+  ownerId   String     @unique
+  owner     User       @relation("OwnedCompany", fields: [ownerId], references: [id])
+  users     User[]     @relation("CompanyMembers")
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
 model User {
-  id         String    @id @default(uuid())
-  nickname   String
-  email      String    @unique
-  password   String
-  isAdmin    Boolean   @default(false)
-  isBlocked  Boolean   @default(false)
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  templates  Template[] @relation("AuthorTemplates")
-  forms      Form[]
-  comments   Comment[]
-  likes      Like[]
+  id            String           @id @default(uuid())
+  nickname      String
+  email         String           @unique
+  password      String
+  isAdmin       Boolean          @default(false)
+  isBlocked     Boolean          @default(false)
+  companyId     String?
+  company       CompanyAccount?  @relation("CompanyMembers", fields: [companyId], references: [id])
+  ownedCompany  CompanyAccount?  @relation("OwnedCompany")
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  templates     Template[]       @relation("AuthorTemplates")
+  forms         Form[]
+  comments      Comment[]
+  likes         Like[]
   @@index([email])
 }
 
