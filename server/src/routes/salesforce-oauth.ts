@@ -1,8 +1,7 @@
-// routes/salesforce-oauth.ts
-import express from 'express';
+import express, { Router } from 'express';
 import axios from 'axios';
 
-const router = express.Router();
+const router: Router = express.Router();
 
 router.get("/auth", (_, res) => {
     const params = new URLSearchParams({
@@ -34,6 +33,7 @@ router.get("/callback", async (req, res) => {
             refresh_token: response.data.refresh_token,
             expires_at: Date.now() + response.data.expires_in * 1000
         };
+        return res.redirect(process.env.CLIENT_URL!);
     } catch (err: any) {
         console.error("❌ Salesforce token exchange error:", err.response?.data || err.message);
         res.status(500).send(`Salesforce OAuth error: ${JSON.stringify(err.response?.data || err.message)}`);

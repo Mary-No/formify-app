@@ -1,8 +1,7 @@
-// routes/salesforce.ts
-import express from "express";
+import express, { Router } from "express";
 import axios from "axios";
 
-const router = express.Router();
+const router: Router = express.Router();
 
 router.post("/upgrade", async (req, res) => {
     try {
