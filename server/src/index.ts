@@ -5,15 +5,15 @@ import session from 'express-session'
 import passport from 'passport'
 import helmet from 'helmet'
 import './auth/google'
+import { config } from 'dotenv'
+import { initSocket } from './socket'
+import http from 'http'
 import authRoutes from './routes/auth'
 import formsRoutes from './routes/forms'
 import templatesRoutes from './routes/templates'
 import adminRoutes from './routes/admin'
 import companyRoutes from './routes/company'
 import salesforceRoutes from './routes/salesforce'
-import { config } from 'dotenv'
-import { initSocket } from './socket'
-import http from 'http'
 import salesforceOAuthRoutes from './routes/salesforce-oauth'
 
 config()
@@ -71,7 +71,7 @@ app.use('/templates', templatesRoutes)
 app.use('/admin', adminRoutes)
 app.use('/company', companyRoutes)
 app.use('/salesforce', salesforceRoutes)
-app.use('/salesforce', salesforceOAuthRoutes)
+app.use('/salesforce/oauth', salesforceOAuthRoutes)
 
 
 app.get('/', (_, res) => {
