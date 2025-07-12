@@ -33,8 +33,6 @@ router.get("/callback", async (req, res) => {
             refresh_token: response.data.refresh_token,
             expires_at: Date.now() + response.data.expires_in * 1000
         };
-       res.redirect(process.env.CLIENT_URL!);
-        return
     } catch (err: any) {
         console.error("❌ Salesforce token exchange error:", err.response?.data || err.message);
         res.status(500).send(`Salesforce OAuth error: ${JSON.stringify(err.response?.data || err.message)}`);
