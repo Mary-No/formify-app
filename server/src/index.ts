@@ -1,3 +1,4 @@
+/// <reference path="./types/express-session.d.ts" />
 import express from 'express'
 import cors from 'cors'
 import session from 'express-session'
@@ -9,10 +10,11 @@ import formsRoutes from './routes/forms'
 import templatesRoutes from './routes/templates'
 import adminRoutes from './routes/admin'
 import companyRoutes from './routes/company'
+import salesforceRoutes from './routes/salesforce'
 import { config } from 'dotenv'
 import { initSocket } from './socket'
 import http from 'http'
-
+import salesforceOAuthRoutes from './routes/salesforce-oauth'
 
 config()
 
@@ -68,6 +70,8 @@ app.use('/forms', formsRoutes)
 app.use('/templates', templatesRoutes)
 app.use('/admin', adminRoutes)
 app.use('/company', companyRoutes)
+app.use('/salesforce', salesforceRoutes)
+app.use('/salesforce', salesforceOAuthRoutes)
 
 
 app.get('/', (_, res) => {
