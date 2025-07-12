@@ -6,7 +6,8 @@ const router: Router = express.Router();
 router.post("/upgrade", async (req, res) => {
     try {
         if (!req.session.salesforce) {
-            return res.status(401).send("❌ Authorise via /salesforce/auth");
+            res.status(401).send("❌ Authorise via /salesforce/auth");
+            return
         }
 
         const { access_token, instance_url } = req.session.salesforce;

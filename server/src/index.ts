@@ -49,6 +49,8 @@ app.use(cors({
 }))
 app.use(express.json())
 
+console.log(typeof salesforceRoutes);
+
 app.use(session({
     secret: process.env.SESSION_SECRET || 'supersecret',
     resave: false,

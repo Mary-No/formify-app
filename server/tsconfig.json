@@ -9,7 +9,7 @@
     "strict": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "types": ["express-session"],
+    "types": ["express", "express-session"],
     "typeRoots": ["./node_modules/@types", "./src/types"],
   },
   "include": ["src", "src/types"]
