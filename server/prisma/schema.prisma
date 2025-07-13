@@ -69,6 +69,7 @@ model User {
   forms         Form[]
   comments      Comment[]
   likes         Like[]
+  apiToken      String?          @unique
   @@index([email])
 }
 

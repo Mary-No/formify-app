@@ -15,6 +15,7 @@ import adminRoutes from './routes/admin'
 import companyRoutes from './routes/company'
 import salesforceRoutes from './routes/salesforce'
 import salesforceOAuthRoutes from './routes/salesforce-oauth'
+import odooRoutes from './routes/odoo'
 
 config()
 
@@ -74,6 +75,7 @@ app.use('/admin', adminRoutes)
 app.use('/company', companyRoutes)
 app.use('/salesforce', salesforceRoutes)
 app.use('/salesforce/oauth', salesforceOAuthRoutes)
+app.use('/odoo', odooRoutes)
 
 
 app.get('/', (_, res) => {
