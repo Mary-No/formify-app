@@ -26,6 +26,15 @@ export type Topic =
     | 'PSYCHOLOGY'
     | 'OTHER'
 
+export type AccountType = 'BASIC' | 'BUSINESS' | 'PREMIUM';
+
+export type CompanyAccount = {
+    id: string;
+    type: AccountType;
+    ownerId: string;
+    createdAt: string;
+    updatedAt: string;
+}
 
 export type QuestionType = 'SHORT_TEXT' | 'LONG_TEXT' | 'INTEGER' | 'CHECKBOX' | 'SINGLE_CHOICE'| 'IMAGE';
 
@@ -128,6 +137,8 @@ export type User = {
     nickname: string
     isAdmin: boolean
     isBlocked: boolean
+    companyId?: string
+    company?: CompanyAccount
 }
 
 export type AuthUser = User | null

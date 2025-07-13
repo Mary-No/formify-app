@@ -1,4 +1,4 @@
-import { Button, Tabs, Typography, Space, Spin } from 'antd'
+import { Button, Tabs, Typography, Space, Spin, Tag } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
@@ -8,6 +8,7 @@ import s from './PersonalAccountPage.module.scss'
 import { useTranslation } from 'react-i18next'
 import { useAppSelector } from '../../app/hooks.ts'
 import { AdminPanel } from '../../components/AdminPanel/AdminPanel.tsx'
+import ConnectSalesforce from "./ConnectSalesforce/ConnectSalesforce.tsx";
 
 const { Title } = Typography
 
@@ -52,6 +53,12 @@ const PersonalAccountPage = () => {
         <div className={s.container}>
             <Space style={{ width: '100%' }} direction="vertical" size="large">
                 <Title className={s.title} level={3}>{t('account.title')}</Title>
+                <div className={s.brief_info}>
+                    <p className={s.nickname}>{user.nickname}</p>
+                    <p>{user.email}</p>
+                    <Tag color="cyan">{user.company? user.company.type: "BASIC"}</Tag>
+                </div>
+                <ConnectSalesforce/>
                 <Button
                     type="primary"
                     icon={<PlusOutlined />}

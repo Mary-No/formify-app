@@ -6,6 +6,17 @@
 }
 .title{
   color: var(--text-color)!important;
+  margin: 0!important;
+}
+.brief_info{
+  display: flex;
+  align-items: center;
+  gap:20px;
+
+  p{
+    margin: 0;
+    font-size: 16px;
+  }
 }
 .tabs{
   :global{
@@ -18,5 +29,4 @@
   .container {
     padding: 1rem;
   }
-
 }

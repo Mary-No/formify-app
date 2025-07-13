@@ -10,7 +10,7 @@ type Props = {
 export const UploadImageBlock = ({ imageUrl, onChange }: Props) => {
     const { t } = useTranslation();
     return (
-        <div>
+        <div style={{ display: 'flex', flexDirection: 'column'}}>
             <Upload
                 name="file"
                 showUploadList={false}
@@ -42,7 +42,7 @@ export const UploadImageBlock = ({ imageUrl, onChange }: Props) => {
                 <img
                     src={imageUrl}
                     alt="Uploaded"
-                    style={{ maxWidth: '100%', marginTop: 8 }}
+                    style={{ width: "30vw", marginTop: 8 }}
                 />
             )}
         </div>
