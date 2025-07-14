@@ -5,7 +5,6 @@ import { Request, Response } from 'express'
 import { handleRequest } from '../utils/handleRequest'
 import passport from 'passport'
 import { User } from '@prisma/client'
-import { requireApiTokenOrSession } from '../middleware/requireApiTokenOrSession'
 
 const router = express.Router()
 
