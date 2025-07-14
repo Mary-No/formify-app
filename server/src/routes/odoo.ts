@@ -25,10 +25,10 @@ router.post('/generate-api-token', requireApiTokenOrSession, handleRequest(async
 }))
 
 router.get('/aggregated-results', requireApiTokenOrSession, handleRequest(async (req, res) => {
-    const userId = req.session.userId
+    const userId = (req.user as { id: string })?.id || req.session.userId;
     if (!userId) {
-        res.status(401).json({ error: 'Unauthorized' })
-        return
+        res.status(401).json({ error: 'Unauthorized' });
+        return;
     }
 
     const templates = await prisma.template.findMany({
@@ -40,7 +40,7 @@ router.get('/aggregated-results', requireApiTokenOrSession, handleRequest(async 
                 }
             }
         }
-    })
+    });
 
     const aggregated = templates.map(template => {
         return {
