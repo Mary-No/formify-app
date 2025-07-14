@@ -1,5 +1,5 @@
 import { prisma } from '../prisma'
-import {NextFunction, Request, Response} from "express";
+import { NextFunction, Request, Response } from "express";
 
 export async function requireApiTokenOrSession(req: Request, res: Response, next: NextFunction) {
     try {
@@ -12,12 +12,28 @@ export async function requireApiTokenOrSession(req: Request, res: Response, next
             });
 
             if (!user) {
-                res.status(401).json({ error: 'Invalid API token' });
-                return
+                return res.status(401).json({ error: 'Invalid API token' });
             }
             if (user.isBlocked) {
-                res.status(403).json({ error: 'Account is blocked' });
-                return
+                return res.status(403).json({ error: 'Account is blocked' });
+            }
+
+            req.user = user;
+            return next();
+        }
+
+        if (req.query.api_token && typeof req.query.api_token === 'string') {
+            const token = req.query.api_token;
+            const user = await prisma.user.findUnique({
+                where: { apiToken: token },
+                select: { id: true, email: true, nickname: true, isBlocked: true, isAdmin: true },
+            });
+
+            if (!user) {
+                return res.status(401).json({ error: 'Invalid API token in query' });
+            }
+            if (user.isBlocked) {
+                return res.status(403).json({ error: 'Account is blocked' });
             }
 
             req.user = user;
