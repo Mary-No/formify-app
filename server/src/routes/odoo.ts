@@ -6,8 +6,6 @@ import { randomUUID } from "crypto"
 
 const router = Router()
 
-
-
 router.post('/generate-api-token', requireApiTokenOrSession, handleRequest(async (req, res) => {
     const userId = req.session.userId
     if (!userId) {
@@ -25,14 +23,17 @@ router.post('/generate-api-token', requireApiTokenOrSession, handleRequest(async
 }))
 
 router.get('/aggregated-results', requireApiTokenOrSession, handleRequest(async (req, res) => {
-    const userId = (req.user as { id: string })?.id || req.session.userId;
-    if (!userId) {
+    const user = req.user as { id: string; isAdmin: boolean };
+
+    if (!user) {
         res.status(401).json({ error: 'Unauthorized' });
         return;
     }
 
+    const whereClause = user.isAdmin ? {} : { authorId: user.id };
+
     const templates = await prisma.template.findMany({
-        where: { authorId: userId },
+        where: whereClause,
         include: {
             questions: {
                 include: {
