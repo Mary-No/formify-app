@@ -42,7 +42,8 @@ router.get('/aggregated-results', requireApiTokenOrSession, handleRequest(async 
             }
         }
     });
-
+    console.log('User:', user);
+    console.log('Filter:', whereClause);
     const aggregated = templates.map(template => {
         return {
             id: template.id,
@@ -96,6 +97,7 @@ router.get('/aggregated-results', requireApiTokenOrSession, handleRequest(async 
             })
         }
     })
+    console.log('Templates fetched:', templates.map(t => ({ id: t.id, authorId: t.authorId })));
 
     res.json({ templates: aggregated })
 }))
