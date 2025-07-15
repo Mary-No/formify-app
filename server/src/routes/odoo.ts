@@ -35,6 +35,7 @@ router.get('/aggregated-results', requireApiTokenOrSession, handleRequest(async 
     const templates = await prisma.template.findMany({
         where: whereClause,
         include: {
+            author: true,
             questions: {
                 include: {
                     answers: true
@@ -42,13 +43,12 @@ router.get('/aggregated-results', requireApiTokenOrSession, handleRequest(async 
             }
         }
     });
-    console.log('User:', user);
-    console.log('Filter:', whereClause);
     const aggregated = templates.map(template => {
         return {
             id: template.id,
             title: template.title,
             description: template.description,
+            authorNickname: template.author.nickname,
             topic: template.topic,
             createdAt: template.createdAt,
             questions: template.questions.map(q => {
@@ -69,7 +69,6 @@ router.get('/aggregated-results', requireApiTokenOrSession, handleRequest(async 
                 }
 
                 if (q.type === 'SHORT_TEXT' || q.type === 'LONG_TEXT' || q.type === 'CHECKBOX' || q.type === 'SINGLE_CHOICE') {
-                    // Группируем одинаковые ответы и берём топ 3
                     const freq: Record<string, number> = {}
                     for (const v of values) {
                         const key = typeof v === 'string' ? v : JSON.stringify(v)
@@ -97,7 +96,6 @@ router.get('/aggregated-results', requireApiTokenOrSession, handleRequest(async 
             })
         }
     })
-    console.log('Templates fetched:', templates.map(t => ({ id: t.id, authorId: t.authorId })));
 
     res.json({ templates: aggregated })
 }))
