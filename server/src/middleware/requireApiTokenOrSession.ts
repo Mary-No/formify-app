@@ -1,53 +1,32 @@
 import { prisma } from '../prisma'
 import { NextFunction, Request, Response } from "express";
+import jwt from 'jsonwebtoken'
 
 export async function requireApiTokenOrSession(req: Request, res: Response, next: NextFunction) {
+    const JWT_SECRET = process.env.JWT_SECRET || 'some_super_secret_key'
     try {
         const authHeader = req.headers['authorization'];
         if (authHeader && authHeader.startsWith('Bearer ')) {
             const token = authHeader.split(' ')[1];
+
+            let payload;
+            try {
+                payload = jwt.verify(token, JWT_SECRET) as { userId?: string };
+            } catch (e) {
+                return res.status(401).json({ error: 'Invalid API token' });
+            }
+
+            if (!payload.userId) {
+                return res.status(401).json({ error: 'Invalid API token payload' });
+            }
+
             const user = await prisma.user.findUnique({
-                where: { apiToken: token },
+                where: { id: payload.userId },
                 select: { id: true, email: true, nickname: true, isBlocked: true, isAdmin: true },
             });
 
             if (!user) {
                 return res.status(401).json({ error: 'Invalid API token' });
-            }
-            if (user.isBlocked) {
-                return res.status(403).json({ error: 'Account is blocked' });
-            }
-
-            req.user = user;
-            return next();
-        }
-
-        if (req.query.api_token && typeof req.query.api_token === 'string') {
-            const token = req.query.api_token;
-            const user = await prisma.user.findUnique({
-                where: { apiToken: token },
-                select: { id: true, email: true, nickname: true, isBlocked: true, isAdmin: true },
-            });
-
-            if (!user) {
-                return res.status(401).json({ error: 'Invalid API token in query' });
-            }
-            if (user.isBlocked) {
-                return res.status(403).json({ error: 'Account is blocked' });
-            }
-
-            req.user = user;
-            return next();
-        }
-
-        if (req.session && req.session.userId) {
-            const user = await prisma.user.findUnique({
-                where: { id: req.session.userId },
-                select: { id: true, email: true, nickname: true, isBlocked: true, isAdmin: true },
-            });
-
-            if (!user) {
-                return res.status(401).json({ error: 'Invalid session' });
             }
             if (user.isBlocked) {
                 return res.status(403).json({ error: 'Account is blocked' });
