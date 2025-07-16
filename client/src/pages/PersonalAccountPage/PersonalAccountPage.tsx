@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next'
 import { useAppSelector } from '../../app/hooks.ts'
 import { AdminPanel } from '../../components/AdminPanel/AdminPanel.tsx'
 import ConnectSalesforce from "./ConnectSalesforce/ConnectSalesforce.tsx";
+import { GenerateApiKey } from './GenerateApiKey.tsx'
 
 const { Title } = Typography
 
@@ -59,6 +60,7 @@ const PersonalAccountPage = () => {
                     <Tag color="cyan">{user.company? user.company.type: "BASIC"}</Tag>
                 </div>
                 <ConnectSalesforce/>
+                <GenerateApiKey/>
                 <Button
                     type="primary"
                     icon={<PlusOutlined />}

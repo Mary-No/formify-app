@@ -62,7 +62,7 @@ export const SignUp = () => {
                     </Form.Item>
 
                     <Form.Item >
-                        <Button className={s.register} type="primary" htmlType="submit" loading={isLoading} block style={{marginBottom: 12}}>
+                        <Button className={s.register}  type="primary" htmlType="submit" loading={isLoading} block>
                             {t('register')}
                         </Button>
                     </Form.Item>

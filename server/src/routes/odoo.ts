@@ -2,11 +2,9 @@ import { Router } from "express"
 import { requireApiTokenOrSession } from "../middleware/requireApiTokenOrSession"
 import { handleRequest } from "../utils/handleRequest"
 import { prisma } from "../prisma"
-import jwt from 'jsonwebtoken'
+import { randomUUID } from "crypto"
 
 const router = Router()
-
-const JWT_SECRET = process.env.JWT_SECRET || 'some_super_secret_key'
 
 router.post('/generate-api-token', requireApiTokenOrSession, handleRequest(async (req, res) => {
     const userId = req.session.userId
@@ -14,7 +12,12 @@ router.post('/generate-api-token', requireApiTokenOrSession, handleRequest(async
         res.status(401).json({ error: 'Unauthorized' })
         return
     }
-    const token = jwt.sign({ userId }, JWT_SECRET, { expiresIn: '7d' })
+
+    const token = randomUUID()
+    await prisma.user.update({
+        where: { id: userId },
+        data: { apiToken: token }
+    })
 
     res.json({ apiToken: token })
 }))

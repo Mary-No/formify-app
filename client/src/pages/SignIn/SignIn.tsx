@@ -57,7 +57,7 @@ export const SignIn = () => {
                         <Input.Password/>
                     </Form.Item>
                     <Form.Item>
-                        <Button type="primary" htmlType="submit" block loading={isLoading}>
+                        <Button type="primary" className={s.button} htmlType="submit" block loading={isLoading}>
                             {t('submit')}
                         </Button>
                     </Form.Item>

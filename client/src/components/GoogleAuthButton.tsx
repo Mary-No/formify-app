@@ -8,6 +8,7 @@ export const GoogleAuthButton = () => {
     return (
         <Form.Item>
             <Button
+                style={{width:'100%'}}
                 block
                 icon={<FcGoogle style={{ marginRight: 8 }} />}
                 onClick={() =>
