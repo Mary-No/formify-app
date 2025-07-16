@@ -42,8 +42,7 @@ class ExternalTemplateImportWizard(models.TransientModel):
                     'description': template_data.get('description'),
                     'topic': template_data.get('topic'),
                     'created_at': created_at_clean,
-                    'author_name': template_data.get('authorNickname'),
-                    'author_id': template_data.get('authorId'),
+                    'author_name': template_data.get('authorNickname')
                 })
 
             for question in template_data.get('questions', []):

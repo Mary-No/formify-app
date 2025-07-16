@@ -11,7 +11,6 @@ class ExternalTemplate(models.Model):
     created_at = fields.Datetime(string='Created At')
     author_name = fields.Char(string='Author')
     question_ids = fields.One2many('external.template.question', 'template_id_ref', string='Questions')
-    author_id = fields.Char(string='Author ID', index=True)
 
 class ExternalTemplateQuestion(models.Model):
     _name = 'external.template.question'
@@ -66,7 +65,3 @@ class ExternalTemplateImportWizard(models.TransientModel):
                     'average_value': q.get('average'),
                     'top_answers': str(q.get('topAnswers')),
                 })
-class ResUsers(models.Model):
-    _inherit = 'res.users'
-
-    external_user_id = fields.Char(string='External User ID')
