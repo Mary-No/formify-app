@@ -44,19 +44,19 @@ router.post('/', requireAuth, requireNotBlocked, handleRequest(async (req, res) 
         const question = questions.find(q => q.id === ans.questionId);
         return question && (String(question.type) !== 'IMAGE');
     });
-        const form = await prisma.form.create({
-            data: {
-                templateId,
-                userId,
-                answers: {
-                    create: filteredAnswers.map(ans => ({
-                        questionId: ans.questionId,
-                        value: ans.value,
-                    })),
-                },
+    const form = await prisma.form.create({
+        data: {
+            templateId,
+            userId,
+            answers: {
+                create: filteredAnswers.map(ans => ({
+                    value: ans.value ?? null,
+                    question: { connect: { id: ans.questionId } },
+                })),
             },
-            include: { answers: true },
-        })
+        },
+        include: { answers: true },
+    })
 
         res.status(201).json({ form })
 }))
