@@ -8,8 +8,6 @@ import s from './PersonalAccountPage.module.scss'
 import { useTranslation } from 'react-i18next'
 import { useAppSelector } from '../../app/hooks.ts'
 import { AdminPanel } from '../../components/AdminPanel/AdminPanel.tsx'
-import ConnectSalesforce from "./ConnectSalesforce/ConnectSalesforce.tsx";
-import { GenerateApiKey } from './GenerateApiKey.tsx'
 
 const { Title } = Typography
 
@@ -56,11 +54,9 @@ const PersonalAccountPage = () => {
                 <Title className={s.title} level={3}>{t('account.title')}</Title>
                 <div className={s.brief_info}>
                     <p className={s.nickname}>{user.nickname}</p>
-                    <p>{user.email}</p>
+                    <p className={s.email}>{user.email}</p>
                     <Tag color="cyan">{user.company? user.company.type: "BASIC"}</Tag>
                 </div>
-                <ConnectSalesforce/>
-                <GenerateApiKey/>
                 <Button
                     type="primary"
                     icon={<PlusOutlined />}

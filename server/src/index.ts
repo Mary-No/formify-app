@@ -13,9 +13,6 @@ import formsRoutes from './routes/forms'
 import templatesRoutes from './routes/templates'
 import adminRoutes from './routes/admin'
 import companyRoutes from './routes/company'
-import salesforceRoutes from './routes/salesforce'
-import salesforceOAuthRoutes from './routes/salesforce-oauth'
-import odooRoutes from './routes/odoo'
 
 config()
 
@@ -50,7 +47,6 @@ app.use(cors({
 }))
 app.use(express.json())
 
-console.log(typeof salesforceRoutes);
 
 app.use(session({
     secret: process.env.SESSION_SECRET || 'supersecret',
@@ -73,9 +69,6 @@ app.use('/forms', formsRoutes)
 app.use('/templates', templatesRoutes)
 app.use('/admin', adminRoutes)
 app.use('/company', companyRoutes)
-app.use('/salesforce', salesforceRoutes)
-app.use('/salesforce/oauth', salesforceOAuthRoutes)
-app.use('/odoo', odooRoutes)
 
 
 app.get('/', (_, res) => {
