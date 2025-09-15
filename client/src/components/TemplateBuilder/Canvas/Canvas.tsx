@@ -74,12 +74,12 @@ export const Canvas = ({ questions, setQuestions, tags, setTags, title, setTitle
             <div className={s.defaultBoxes}>
                 <Text strong>{t('templateBuilderTitle')}</Text>
                 <Input
-                    placeholder="Template title"
+                    placeholder={t('titlePlaceholder')}
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
 
                 />
-                <Text strong>{t('description')}</Text>
+                <Text strong>{t('description')} </Text>
                 <MarkdownDescription description={description}
                                       setDescription={setDescription}/>
                 <Text strong>{t('topic')}</Text>
