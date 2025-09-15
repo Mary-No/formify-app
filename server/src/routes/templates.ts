@@ -16,7 +16,7 @@ const router = express.Router()
 
 export const createTemplateSchema = z.object({
     title: z.string().min(1, 'Title is required'),
-    description: z.string().min(1, 'Description is required'),
+    description: z.string().optional().default(''),
     topic: TopicEnum,
     tags: z.array(z.string()).optional().default([]),
     isPublic: z.boolean().optional().default(true),
