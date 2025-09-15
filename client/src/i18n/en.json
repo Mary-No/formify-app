@@ -161,5 +161,6 @@
   "remove": "Remove",
   "image": "Image",
   "changeImage": "Change image",
-  "uploadImage": "Upload image"
+  "uploadImage": "Upload image",
+  "fillTitle": "Please provide a title"
 }

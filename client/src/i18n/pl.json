@@ -161,5 +161,6 @@
   "remove": "Usuń",
   "image": "Obraz",
   "changeImage": "Zmień obraz",
-  "uploadImage": "Prześlij obraz"
+  "uploadImage": "Prześlij obraz",
+  "fillTitle": "Proszę podać tytuł"
 }

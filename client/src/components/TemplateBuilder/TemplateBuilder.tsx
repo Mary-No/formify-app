@@ -46,6 +46,9 @@ export const TemplateBuilder = ({ editMode = false, initialData }: TemplateBuild
             if (hasEmptyQuestions) {
                 message.error(t('fillOrRemoveEmptyQuestions'));
                 return;
+            } if (!title){
+                message.error(t('fillTitle'));
+                return;
             }
 
             const payload = {
