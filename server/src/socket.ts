@@ -15,16 +15,10 @@ export const initSocket = (server: HTTPServer) => {
     })
 
     io.on('connection', socket => {
-        console.log('Socket connected:', socket.id)
 
         socket.on('join-template', (templateId: string) => {
             const room = `template-${templateId}`
             socket.join(room)
-            console.log(`User ${socket.id} joined room ${room}`)
-        })
-
-        socket.on('disconnect', () => {
-            console.log('Socket disconnected:', socket.id)
         })
     })
 }

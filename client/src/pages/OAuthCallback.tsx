@@ -16,7 +16,6 @@ export const OAuthCallback = () => {
 
         if (hash.startsWith('#token=')) {
             const token = hash.replace('#token=', '');
-            console.log('OAuth token from URL:', token);
             localStorage.setItem('accessToken', token);
             setTimeout(() => triggerGetMe(), 0);
             window.history.replaceState(null, '', window.location.pathname);
@@ -29,7 +28,6 @@ export const OAuthCallback = () => {
     }, [called, triggerGetMe]);
 
     useEffect(() => {
-        console.log('getMe called, data:', data, 'isError:', isError);
         if (isSuccess && data?.user) {
             dispatch(setUser(data.user));
             navigate('/');

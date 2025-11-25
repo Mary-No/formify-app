@@ -58,7 +58,6 @@ router.get('/google/callback',
             process.env.JWT_SECRET!,
             { expiresIn: '24h' }
         );
-        console.log('Generated JWT token:', token);
         res.redirect(`${CLIENT_URL}/auth/callback#token=${token}`);
     }
 );
