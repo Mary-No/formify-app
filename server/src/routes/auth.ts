@@ -53,12 +53,19 @@ router.get('/google/callback',
         if (!req.user) {
             return res.redirect(`${CLIENT_URL}/login?error=no_user`);
         }
+        const user = req.user as { id: string; email?: string; nickname?: string };
 
         const token = jwt.sign(
-            { id: (req.user as User).id },
+            { id: user.id },
             process.env.JWT_SECRET!,
             { expiresIn: '24h' }
         );
+
+        if (req.session) {
+            req.session.userId = user.id;
+        }
+
+        req.user = { id: user.id };
         res.redirect(`${CLIENT_URL}/auth/callback#token=${token}`);
     }
 );
