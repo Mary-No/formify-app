@@ -5,10 +5,12 @@ import { prisma } from '../prisma'
 import { handleRequest } from '../utils/handleRequest'
 import { getUserId } from '../utils/getUserId'
 import { isAuthorOrAdmin } from '../utils/isAuthorOrAdmin'
+import {requireAdmin} from "../middleware/requireAdmin";
 
 const router = express.Router()
+router.use(requireAuth, requireNotBlocked)
 
-router.post('/', requireAuth, requireNotBlocked, handleRequest(async (req, res) => {
+router.post('/', handleRequest(async (req, res) => {
     const userId = getUserId(req)
         const { templateId, answers } = req.body
 
@@ -63,10 +65,8 @@ router.post('/', requireAuth, requireNotBlocked, handleRequest(async (req, res) 
 
 router.get(
     '/mine',
-    requireAuth,
-    requireNotBlocked,
     handleRequest(async (req, res) => {
-        const userId = req.session.userId
+        const userId = getUserId(req)
 
         const forms = await prisma.form.findMany({
             take: 20,
@@ -96,7 +96,7 @@ router.get(
 )
 
 
-router.get('/results/:templateId', requireAuth, requireNotBlocked, handleRequest(async (req, res) => {
+router.get('/results/:templateId', handleRequest(async (req, res) => {
     const userId = getUserId(req);
     const { templateId } = req.params;
 
@@ -142,7 +142,7 @@ router.get('/results/:templateId', requireAuth, requireNotBlocked, handleRequest
 }));
 
 
-router.get('/:formId', requireAuth, requireNotBlocked, handleRequest(async (req, res) => {
+router.get('/:formId', handleRequest(async (req, res) => {
     const userId = getUserId(req);
     const { formId } = req.params;
 
@@ -185,9 +185,9 @@ router.get('/:formId', requireAuth, requireNotBlocked, handleRequest(async (req,
 
 
 
-router.delete('/:id', requireAuth, async (req, res) => {
+router.delete('/:id', async (req, res) => {
     const { id } = req.params
-    const userId = req.session.userId!
+    const userId = getUserId(req)
 
     const form = await prisma.form.findUnique({
         where: { id },
@@ -209,7 +209,7 @@ router.delete('/:id', requireAuth, async (req, res) => {
 
     res.status(200).json({ message: 'Form deleted successfully' })
 })
-router.patch('/:formId', requireAuth, requireNotBlocked, handleRequest(async (req, res) => {
+router.patch('/:formId', handleRequest(async (req, res) => {
     const userId = getUserId(req);
     const { formId } = req.params;
     const { answers } = req.body;
@@ -290,7 +290,7 @@ router.patch('/:formId', requireAuth, requireNotBlocked, handleRequest(async (re
 }));
 
 
-router.get('/aggregated/:templateId', requireAuth, requireNotBlocked, handleRequest(async (req, res) => {
+router.get('/aggregated/:templateId', handleRequest(async (req, res) => {
     const userId = getUserId(req)
     const { templateId } = req.params
 

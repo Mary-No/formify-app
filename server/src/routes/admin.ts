@@ -6,6 +6,7 @@ import { Request, Response } from 'express'
 import { requireNotBlocked } from '../middleware/requireNotBlocked'
 import {batchActionSchema, handleBatchAction } from '../utils/handleBatchAction'
 import { Prisma } from '@prisma/client'
+import {getUserId} from "../utils/getUserId";
 
 
 const router = express.Router()
@@ -58,11 +59,11 @@ router.get('/users', async (req: Request, res: Response) => {
 router.patch('/users/batch', async (req, res) => {
     try {
         const { userIds, action } = batchActionSchema.parse(req.body)
-
+        const userId = getUserId(req)
         const result = await handleBatchAction(
             userIds,
             action,
-            req.session.userId!
+            userId!
         )
 
         res.json(result)

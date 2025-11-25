@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from 'express'
 import { prisma } from '../prisma'
+import {getUserId} from "../utils/getUserId";
 
 export async function requireNotBlocked(req: Request, res: Response, next: NextFunction) {
-    const userId = req.session.userId
+    const userId = getUserId(req)
     if (!userId) {
         res.status(401).json({ error: 'Not authenticated' })
         return

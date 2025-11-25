@@ -2,11 +2,13 @@ import express from "express";
 import { requireAuth } from "../middleware/requireAuth";
 import { requireNotBlocked } from "../middleware/requireNotBlocked";
 import { prisma } from "../prisma";
+import {getUserId} from "../utils/getUserId";
 
 const router = express.Router()
+router.use(requireAuth, requireNotBlocked)
 
-router.post("/", requireAuth, requireNotBlocked, async (req, res) => {
-    const userId = req.session.userId;
+router.post("/", async (req, res) => {
+    const userId = getUserId(req)
     const { type } = req.body;
     if (!["BUSINESS", "PREMIUM"].includes(type)) {
        res.status(400).json({ message: "Invalid account type" });
@@ -32,7 +34,7 @@ router.post("/", requireAuth, requireNotBlocked, async (req, res) => {
     res.json(company);
 });
 
-router.patch("/:id/type", requireAuth, requireNotBlocked, async (req, res) => {
+router.patch("/:id/type", async (req, res) => {
     const { type } = req.body;
     if (!["BUSINESS", "PREMIUM"].includes(type)) {
         res.status(400).json({ message: "Invalid account type" });
@@ -55,7 +57,7 @@ router.patch("/:id/type", requireAuth, requireNotBlocked, async (req, res) => {
 
     res.json(updated);
 });
-router.post("/:id/users", requireAuth, requireNotBlocked, async (req, res) => {
+router.post("/:id/users", async (req, res) => {
     const { userId } = req.body;
 
     const company = await prisma.companyAccount.findUnique({
@@ -81,7 +83,7 @@ router.post("/:id/users", requireAuth, requireNotBlocked, async (req, res) => {
     res.json({ message: "User added" });
 });
 
-router.delete("/:id/users/:userId", requireAuth, requireNotBlocked, async (req, res) => {
+router.delete("/:id/users/:userId", async (req, res) => {
     const company = await prisma.companyAccount.findUnique({
         where: { id: req.params.id }
     });
@@ -99,7 +101,7 @@ router.delete("/:id/users/:userId", requireAuth, requireNotBlocked, async (req, 
     res.json({ message: "User removed from company" });
 });
 
-router.get("/api/company/:id", requireAuth, requireNotBlocked, async (req, res) => {
+router.get("/api/company/:id", async (req, res) => {
     const company = await prisma.companyAccount.findUnique({
         where: { id: req.params.id },
         include: { users: true }

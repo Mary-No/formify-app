@@ -101,7 +101,7 @@ router.post('/', requireAuth, requireNotBlocked, handleRequest(async (req, res) 
 
 
 router.get('/', handleRequest(async (req, res) => {
-    const userId = req.session?.userId
+    const userId = getUserId(req)
     const skip = Number(req.query.skip ?? 0)
     const take = 20
     const search = req.query.search as string || ''
@@ -230,9 +230,9 @@ router.get('/tags', handleRequest(async (req, res) => {
 }))
 
 
-router.delete('/:id', requireAuth, async (req, res) => {
+router.delete('/:id', requireAuth, requireNotBlocked, async (req, res) => {
     const { id } = req.params
-    const userId = req.session.userId!
+    const userId = getUserId(req)
 
     const template = await prisma.template.findUnique({
         where: { id },

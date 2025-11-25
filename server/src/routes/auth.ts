@@ -7,6 +7,7 @@ import passport from 'passport'
 import { User } from '@prisma/client'
 import jwt from 'jsonwebtoken';
 import { requireAuth } from '../middleware/requireAuth'
+import {getUserId} from "../utils/getUserId";
 
 
 const router = express.Router()
@@ -109,7 +110,7 @@ router.post('/login', handleRequest(async (req, res) => {
 }));
 
 router.get('/me',requireAuth, handleRequest(async (req, res) => {
-    const userId = req.user?.id || req.session?.userId;
+    const userId = getUserId(req)
     if (!userId) {
         res.status(401).json({ error: 'Not authenticated' });
         return;
@@ -134,7 +135,7 @@ router.get('/me',requireAuth, handleRequest(async (req, res) => {
 }))
 
 
-router.post('/logout', (req: Request, res: Response): void => {
+router.post('/logout', requireAuth, (req: Request, res: Response): void => {
     req.session.destroy(err => {
         if (err) {
             console.error('Logout error:', err)
