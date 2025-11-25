@@ -29,6 +29,7 @@ export const Header = () => {
     const handleLogout = async () => {
         try {
             await logout().unwrap()
+            localStorage.removeItem('accessToken');
             dispatch(setUser(null));
             dispatch(api.util.resetApiState());
             navigate('/')

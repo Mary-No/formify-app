@@ -42,6 +42,7 @@ export const AdminPanel = () => {
 
             if (isSelfAffected && (action === 'delete' || action === 'block')){
                 await logout()
+                localStorage.removeItem('accessToken');
                 dispatch(setUser(null))
                 message.warning(`${t('admin.messages.logout')}${t(`admin.actions.${action}`)}`)
             }
