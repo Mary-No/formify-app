@@ -18,7 +18,7 @@ export const OAuthCallback = () => {
             const token = hash.replace('#token=', '');
             console.log('OAuth token from URL:', token);
             localStorage.setItem('accessToken', token);
-            triggerGetMe();
+            setTimeout(() => triggerGetMe(), 0);
             window.history.replaceState(null, '', window.location.pathname);
         } else {
             if (!called) {
