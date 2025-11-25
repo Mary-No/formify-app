@@ -1,10 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import {getUserId} from "../utils/getUserId";
 
 export function requireAuth(req: Request, res: Response, next: NextFunction) {
     const authHeader = req.headers['authorization'];
-    const userId = getUserId(req)
     if (authHeader?.startsWith('Bearer ')) {
         const token = authHeader.split(' ')[1];
         try {
@@ -16,6 +14,7 @@ export function requireAuth(req: Request, res: Response, next: NextFunction) {
         }
     }
 
+    const userId = req.session?.userId;
     if (userId) {
         req.user = { id: userId };
         return next();
