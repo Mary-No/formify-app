@@ -5,6 +5,7 @@ import { Request, Response } from 'express'
 import { handleRequest } from '../utils/handleRequest'
 import passport from 'passport'
 import { User } from '@prisma/client'
+import jwt from 'jsonwebtoken';
 
 const router = express.Router()
 
@@ -41,15 +42,25 @@ router.get('/google', passport.authenticate('google', {
 }))
 
 router.get('/google/callback',
-    passport.authenticate('google', {
-        failureRedirect: `${CLIENT_URL}/login`,
-        session: true,
-    }),
+    passport.authenticate('google', { failureRedirect: `${CLIENT_URL}/login`, session: false }),
     (req, res) => {
-        if (req.user) {
-            req.session.userId = (req.user as User).id;
-        }
-        res.redirect(`${CLIENT_URL}/auth/callback`);
+        if (!req.user) return res.redirect(`${CLIENT_URL}/login`);
+
+        const token = jwt.sign(
+            { id: (req.user as User).id },
+            process.env.JWT_SECRET!,
+            { expiresIn: '1h' }
+        );
+
+        res.send(`
+            <script>
+                window.opener.postMessage(
+                    { token: "${token}" },
+                    "${CLIENT_URL}"
+                );
+                window.close();
+            </script>
+        `);
     }
 );
 
