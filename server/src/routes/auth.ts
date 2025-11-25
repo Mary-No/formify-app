@@ -4,7 +4,6 @@ import { prisma } from '../prisma'
 import { Request, Response } from 'express'
 import { handleRequest } from '../utils/handleRequest'
 import passport from 'passport'
-import { User } from '@prisma/client'
 import jwt from 'jsonwebtoken';
 import { requireAuth } from '../middleware/requireAuth'
 import {getUserId} from "../utils/getUserId";
