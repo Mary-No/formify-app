@@ -34,6 +34,7 @@ export const OAuthCallback = () => {
             dispatch(setUser(data.user));
             navigate('/');
         } else if (isError) {
+            console.log(isError)
             navigate('/login');
         }
     }, [isSuccess, isError, data, dispatch, navigate]);

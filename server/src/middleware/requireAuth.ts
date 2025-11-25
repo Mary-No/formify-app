@@ -7,6 +7,7 @@ export function requireAuth(req: Request, res: Response, next: NextFunction) {
     if (authHeader?.startsWith('Bearer ')) {
         const token = authHeader.split(' ')[1];
         try {
+            console.log('authHeader:', authHeader)
             const payload = jwt.verify(token, process.env.JWT_SECRET!) as { id: string };
             console.log('JWT verified, payload:', payload);
             req.user = { id: payload.id };
