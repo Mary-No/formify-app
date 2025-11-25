@@ -42,25 +42,44 @@ router.get('/google', passport.authenticate('google', {
 }))
 
 router.get('/google/callback',
-    passport.authenticate('google', { failureRedirect: `${CLIENT_URL}/login`, session: false }),
+    passport.authenticate('google', {
+        failureRedirect: `${CLIENT_URL}/login?error=auth_failed`,
+        session: false
+    }),
     (req, res) => {
-        if (!req.user) return res.redirect(`${CLIENT_URL}/login`);
+        if (!req.user) {
+            return res.redirect(`${CLIENT_URL}/login?error=no_user`);
+        }
 
         const token = jwt.sign(
             { id: (req.user as User).id },
             process.env.JWT_SECRET!,
-            { expiresIn: '1h' }
+            { expiresIn: '24h' }
         );
-
         res.send(`
-            <script>
-                window.opener.postMessage(
-                    { token: "${token}" },
-                    "${CLIENT_URL}"
-                );
-                window.close();
-            </script>
-        `);
+      <html>
+        <head>
+          <title>Authentication Successful</title>
+        </head>
+        <body>
+          <script>
+            // Отправляем токен в opener (фронтенд)
+            if (window.opener && !window.opener.closed) {
+              window.opener.postMessage({
+                type: 'oauth-success',
+                token: '${token}'
+              }, '${CLIENT_URL}');
+              
+              // Закрываем popup после небольшой задержки
+              setTimeout(() => window.close(), 100);
+            } else {
+              // Fallback: если opener недоступен, показываем инструкцию
+              document.body.innerHTML = '<p>Authentication successful! You can close this window.</p>';
+            }
+          </script>
+        </body>
+      </html>
+    `);
     }
 );
 
