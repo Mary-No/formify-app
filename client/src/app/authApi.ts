@@ -27,6 +27,7 @@ export const authApi = api.injectEndpoints({
                 headers: (() => {
                     const headers: Record<string, string> = {}
                     const token = localStorage.getItem('accessToken')
+                    console.log('Adding token to headers:', token);
                     if (token) {
                         headers['Authorization'] = `Bearer ${token}`
                     }

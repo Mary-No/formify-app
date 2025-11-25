@@ -15,13 +15,12 @@ export const OAuthCallback = () => {
         const hash = window.location.hash;
 
         if (hash.startsWith('#token=')) {
-            // Google OAuth
             const token = hash.replace('#token=', '');
+            console.log('OAuth token from URL:', token);
             localStorage.setItem('accessToken', token);
             triggerGetMe();
             window.history.replaceState(null, '', window.location.pathname);
         } else {
-            // Обычная авторизация через сессионные куки
             if (!called) {
                 triggerGetMe();
                 setCalled(true);
@@ -30,6 +29,7 @@ export const OAuthCallback = () => {
     }, [called, triggerGetMe]);
 
     useEffect(() => {
+        console.log('getMe called, data:', data, 'isError:', isError);
         if (isSuccess && data?.user) {
             dispatch(setUser(data.user));
             navigate('/');

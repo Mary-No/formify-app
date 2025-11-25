@@ -4,7 +4,7 @@ export const api = createApi({
     reducerPath: 'api',
     baseQuery: fetchBaseQuery({
         baseUrl: 'https://formify-app.onrender.com/',
-        credentials: 'include', // для обычных сессий
+        credentials: 'include',
         prepareHeaders: (headers) => {
             const token = localStorage.getItem('accessToken');
             if (token) {
