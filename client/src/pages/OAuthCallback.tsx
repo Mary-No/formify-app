@@ -10,10 +10,22 @@ export const OAuthCallback = () => {
     const [triggerGetMe, { data, isSuccess, isError }] = useLazyGetMeQuery();
     const [called, setCalled] = useState(false);
 
+
     useEffect(() => {
-        if (!called) {
+        const hash = window.location.hash;
+
+        if (hash.startsWith('#token=')) {
+            // Google OAuth
+            const token = hash.replace('#token=', '');
+            localStorage.setItem('accessToken', token);
             triggerGetMe();
-            setCalled(true);
+            window.history.replaceState(null, '', window.location.pathname);
+        } else {
+            // Обычная авторизация через сессионные куки
+            if (!called) {
+                triggerGetMe();
+                setCalled(true);
+            }
         }
     }, [called, triggerGetMe]);
 
