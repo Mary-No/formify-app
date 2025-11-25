@@ -63,6 +63,7 @@
   "fillForm": "Заполнить форму",
   "titlePlaceholder": "Введите название",
   "descriptionPlaceholder": "Введите описание",
+  "addAtLeastOneQuestion": "Нужно добавить хотя бы один вопрос",
   "topicPlaceholder": "Выберите тематику",
   "tagsPlaceholder": "Введите теги",
   "dragHint": "Перетащите сюда вопросы",

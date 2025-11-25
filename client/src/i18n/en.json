@@ -63,6 +63,7 @@
   "fillForm": "Fill the form",
   "titlePlaceholder": "Template title",
   "descriptionPlaceholder": "Template description",
+  "addAtLeastOneQuestion": "You need to add at least one question",
   "topicPlaceholder": "Select topic",
   "tagsPlaceholder": "Enter tags",
   "dragHint": "Drag questions here",

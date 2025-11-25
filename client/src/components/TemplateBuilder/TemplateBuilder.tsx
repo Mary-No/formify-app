@@ -49,6 +49,9 @@ export const TemplateBuilder = ({ editMode = false, initialData }: TemplateBuild
             } if (!title){
                 message.error(t('fillTitle'));
                 return;
+            }if (!questions.length) {
+                message.error(t('addAtLeastOneQuestion'));
+                return;
             }
 
             const payload = {

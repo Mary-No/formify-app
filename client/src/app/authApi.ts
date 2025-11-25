@@ -20,11 +20,19 @@ export const authApi = api.injectEndpoints({
                 body: credentials,
             }),
         }),
-        getMe: build.query<
-            { user: User },
-            void
-        >({
-            query: () => '/auth/me',
+        getMe: build.query<{ user: User }, void>({
+            query: () => ({
+                url: '/auth/me',
+                method: 'GET',
+                headers: (() => {
+                    const headers: Record<string, string> = {}
+                    const token = localStorage.getItem('accessToken')
+                    if (token) {
+                        headers['Authorization'] = `Bearer ${token}`
+                    }
+                    return headers
+                })(),
+            }),
         }),
         logout: build.mutation<{ message: string }, void>({
             query: () => ({

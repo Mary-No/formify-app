@@ -63,6 +63,7 @@
   "fillForm": "Wypełnij formularz",
   "titlePlaceholder": "Wpisz tytuł",
   "descriptionPlaceholder": "Wpisz opis",
+  "addAtLeastOneQuestion": "Musisz dodać co najmniej jedno pytanie",
   "topicPlaceholder": "Wybierz temat",
   "tagsPlaceholder": "Wprowadź tagi",
   "dragHint": "Przeciągnij tutaj pytania",
