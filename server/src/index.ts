@@ -38,6 +38,16 @@ app.use(helmet({
     },
 }))
 
+app.use((req, res, next) => {
+    if (req.path.includes('/auth/google/callback')) {
+        res.setHeader(
+            'Content-Security-Policy',
+            "script-src 'self' 'unsafe-inline' https://accounts.google.com; default-src 'self'"
+        );
+    }
+    next();
+});
+
 app.use(cors({
     origin: [
         'http://localhost:5173',
