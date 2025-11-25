@@ -19,7 +19,8 @@ export const DynamicForm = ({
                                 buttonText
                             }: DynamicFormProps) => {
     const [form] = Form.useForm();
-    const { t } = useTranslation();
+    const { t, ready } = useTranslation();
+    if (!ready) return null;
 
     const getRules = (q: Question) => {
         const requiredRule = q.required
