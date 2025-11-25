@@ -56,32 +56,11 @@ router.get('/google/callback',
             process.env.JWT_SECRET!,
             { expiresIn: '24h' }
         );
-        res.send(`
-      <html>
-        <head>
-          <title>Authentication Successful</title>
-        </head>
-        <body>
-          <script>
-            // Отправляем токен в opener (фронтенд)
-            if (window.opener && !window.opener.closed) {
-              window.opener.postMessage({
-                type: 'oauth-success',
-                token: '${token}'
-              }, '${CLIENT_URL}');
-              
-              // Закрываем popup после небольшой задержки
-              setTimeout(() => window.close(), 100);
-            } else {
-              // Fallback: если opener недоступен, показываем инструкцию
-              document.body.innerHTML = '<p>Authentication successful! You can close this window.</p>';
-            }
-          </script>
-        </body>
-      </html>
-    `);
+
+        res.redirect(`${CLIENT_URL}/auth/callback#token=${token}`);
     }
 );
+
 
 router.post('/login', handleRequest(async (req, res) => {
     const { email, password } = req.body;
