@@ -374,7 +374,7 @@ router.patch(
 
 router.get('/:templateId', handleRequest(async (req, res) => {
     const { templateId } = req.params
-    const userId = req.session?.userId
+    const userId = getUserId(req);
 
     const template = await prisma.template.findUnique({
         where: { id: templateId },

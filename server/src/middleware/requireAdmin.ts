@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
 import { prisma } from '../prisma'
-import {getUserId} from "../utils/getUserId";
 
 export async function requireAdmin(req: Request, res: Response, next: NextFunction) {
     const userId = req.user?.id || req.session?.userId;
