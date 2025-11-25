@@ -24,15 +24,6 @@ export const authApi = api.injectEndpoints({
             query: () => ({
                 url: '/auth/me',
                 method: 'GET',
-                headers: (() => {
-                    const headers: Record<string, string> = {}
-                    const token = localStorage.getItem('accessToken')
-                    console.log('Adding token to headers:', token);
-                    if (token) {
-                        headers['Authorization'] = `Bearer ${token}`
-                    }
-                    return headers
-                })(),
             }),
         }),
         logout: build.mutation<{ message: string }, void>({
