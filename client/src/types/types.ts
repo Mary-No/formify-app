@@ -184,6 +184,8 @@ export type GetFormResponse = {
         };
 };
 
+
+
 //statistic types
 export type AggregatedAnswer = {
     author: string;
@@ -203,7 +205,10 @@ export type AggregatedQuestion = {
 export type AggregatedResponse = {
     questions: AggregatedQuestion[];
 };
-
+export type BarChartDatum = {
+    value: number;
+    count: number;
+};
 //admin types
 export type BatchAction = 'delete' | 'block' | 'unblock' | 'promote' | 'demote'
 

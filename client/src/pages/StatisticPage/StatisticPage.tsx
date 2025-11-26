@@ -3,18 +3,15 @@ import {Typography, Table, Spin, Alert, Divider, Card, Row, Col, Image} from 'an
 import { Pie, Column } from '@ant-design/charts';
 import { useGetAggregatedDataQuery } from '../../app/formApi';
 import {useEffect} from "react";
-import { aggregateInteger } from '../../utils/aggregateInteger.ts';
-import { aggregateBoolean } from '../../utils/aggregateBoolean.ts';
+import { aggregateInteger } from '../../utils/aggregateInteger/aggregateInteger.ts';
+import { aggregateBoolean } from '../../utils/aggregateBoolean/aggregateBoolean.ts';
 import s from './StatisticPage.module.scss'
 import { useTranslation } from 'react-i18next';
 import { aggregateSingleChoice } from '../../utils/aggregateSingleChoice.ts';
+import type { BarChartDatum } from '../../types/types.ts';
 
 const { Title } = Typography;
 
-export type BarChartDatum = {
-    value: number;
-    count: number;
-};
 
 export const StatisticPage = () => {
     const { t } = useTranslation();
@@ -124,7 +121,7 @@ export const StatisticPage = () => {
                                             <Pie
                                                 data={aggregateBoolean(q.answers).map(item => ({
                                                     ...item,
-                                                    type: item.value === 'true' ? t('statistics.yes') : t('statistics.no'),
+                                                    type: item.value === "true" ? t('statistics.yes') : t('statistics.no'),
                                                     value: item.count,
                                                 }))}
                                                 angleField="value"

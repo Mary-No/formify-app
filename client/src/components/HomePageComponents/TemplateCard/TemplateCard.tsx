@@ -3,7 +3,7 @@ import { useNavigate} from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { formatTemplateDate } from '../../../utils/formatDate.ts'
 import s from './TemplateCard.module.scss'
-import { truncateWords } from '../../../utils/truncateWords.ts'
+import { truncateWords } from '../../../utils/truncateWords/truncateWords.ts'
 import type {Template} from "../../../types/types.ts";
 import {Likes} from "../../Likes.tsx";
 import truncate from 'html-truncate'
