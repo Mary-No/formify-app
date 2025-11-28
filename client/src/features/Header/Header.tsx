@@ -9,7 +9,6 @@ import { ThemeToggle } from '../../components/HeaderComponents/ThemeToggle/Theme
 import {useLogoutMutation } from '../../app/authApi.ts';
 import {handleApiError} from "../../utils/handleApiErrror.ts";
 import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
-import { setUser } from '../../app/authSlice.ts';
 import {UserAvatar} from "../../components/Avatar.tsx";
 import { api } from '../../app/api.ts';
 import { SearchOutlined } from '@ant-design/icons';
@@ -29,8 +28,6 @@ export const Header = () => {
     const handleLogout = async () => {
         try {
             await logout().unwrap()
-            localStorage.removeItem('accessToken');
-            dispatch(setUser(null));
             dispatch(api.util.resetApiState());
             navigate('/')
         } catch (err) {

@@ -4,8 +4,7 @@ import type React from 'react';
 import { useGetUsersQuery, useBatchUsersMutation } from '../../app/adminApi'
 import { useState } from 'react'
 import { useLogoutMutation } from '../../app/authApi'
-import { useAppDispatch, useAppSelector } from '../../app/hooks'
-import { setUser } from '../../app/authSlice'
+import { useAppSelector } from '../../app/hooks'
 import { BatchActionButton } from './BatchActionButton/BatchActionButton'
 import type {BatchAction} from "../../types/types.ts";
 import { useTranslation } from 'react-i18next'
@@ -19,7 +18,6 @@ export const AdminPanel = () => {
     const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([])
     const [page, setPage] = useState(1)
     const limit = 10
-    const dispatch = useAppDispatch()
     const { user } = useAppSelector((state) => state.auth)
     const [logout] = useLogoutMutation()
     const { data, isLoading, refetch } = useGetUsersQuery({ page, limit, search: searchTerm })
@@ -42,8 +40,6 @@ export const AdminPanel = () => {
 
             if (isSelfAffected && (action === 'delete' || action === 'block')){
                 await logout()
-                localStorage.removeItem('accessToken');
-                dispatch(setUser(null))
                 message.warning(`${t('admin.messages.logout')}${t(`admin.actions.${action}`)}`)
             }
             if(isSelfAffected && action === 'demote'){
