@@ -5,7 +5,7 @@ import { prisma } from '../prisma'
 import { handleRequest } from '../utils/handleRequest'
 import { getUserId } from '../utils/getUserId'
 import { isAuthorOrAdmin } from '../utils/isAuthorOrAdmin'
-import {requireAdmin} from "../middleware/requireAdmin";
+
 
 const router = express.Router()
 router.use(requireAuth, requireNotBlocked)

@@ -45,7 +45,7 @@ router.patch("/:id/type", async (req, res) => {
         where: { id: req.params.id }
     });
 
-    if (!company || company.ownerId !== req.session.userId) {
+    if (!company || company.ownerId !== req.user?.id) {
         res.status(403).json({ message: "Not allowed" });
         return
     }
@@ -65,7 +65,7 @@ router.post("/:id/users", async (req, res) => {
         include: { users: true }
     });
 
-    if (!company || company.ownerId !== req.session.userId) {
+    if (!company || company.ownerId !== req.user?.id) {
         res.status(403).json({ message: "Not allowed" });
         return
     }
@@ -88,7 +88,7 @@ router.delete("/:id/users/:userId", async (req, res) => {
         where: { id: req.params.id }
     });
 
-    if (!company || company.ownerId !== req.session.userId) {
+    if (!company || company.ownerId !== req.user?.id) {
        res.status(403).json({ message: "Not allowed" });
         return
     }
@@ -107,7 +107,7 @@ router.get("/api/company/:id", async (req, res) => {
         include: { users: true }
     });
 
-    if (!company || company.ownerId !== req.session.userId) {
+    if (!company || company.ownerId !== req.user?.id) {
         res.status(403).json({ message: "Not allowed" });
         return
     }

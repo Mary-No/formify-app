@@ -101,7 +101,7 @@ router.post('/', requireAuth, requireNotBlocked, handleRequest(async (req, res) 
 
 
 router.get('/', handleRequest(async (req, res) => {
-    const userId = req.user?.id || req.session?.userId
+    const userId = req.user?.id
     const skip = Number(req.query.skip ?? 0)
     const take = 20
     const search = req.query.search as string || ''
@@ -169,7 +169,7 @@ router.get('/', handleRequest(async (req, res) => {
 }))
 
 router.get('/overview', handleRequest(async (req, res) => {
-    const userId = req.user?.id || req.session?.userId
+    const userId = req.user?.id
 
     const [popularTemplates, latestTemplates] = await Promise.all([
         prisma.template.findMany({
@@ -374,7 +374,7 @@ router.patch(
 
 router.get('/:templateId', handleRequest(async (req, res) => {
     const { templateId } = req.params
-    const userId = req.user?.id || req.session?.userId;
+    const userId = req.user?.id
 
     const template = await prisma.template.findUnique({
         where: { id: templateId },

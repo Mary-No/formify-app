@@ -1,13 +1,12 @@
-/// <reference path="./types/express-session.d.ts" />
 import express from 'express'
 import cors from 'cors'
-import session from 'express-session'
 import passport from 'passport'
 import helmet from 'helmet'
-import './auth/google'
+import cookieParser from 'cookie-parser'
 import { config } from 'dotenv'
-import { initSocket } from './socket'
 import http from 'http'
+import './auth/google'
+import { initSocket } from './socket'
 import authRoutes from './routes/auth'
 import formsRoutes from './routes/forms'
 import templatesRoutes from './routes/templates'
@@ -19,6 +18,7 @@ config()
 const app = express()
 app.set('trust proxy', 1)
 const PORT = 4000
+
 app.use(helmet({
     contentSecurityPolicy: {
         directives: {
@@ -56,30 +56,14 @@ app.use(cors({
     credentials: true,
 }))
 app.use(express.json())
-
-
-app.use(session({
-    secret: process.env.SESSION_SECRET || 'supersecret',
-    resave: false,
-    saveUninitialized: false,
-    proxy: true,
-    cookie: {
-        secure: true,
-        sameSite: 'none',
-        httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24 * 7,
-    }
-}))
-
+app.use(cookieParser() as express.RequestHandler);
 app.use(passport.initialize())
-app.use(passport.session())
 
 app.use('/auth', authRoutes)
 app.use('/forms', formsRoutes)
 app.use('/templates', templatesRoutes)
 app.use('/admin', adminRoutes)
 app.use('/company', companyRoutes)
-
 
 app.get('/', (_, res) => {
     res.send('Formify API is running')
