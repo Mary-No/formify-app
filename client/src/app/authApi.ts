@@ -39,7 +39,6 @@ export const authApi = api.injectEndpoints({
             async onQueryStarted(_, { dispatch }) {
                 dispatch(logoutAction());
                 dispatch(setUser(null))
-                dispatch(api.util.resetApiState());
             },
         }),
         refresh: build.mutation<{ accessToken: string }, void>({
