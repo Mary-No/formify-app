@@ -15,13 +15,12 @@ export const SignIn = () => {
     const { t } = useTranslation()
     const navigate = useNavigate()
     const [login, { isLoading }] = useLoginMutation()
-    const { refetch: refetchMe } = useGetMeQuery();
+    const { refetch: refetchMe } = useGetMeQuery(undefined, { skip: true });
 
     const onFinish = async (values: { email: string; password: string }) => {
         try {
             await login(values).unwrap();
             const { data } = await refetchMe();
-
             if (data?.user && !data.user.isBlocked) {
                 dispatch(setUser(data.user));
                 message.success(t('loginSuccess'));
