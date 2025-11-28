@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../app/hooks';
 import { setUser } from '../app/authSlice';
@@ -8,8 +8,6 @@ export const OAuthCallback = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const [triggerGetMe, { data, isSuccess, isError }] = useLazyGetMeQuery();
-    const [called, setCalled] = useState(false);
-
 
     useEffect(() => {
         const hash = window.location.hash;
@@ -17,15 +15,12 @@ export const OAuthCallback = () => {
         if (hash.startsWith('#token=')) {
             const token = hash.replace('#token=', '');
             localStorage.setItem('accessToken', token);
-            setTimeout(() => triggerGetMe(), 0);
+            triggerGetMe();
             window.history.replaceState(null, '', window.location.pathname);
         } else {
-            if (!called) {
-                triggerGetMe();
-                setCalled(true);
-            }
+            triggerGetMe();
         }
-    }, [called, triggerGetMe]);
+    }, [triggerGetMe]);
 
     useEffect(() => {
         if (isSuccess && data?.user) {
@@ -38,3 +33,4 @@ export const OAuthCallback = () => {
 
     return <p>Logging in via Google...</p>;
 };
+

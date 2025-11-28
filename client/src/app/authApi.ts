@@ -1,5 +1,6 @@
-import type {RegisterPayload, User, UserLogin, UserResponse} from '../types/types';
+import type { RegisterPayload, User, UserLogin, UserResponse } from '../types/types';
 import { api } from './api';
+import { logout } from './authSlice';
 
 export const authApi = api.injectEndpoints({
     endpoints: (build) => ({
@@ -10,15 +11,19 @@ export const authApi = api.injectEndpoints({
                 body,
             }),
         }),
-        login: build.mutation<
-            { message: string; user: UserLogin },
-            { email: string; password: string }
-        >({
+        login: build.mutation<{ accessToken: string; user: UserLogin }, { email: string; password: string }>({
             query: (credentials) => ({
                 url: '/auth/login',
                 method: 'POST',
                 body: credentials,
             }),
+            async onQueryStarted(_, { dispatch, queryFulfilled }) {
+                try {
+                    const { data } = await queryFulfilled;
+                    localStorage.setItem('accessToken', data.accessToken);
+                    dispatch(authApi.endpoints.getMe.initiate());
+                } catch {}
+            },
         }),
         getMe: build.query<{ user: User }, void>({
             query: () => ({
@@ -31,13 +36,24 @@ export const authApi = api.injectEndpoints({
                 url: '/auth/logout',
                 method: 'POST',
             }),
+            async onQueryStarted(_, { dispatch }) {
+                localStorage.removeItem('accessToken');
+                dispatch(logout());
+            },
+        }),
+        refresh: build.mutation<{ accessToken: string }, void>({
+            query: () => ({
+                url: '/auth/refresh',
+                method: 'POST',
+            }),
+            async onQueryStarted(_, { queryFulfilled }) {
+                try {
+                    const { data } = await queryFulfilled;
+                    localStorage.setItem('accessToken', data.accessToken);
+                } catch {}
+            },
         }),
     }),
-})
+});
 
-export const {  useRegisterMutation,
-                useLoginMutation,
-                useGetMeQuery,
-                useLogoutMutation,
-                useLazyGetMeQuery} = authApi
-
+export const { useRegisterMutation, useLoginMutation, useGetMeQuery, useLazyGetMeQuery, useLogoutMutation, useRefreshMutation } = authApi;
