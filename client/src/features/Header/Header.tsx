@@ -8,16 +8,14 @@ import s from './Header.module.scss'
 import { ThemeToggle } from '../../components/HeaderComponents/ThemeToggle/ThemeToggle.tsx';
 import {useLogoutMutation } from '../../app/authApi.ts';
 import {handleApiError} from "../../utils/handleApiErrror.ts";
-import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
+import {useAppSelector} from "../../app/hooks.ts";
 import {UserAvatar} from "../../components/Avatar.tsx";
-import { api } from '../../app/api.ts';
 import { SearchOutlined } from '@ant-design/icons';
 const { useBreakpoint } = Grid;
 
 const { Header: AntHeader } = Layout
 
 export const Header = () => {
-    const dispatch = useAppDispatch()
     const navigate = useNavigate()
     const { t } = useTranslation()
     const { pathname } = useLocation()
@@ -28,7 +26,7 @@ export const Header = () => {
     const handleLogout = async () => {
         try {
             await logout().unwrap()
-            dispatch(api.util.resetApiState());
+            localStorage.removeItem('accessToken');
             navigate('/')
         } catch (err) {
             handleApiError(err, t)

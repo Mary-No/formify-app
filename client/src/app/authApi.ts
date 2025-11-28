@@ -1,6 +1,6 @@
 import type { RegisterPayload, User, UserLogin, UserResponse } from '../types/types';
 import { api } from './api';
-import {logout, setUser} from './authSlice';
+import {logoutAction, setUser} from './authSlice';
 
 export const authApi = api.injectEndpoints({
     endpoints: (build) => ({
@@ -37,9 +37,9 @@ export const authApi = api.injectEndpoints({
                 method: 'POST',
             }),
             async onQueryStarted(_, { dispatch }) {
-                dispatch(logout());
-                localStorage.removeItem('accessToken');
+                dispatch(logoutAction());
                 dispatch(setUser(null))
+                dispatch(api.util.resetApiState());
             },
         }),
         refresh: build.mutation<{ accessToken: string }, void>({
