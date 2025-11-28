@@ -186,7 +186,7 @@ router.get(
 );
 
 
-router.post('/logout', requireAuth, (req, res) => {
+router.post('/logout', (req, res) => {
     res.clearCookie('refreshToken', {
         path: '/auth/refresh',
         httpOnly: true,
