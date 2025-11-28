@@ -31,7 +31,9 @@ function AppWithAuth() {
     const dispatch = useAppDispatch();
     const location = useLocation();
 
-    const skipMeQuery = location.pathname.startsWith("/auth/callback");
+    const token = localStorage.getItem('accessToken');
+    const skipMeQuery = !token || location.pathname.startsWith("/auth/callback");
+
     const { data } = useGetMeQuery(undefined, { skip: skipMeQuery });
     useEffect(() => {
         if (data?.user && !data?.user.isBlocked) {
