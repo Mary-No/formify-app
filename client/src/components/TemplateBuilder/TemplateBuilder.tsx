@@ -79,10 +79,10 @@ export const TemplateBuilder = ({ editMode = false, initialData }: TemplateBuild
 
             if (editMode && initialData?.id) {
                 await updateTemplate({ id: initialData.id, data: payload }).unwrap();
-                message.success(t('template.updated'));
+                message.success(t('templateUpdated'));
             } else {
                 await createTemplate(payload).unwrap();
-                message.success(t('template.created'));
+                message.success(t('templateCreated'));
             }
 
             navigate("/account");

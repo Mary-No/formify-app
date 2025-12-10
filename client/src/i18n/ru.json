@@ -79,6 +79,8 @@
   "answerType": "Ответ вида",
   "template": "Шаблон",
   "templateNotFound": "Шаблон не найден",
+  "templateCreated": "Шаблон успешно создан.",
+  "templateUpdated": "Шаблон успешно обновлён.",
   "saveTemplate": "Сохранить шаблон",
   "enterTags": "Введите теги",
   "errorTitle": "Ошибка",

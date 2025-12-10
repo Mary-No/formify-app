@@ -11,7 +11,7 @@ const { Option } = Select
 import s from './Canvas.module.scss'
 import {useGetTagsQuery} from "../../../app/templateApi.ts";
 import {useTranslation} from "react-i18next";
-import {MarkdownDescription} from "../MarkdownDescription.tsx";
+import {MarkdownDescription} from "../MarkdownDescription/MarkdownDescription.tsx";
 import type React from 'react';
 
 type DraggedQuestionItem = {

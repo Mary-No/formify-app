@@ -80,6 +80,8 @@
   "template": "Szablon",
   "templateNotFound": "Szablon nie został znaleziony",
   "saveTemplate": "Zapisz szablon",
+  "templateCreated": "Szablon został pomyślnie utworzony.",
+  "templateUpdated": "Szablon został pomyślnie zaktualizowany.",
   "enterTags": "Wprowadź tagi",
   "errorTitle": "Błąd",
   "myTemplates": {

@@ -10,7 +10,7 @@ import {useAppDispatch, useAppSelector} from "./app/hooks.ts";
 import { useEffect } from "react";
 import {setUser} from "./app/authSlice.ts";
 import {TemplatePage} from "./pages/TemplatePage.tsx";
-import { FillFormPage } from "./pages/FillFormPage.tsx";
+import { FillFormPage } from "./pages/FillFormPage/FillFormPage.tsx";
 import PersonalAccountPage from "./pages/PersonalAccountPage/PersonalAccountPage.tsx";
 import { PrivateRoute } from "./components/PrivateRoute.tsx";
 import { TemplateBuilder } from "./components/TemplateBuilder/TemplateBuilder.tsx";

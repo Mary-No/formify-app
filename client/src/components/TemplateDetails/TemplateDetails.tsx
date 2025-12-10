@@ -13,6 +13,7 @@ import {useNavigate} from "react-router-dom";
 import {useAppSelector} from "../../app/hooks.ts";
 import { Image } from 'antd'
 import {TemplateActionsMenu} from "../TemplateActionsMenu.tsx";
+import ReactQuill from "react-quill";
 
 const { Title } = Typography
 const { useBreakpoint } = Grid;
@@ -63,9 +64,7 @@ export const TemplateDetails = ({data}:Props) => {
                 </Descriptions.Item>
                 <Descriptions.Item label={t('topic')}> <TemplateTopic topic={template.topic}/></Descriptions.Item>
                 <Descriptions.Item label={t('description')}>
-                    <div
-                        dangerouslySetInnerHTML={{__html: template.description}}
-                    />
+                    <ReactQuill className={s.desc} value={template.description} readOnly theme="bubble" />
                 </Descriptions.Item>
                 <Descriptions.Item className={s.tags} label={t('tags')}>
                     <TemplateTag tags={template.tags}/>

@@ -1,7 +1,7 @@
 import { Spin } from "antd";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { FillFormPage } from "../pages/FillFormPage.tsx";
+import { FillFormPage } from "../pages/FillFormPage/FillFormPage.tsx";
 import { useGetFormByIdQuery } from "../app/formApi.ts";
 
 export const FormEditor = () => {

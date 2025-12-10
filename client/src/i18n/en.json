@@ -79,6 +79,8 @@
   "answerType": "Answer type",
   "template": "Template",
   "templateNotFound": "Template not found",
+  "templateCreated": "Template has been created successfully.",
+  "templateUpdated": "Template has been updated successfully.",
   "saveTemplate": "Save Template",
   "enterTags": "Enter tags",
   "errorTitle": "Error",
