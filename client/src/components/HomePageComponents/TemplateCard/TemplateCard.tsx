@@ -7,6 +7,7 @@ import { truncateWords } from '../../../utils/truncateWords/truncateWords.ts'
 import type {Template} from "../../../types/types.ts";
 import {Likes} from "../../Likes.tsx";
 import truncate from 'html-truncate'
+import ReactQuill from "react-quill";
 
 type Props = {
     template: Template
@@ -39,7 +40,7 @@ export const TemplateCard = ({ template }: Props) => {
                 title={<div style={{whiteSpace: 'normal'}}>{truncateWords(template.title, 6)}</div>}
                 description={template.author?.nickname}
             />
-            <p className={s.description} dangerouslySetInnerHTML={{__html: truncate(template.description, 98, {ellipsis: '...'})}}/>
+            <ReactQuill className={s.description} value={truncate(template.description, 114, {ellipsis: '...'})} readOnly theme="bubble" />
         </Card>
 
     );

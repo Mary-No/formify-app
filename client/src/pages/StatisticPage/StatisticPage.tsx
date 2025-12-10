@@ -9,6 +9,7 @@ import s from './StatisticPage.module.scss'
 import { useTranslation } from 'react-i18next';
 import { aggregateSingleChoice } from '../../utils/aggregateSingleChoice.ts';
 import type { BarChartDatum } from '../../types/types.ts';
+import ReactQuill from "react-quill";
 
 const { Title } = Typography;
 
@@ -37,9 +38,7 @@ export const StatisticPage = () => {
     return (
         <div className={s.container}>
             <Title className={s.title} level={2}>{title}</Title>
-            <div className={s.description}
-                dangerouslySetInnerHTML={{__html: description}}
-            />
+            <ReactQuill className={s.description} value={description} readOnly theme="bubble" />
             <Divider/>
 
             {data.questions.map((q) => {

@@ -11,17 +11,20 @@
 .title, .description{
   color: var(--text-color)!important;
 }
+.description p{
+  font-size: 14px;
+}
+.pie{
+  display: flex;
+  justify-content: center;
+}
+:global [data-chart-source-type="Ant Design Charts"] {
+    flex: none!important;
+}
 @media (max-width: $breakpoint-sm) {
   .container {
     padding: 0;
     margin-top: 20px;
   }
 }
-.pie :global [data-chart-source-type="Ant Design Charts"] {
-  left: 50%;
-}
-@media (max-width: $breakpoint-sm) {
-  .pie :global [data-chart-source-type="Ant Design Charts"] {
-    left: auto;
-  }
-}
+

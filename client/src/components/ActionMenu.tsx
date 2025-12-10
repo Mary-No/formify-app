@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { Dropdown, Menu, Button, Modal, message } from 'antd'
 import { MoreOutlined, EditOutlined, DeleteOutlined, BarChartOutlined } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
-import {useNavigate} from "react-router-dom";
 
 type Props = {
     onEdit: () => void
@@ -15,14 +14,12 @@ export const ActionMenu = ({ onEdit, onDelete, onStats, loading = false }: Props
     const { t } = useTranslation()
     const [modalVisible, setModalVisible] = useState(false)
 
-    const navigate = useNavigate()
     const showDeleteConfirm = () => setModalVisible(true)
 
     const handleDelete = async () => {
         try {
             await onDelete()
             message.success(t('action.deleteSuccess'))
-            navigate("/")
         } catch {
             message.error(t('action.deleteError'))
         } finally {
