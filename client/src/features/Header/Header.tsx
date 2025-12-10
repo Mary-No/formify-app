@@ -9,7 +9,7 @@ import { ThemeToggle } from '../../components/HeaderComponents/ThemeToggle/Theme
 import {useLogoutMutation } from '../../app/authApi.ts';
 import {handleApiError} from "../../utils/handleApiError.ts";
 import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
-import {UserAvatar} from "../../components/Avatar.tsx";
+import {UserAvatar} from "../../components/HeaderComponents/Avatar/Avatar.tsx";
 import { SearchOutlined } from '@ant-design/icons';
 import { logoutAction } from '../../app/authSlice.ts';
 const { useBreakpoint } = Grid;
