@@ -101,7 +101,7 @@ router.post('/', requireAuth, requireNotBlocked, handleRequest(async (req, res) 
 }))
 
 router.get(
-    '/',
+    '/', optionalAuth,
     handleRequest(async (req, res) => {
         const userId = req.user?.id;
 
