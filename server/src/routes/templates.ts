@@ -280,14 +280,18 @@ router.delete('/:id', requireAuth, requireNotBlocked, async (req, res) => {
         return
     }
 
-    await prisma.template.delete({ where: { id } })
-    await prisma.tag.deleteMany({
-        where: {
-            templates: {
-                none: {},
+    await prisma.$transaction([
+        prisma.template.delete({
+            where: { id },
+        }),
+        prisma.tag.deleteMany({
+            where: {
+                templates: {
+                    none: {},
+                },
             },
-        },
-    })
+        }),
+    ])
 
     res.status(200).json({ message: 'Template deleted successfully' })
 })
