@@ -115,6 +115,7 @@ router.get('/', handleRequest(async (req, res) => {
 
     if (mine) {
         if (!userId) {
+            console.log("user id problem")
             res.status(401).json({ error: 'Unauthorized' })
             return
         }
