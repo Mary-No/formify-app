@@ -407,7 +407,7 @@ router.patch(
     })
 );
 
-router.get('/:templateId', handleRequest(async (req, res) => {
+router.get('/:templateId', optionalAuth, handleRequest(async (req, res) => {
     const { templateId } = req.params
     const userId = req.user?.id
 
