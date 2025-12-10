@@ -40,7 +40,7 @@ export const AdminPanel = () => {
 
             if (isSelfAffected && (action === 'delete' || action === 'block')){
                 await logout()
-                message.warning(`${t('admin.messages.logout')}${t(`admin.actions.${action}`)}`)
+                message.warning(`${t('admin.messages.logout')}${t(`admin.actions.${action}`).toLowerCase()}`)
             }
             if(isSelfAffected && action === 'demote'){
                 window.location.reload()

@@ -16,7 +16,6 @@ type Props={
 }
 export const TemplateSearchCard = ({item}:Props) => {
     const { t } = useTranslation()
-    console.log(item)
 
     return <Card className={s.card} key={item.id} title={
             <div className={s.header}>

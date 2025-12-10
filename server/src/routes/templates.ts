@@ -11,6 +11,7 @@ import {questionSchema, TopicEnum, updateTemplateSchema } from '../types/templat
 import { isAuthorOrAdmin } from '../utils/isAuthorOrAdmin'
 import { toTemplateCardDto } from '../utils/toTemplateCardDto'
 import { $Enums } from '@prisma/client'
+import {optionalAuth} from "../middleware/optionalAuth";
 
 const router = express.Router()
 
@@ -198,7 +199,7 @@ router.get('/mine', requireAuth, handleRequest(async (req, res) => {
     })
 );
 
-router.get('/overview', handleRequest(async (req, res) => {
+router.get('/overview',optionalAuth, handleRequest(async (req, res) => {
     const userId = req.user?.id
 
     const [popularTemplates, latestTemplates] = await Promise.all([
