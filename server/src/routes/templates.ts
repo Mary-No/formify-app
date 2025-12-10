@@ -99,74 +99,62 @@ router.post('/', requireAuth, requireNotBlocked, handleRequest(async (req, res) 
     res.status(201).json({ template })
 }))
 
-
 router.get('/', handleRequest(async (req, res) => {
-    const userId = getUserId(req)
-    const skip = Number(req.query.skip ?? 0)
-    const take = 20
-    const search = req.query.search as string || ''
-    const sortOrder = req.query.order === 'asc' ? 'asc' : 'desc'
-    const topic = req.query.topic as string | undefined
-    const tags = Array.isArray(req.query.tags) ? req.query.tags : req.query.tags ? [req.query.tags] : []
+        const skip = Number(req.query.skip ?? 0);
+        const take = 20;
+        const search = (req.query.search as string) || '';
+        const sortOrder = req.query.order === 'asc' ? 'asc' : 'desc';
+        const topic = req.query.topic as string | undefined;
+        const tags = Array.isArray(req.query.tags)
+            ? req.query.tags
+            : req.query.tags
+                ? [req.query.tags]
+                : [];
 
-    const mine = req.query.mine === 'true'
+        const filters = buildTemplateFilters({ search, topic, tags });
 
-    const filters: any = {}
-
-    if (mine) {
-        if (!userId) {
-            res.status(401).json({ error: 'Unauthorized' })
-            return
-        }
-        filters.authorId = userId
-    } else {
-        filters.isPublic = true
-    }
-
-    if (topic) filters.topic = topic
-
-    if (search) {
-        filters.AND = [
-            ...(filters.AND || []),
-            {
-                OR: [
-                    { title: { contains: search, mode: 'insensitive' } },
-                    { description: { contains: search, mode: 'insensitive' } },
-                    {
-                        comments: {
-                            some: {
-                                text: { contains: search, mode: 'insensitive' },
-                            },
-                        },
-                    },
-                ],
+        const templates = await prisma.template.findMany({
+            where: filters,
+            skip,
+            take,
+            orderBy: { createdAt: sortOrder },
+            include: {
+                author: { select: { id: true, nickname: true } },
+                tags: true,
+                _count: { select: { likes: true } },
             },
-        ]
-    }
+        });
 
-    if (tags.length > 0) {
-        filters.tags = { some: { name: { in: tags } } }
-    }
+        const result = await Promise.all(templates.map(t => toTemplateCardDto(t)));
 
-    const templates = await prisma.template.findMany({
-        where: filters,
-        skip,
-        take,
-        orderBy: { createdAt: sortOrder },
-        include: {
-            author: { select: { id: true, nickname: true } },
-            tags: true,
-            _count: { select: { likes: true } },
-            likes: userId ? { where: { userId }, select: { userId: true } } : false,
-        },
+        res.json({ templates: result });
     })
+);
 
-    const result = await Promise.all(
-        templates.map(t => toTemplateCardDto(t, userId))
-    )
+router.get('/mine', requireAuth, handleRequest(async (req, res) => {
+        const userId = req.user!.id;
+        const skip = Number(req.query.skip ?? 0);
+        const take = 20;
+        const sortOrder = req.query.order === 'asc' ? 'asc' : 'desc';
 
-    res.json({ templates: result })
-}))
+        const templates = await prisma.template.findMany({
+            where: { authorId: userId },
+            skip,
+            take,
+            orderBy: { createdAt: sortOrder },
+            include: {
+                author: { select: { id: true, nickname: true } },
+                tags: true,
+                _count: { select: { likes: true } },
+                likes: { where: { userId }, select: { userId: true } },
+            },
+        });
+
+        const result = await Promise.all(templates.map(t => toTemplateCardDto(t, userId)));
+
+        res.json({ templates: result });
+    })
+);
 
 router.get('/overview', handleRequest(async (req, res) => {
     const userId = req.user?.id
