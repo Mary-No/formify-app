@@ -21,35 +21,31 @@ export async function handleBatchAction(
     action: UserBatchAction,
     currentUserId: string
 ): Promise<{ affected: string[]; demotedSelf?: boolean }> {
-    const filteredIds =
-        action === 'delete'
-            ? userIds.filter((id) => id !== currentUserId)
-            : userIds
 
-    if (filteredIds.length === 0) {
+    if (userIds.length === 0) {
         throw new Error('Nothing to process (cannot affect yourself)')
     }
 
     switch (action) {
         case 'block':
-            await prisma.user.updateMany({ where: { id: { in: filteredIds } }, data: { isBlocked: true } })
+            await prisma.user.updateMany({ where: { id: { in: userIds } }, data: { isBlocked: true } })
             break
         case 'unblock':
-            await prisma.user.updateMany({ where: { id: { in: filteredIds } }, data: { isBlocked: false } })
+            await prisma.user.updateMany({ where: { id: { in: userIds } }, data: { isBlocked: false } })
             break
         case 'promote':
-            await prisma.user.updateMany({ where: { id: { in: filteredIds } }, data: { isAdmin: true } })
+            await prisma.user.updateMany({ where: { id: { in: userIds } }, data: { isAdmin: true } })
             break
         case 'demote':
-            await prisma.user.updateMany({ where: { id: { in: filteredIds } }, data: { isAdmin: false } })
+            await prisma.user.updateMany({ where: { id: { in: userIds } }, data: { isAdmin: false } })
             break
         case 'delete':
-            await prisma.user.deleteMany({ where: { id: { in: filteredIds } } })
+            await prisma.user.deleteMany({ where: { id: { in: userIds } } })
             break
     }
 
     return {
-        affected: filteredIds,
+        affected: userIds,
         demotedSelf: action === 'demote' && userIds.includes(currentUserId)
     }
 }
