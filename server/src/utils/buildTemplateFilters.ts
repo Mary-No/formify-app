@@ -1,7 +1,6 @@
-function buildTemplateFilters({ mine, userId, topic, tags, search }: any) {
+function buildTemplateFilters({ userId, topic, tags, search }: any) {
     const filters: any = {};
-    if (mine) filters.authorId = userId;
-    else filters.isPublic = true;
+   filters.isPublic = true;
 
     if (topic) filters.topic = topic;
 

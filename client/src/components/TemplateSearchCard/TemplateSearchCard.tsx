@@ -32,7 +32,7 @@ export const TemplateSearchCard = ({item}:Props) => {
             <div className={s.author}>
                 {t("author")}: {item.author.nickname}
             </div>
-            <p dangerouslySetInnerHTML={{__html: item.description}}/>
+            <p className={s.description}>{item.description}</p>
             <div className={s.tagsAndLikes}>
                 <TemplateTag tags={item.tags}/>
                 <Likes templateId={item.id} likesCount={item.likesCount} likedByUser={item.likedByUser} size="small"/>
