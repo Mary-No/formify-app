@@ -99,19 +99,55 @@ router.post('/', requireAuth, requireNotBlocked, handleRequest(async (req, res) 
     res.status(201).json({ template })
 }))
 
-router.get('/', handleRequest(async (req, res) => {
+router.get(
+    '/',
+    handleRequest(async (req, res) => {
+        const userId = req.user?.id;
+
         const skip = Number(req.query.skip ?? 0);
         const take = 20;
         const search = (req.query.search as string) || '';
         const sortOrder = req.query.order === 'asc' ? 'asc' : 'desc';
         const topic = req.query.topic as string | undefined;
+
         const tags = Array.isArray(req.query.tags)
             ? req.query.tags
             : req.query.tags
                 ? [req.query.tags]
                 : [];
 
-        const filters = buildTemplateFilters({ search, topic, tags });
+        const filters: any = {
+            isPublic: true,
+        };
+
+        if (topic) filters.topic = topic;
+
+        if (search) {
+            filters.AND = [
+                ...(filters.AND || []),
+                {
+                    OR: [
+                        { title: { contains: search, mode: 'insensitive' } },
+                        { description: { contains: search, mode: 'insensitive' } },
+                        {
+                            comments: {
+                                some: {
+                                    text: { contains: search, mode: 'insensitive' },
+                                },
+                            },
+                        },
+                    ],
+                },
+            ];
+        }
+
+        if (tags.length > 0) {
+            filters.tags = {
+                some: {
+                    name: { in: tags },
+                },
+            };
+        }
 
         const templates = await prisma.template.findMany({
             where: filters,
@@ -122,14 +158,20 @@ router.get('/', handleRequest(async (req, res) => {
                 author: { select: { id: true, nickname: true } },
                 tags: true,
                 _count: { select: { likes: true } },
+                likes: userId
+                    ? { where: { userId }, select: { userId: true } }
+                    : false,
             },
         });
 
-        const result = await Promise.all(templates.map(t => toTemplateCardDto(t)));
+        const result = await Promise.all(
+            templates.map((t) => toTemplateCardDto(t, userId))
+        );
 
         res.json({ templates: result });
     })
 );
+
 
 router.get('/mine', requireAuth, handleRequest(async (req, res) => {
         const userId = req.user!.id;

@@ -9,12 +9,14 @@ import {Link} from "react-router-dom";
 import {TemplateTopic} from "../Topic.tsx";
 import {Likes} from "../Likes.tsx";
 import { TemplateActionsMenu } from "../TemplateActionsMenu.tsx";
+import ReactQuill from "react-quill";
 
 type Props={
     item: Template
 }
 export const TemplateSearchCard = ({item}:Props) => {
     const { t } = useTranslation()
+    console.log(item)
 
     return <Card className={s.card} key={item.id} title={
             <div className={s.header}>
@@ -32,7 +34,7 @@ export const TemplateSearchCard = ({item}:Props) => {
             <div className={s.author}>
                 {t("author")}: {item.author.nickname}
             </div>
-            <p className={s.description}>{item.description}</p>
+            <ReactQuill className={s.description} value={item.description} readOnly theme="bubble" />
             <div className={s.tagsAndLikes}>
                 <TemplateTag tags={item.tags}/>
                 <Likes templateId={item.id} likesCount={item.likesCount} likedByUser={item.likedByUser} size="small"/>
