@@ -15,6 +15,9 @@ export const templateApi  = api.injectEndpoints({
         }),
         searchTemplates: build.query<TemplateListResponse, SearchTemplatesArgs>({
             query: ({ skip = 0, search, topic, tags, order = 'desc', mine }) => {
+                if (mine) {
+                    return `/templates/mine`;
+                }
                 const params = new URLSearchParams();
                 params.set('skip', skip.toString());
                 if (search) params.set('search', search);
@@ -22,8 +25,7 @@ export const templateApi  = api.injectEndpoints({
                 if (order) params.set('order', order);
                 if (tags && tags.length) tags.forEach(tag => params.append('tags', tag));
 
-                const url = mine ? `/templates/mine` : `/templates`;
-                return mine ? `${url}?${params.toString()}` : `${url}?${params.toString()}`;
+                return mine ? `/templates?${params.toString()}` : `/templates?${params.toString()}`;
             },
             providesTags: (result) =>
                 result
