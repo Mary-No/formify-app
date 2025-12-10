@@ -1,7 +1,7 @@
 import { Form, Input, Button, Typography, message } from 'antd'
 import { useTranslation } from 'react-i18next'
 import {useLazyGetMeQuery, useLoginMutation } from '../../app/authApi'
-import {handleApiError} from "../../utils/handleApiErrror.ts";
+import {handleApiError} from "../../utils/handleApiError.ts";
 import s from "./SignIn.module.scss"
 import {GoogleAuthButton} from "../../components/GoogleAuthButton.tsx";
 import { setUser } from '../../app/authSlice.ts';
@@ -17,11 +17,11 @@ export const SignIn = () => {
     const [login, { isLoading }] = useLoginMutation()
     const [triggerGetMe] = useLazyGetMeQuery();
 
-
     const onFinish = async (values: { email: string; password: string }) => {
         try {
             await login(values).unwrap();
             const { data } = await triggerGetMe();
+
             if (data?.user && !data.user.isBlocked) {
                 dispatch(setUser(data.user));
                 message.success(t('loginSuccess'));

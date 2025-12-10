@@ -13,11 +13,9 @@ const baseQuery = fetchBaseQuery({
 });
 
 const baseQueryWithRefresh: typeof baseQuery = async (args, api, extraOptions) => {
-    const token = localStorage.getItem('accessToken');
-    if (!token) return { data: undefined };
-
     let result = await baseQuery(args, api, extraOptions);
-
+    const token = localStorage.getItem('accessToken');
+    if (!token) return result;
     if (result.error && (result.error.status === 401 || (result.error.data as any)?.error === 'Invalid token')) {
         const refreshResult = await baseQuery('/auth/refresh', api, extraOptions);
         if (refreshResult.data && (refreshResult.data as any).accessToken) {

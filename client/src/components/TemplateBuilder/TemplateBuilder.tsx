@@ -9,7 +9,7 @@ import s from './TemplateBuilder.module.scss'
 import { QUESTION_TYPES } from '../../constants'
 import type { Question, Topic } from '../../types/types.ts'
 import { useTranslation } from 'react-i18next'
-import {handleApiError} from "../../utils/handleApiErrror.ts";
+import {handleApiError} from "../../utils/handleApiError.ts";
 import {useNavigate} from "react-router-dom";
 
 type TemplateBuilderProps = {

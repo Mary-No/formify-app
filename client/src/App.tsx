@@ -6,7 +6,7 @@ import {SignIn} from "./pages/SignIn/SignIn.tsx";
 import { TemplateSearchPage } from "./pages/TemplateSearchPage/TemplateSearchPage.tsx";
 import { MainLayout } from "./components/MainLayout.tsx";
 import { useGetMeQuery } from "./app/authApi.ts";
-import { useAppDispatch } from "./app/hooks.ts";
+import {useAppDispatch, useAppSelector} from "./app/hooks.ts";
 import { useEffect } from "react";
 import {setUser} from "./app/authSlice.ts";
 import {TemplatePage} from "./pages/TemplatePage.tsx";
@@ -31,15 +31,17 @@ function AppWithAuth() {
     const dispatch = useAppDispatch();
     const location = useLocation();
 
-    const token = localStorage.getItem('accessToken');
-    const skipMeQuery = !token || location.pathname.startsWith("/auth/callback");
+    const skipMeQuery = location.pathname.startsWith("/auth/callback");
 
     const { data } = useGetMeQuery(undefined, { skip: skipMeQuery });
+    const currentUser = useAppSelector(state => state.auth.user)
 
     useEffect(() => {
-        if (data?.user && !data?.user.isBlocked) {
-            dispatch(setUser(data.user));
-        } else if (!skipMeQuery) {
+        if (data?.user && !data.user.isBlocked) {
+            if (data.user.id !== currentUser?.id) {
+                dispatch(setUser(data.user));
+            }
+        } else if (currentUser !== null) {
             dispatch(setUser(null));
         }
     }, [data, dispatch, skipMeQuery]);

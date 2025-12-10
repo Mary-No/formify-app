@@ -7,11 +7,11 @@ import { useTranslation } from 'react-i18next';
 import s from './Header.module.scss'
 import { ThemeToggle } from '../../components/HeaderComponents/ThemeToggle/ThemeToggle.tsx';
 import {useLogoutMutation } from '../../app/authApi.ts';
-import {handleApiError} from "../../utils/handleApiErrror.ts";
+import {handleApiError} from "../../utils/handleApiError.ts";
 import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
 import {UserAvatar} from "../../components/Avatar.tsx";
 import { SearchOutlined } from '@ant-design/icons';
-import {api} from "../../app/api.ts";
+import { logoutAction } from '../../app/authSlice.ts';
 const { useBreakpoint } = Grid;
 
 const { Header: AntHeader } = Layout
@@ -27,12 +27,12 @@ export const Header = () => {
 
     const handleLogout = async () => {
         try {
-            await logout().unwrap()
+            await logout().unwrap();
             localStorage.removeItem('accessToken');
-            dispatch(api.util.resetApiState());
-            navigate('/')
+            dispatch(logoutAction());
+            navigate('/');
         } catch (err) {
-            handleApiError(err, t)
+            handleApiError(err, t);
         }
     }
     const screens = useBreakpoint();

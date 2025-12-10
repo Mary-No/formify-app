@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Input, Button, Form } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useAddCommentMutation } from '../../../app/templateApi.ts';
-import {handleApiError} from "../../../utils/handleApiErrror.ts";
+import {handleApiError} from "../../../utils/handleApiError.ts";
 import s from "./AddCommentForm.module.scss"
 
 type Props = {

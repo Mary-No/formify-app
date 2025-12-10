@@ -2,7 +2,7 @@ import {useNavigate, useParams} from 'react-router-dom';
 import {Card, Typography, Spin, message} from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useSubmitFormMutation, useUpdateFormMutation } from '../app/formApi';
-import { handleApiError } from '../utils/handleApiErrror.ts';
+import { handleApiError } from '../utils/handleApiError.ts';
 import s from "../components/TemplateDetails/TemplateDetails.module.scss";
 import { useGetTemplateQuery } from '../app/templateApi.ts';
 import { DynamicForm } from '../components/DynamicForm.tsx';

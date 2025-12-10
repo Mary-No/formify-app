@@ -2,7 +2,7 @@ import { Button, Form, Input, Typography, message } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { useRegisterMutation } from '../../app/authApi.ts'
 import type { RegisterPayload } from '../../types/types.ts'
-import { handleApiError } from '../../utils/handleApiErrror.ts'
+import { handleApiError } from '../../utils/handleApiError.ts'
 import { useTranslation } from 'react-i18next'
 import s from "./SignUp.module.scss"
 import {GoogleAuthButton} from "../../components/GoogleAuthButton.tsx";
