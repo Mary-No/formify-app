@@ -1,24 +1,17 @@
 import { PrismaClient } from '@prisma/client'
 import * as bcrypt from 'bcrypt';
 
-
 const prisma = new PrismaClient()
 
 async function main() {
     const email = 'mascha.novik@gmail.com'
 
-    const admin = await prisma.user.upsert({
+    const updatedUser = await prisma.user.update({
         where: { email },
-        update: { isAdmin: true },
-        create: {
-            email,
-            nickname: 'Mary',
-            password: await bcrypt.hash('qwe', 10),
-            isAdmin: true,
-        },
+        data: { isAdmin: true },
     })
 
-    console.log('Admin ensured:', admin)
+    console.log('User updated:', updatedUser)
 }
 
 main()
