@@ -17,9 +17,29 @@ router.post('/register', handleRequest(async (req, res) => {
     const { email, password, nickname } = req.body;
 
     const existingUser = await prisma.user.findUnique({ where: { email } });
+
     if (existingUser) {
-        res.status(409).json({ error: 'User already exists' });
-        return;
+        if (existingUser.password) {
+            res.status(409).json({ error: 'User already exists' });
+            return
+        } else {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            const updatedUser = await prisma.user.update({
+                where: { email },
+                data: { password: hashedPassword, nickname },
+            });
+
+            const accessToken = generateAccessToken(updatedUser.id);
+            const refreshToken = generateRefreshToken(updatedUser.id);
+            setRefreshCookie(res, refreshToken);
+
+            res.status(200).json({
+                message: 'Password added to existing Google account',
+                user: updatedUser,
+                accessToken,
+            });
+            return
+        }
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -29,16 +49,11 @@ router.post('/register', handleRequest(async (req, res) => {
 
     const accessToken = generateAccessToken(user.id);
     const refreshToken = generateRefreshToken(user.id);
-
     setRefreshCookie(res, refreshToken);
 
     res.status(201).json({
         message: 'Registered successfully',
-        user: {
-            id: user.id,
-            email: user.email,
-            nickname: user.nickname,
-        },
+        user,
         accessToken,
     });
 }));
@@ -58,7 +73,19 @@ router.get(
             return res.redirect(`${CLIENT_URL}/login?error=no_user`);
         }
 
-        const user = req.user as { id: string };
+        const googleUser = req.user as { id: string, email: string, nickname: string };
+
+        let user = await prisma.user.findUnique({ where: { email: googleUser.email } });
+
+        if (!user) {
+            user = await prisma.user.create({
+                data: {
+                    email: googleUser.email,
+                    nickname: googleUser.nickname,
+                    password: '',
+                },
+            });
+        }
 
         const accessToken = jwt.sign(
             { id: user.id },
