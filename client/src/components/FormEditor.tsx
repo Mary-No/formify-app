@@ -1,10 +1,10 @@
 import { Spin } from "antd";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { FillFormPage } from "../pages/FillFormPage/FillFormPage.tsx";
+import  FillFormPage  from "../pages/FillFormPage/FillFormPage.tsx";
 import { useGetFormByIdQuery } from "../app/formApi.ts";
 
-export const FormEditor = () => {
+const FormEditor = () => {
     const { formId } = useParams<{ formId: string }>();
     const { t } = useTranslation();
 
@@ -25,3 +25,5 @@ export const FormEditor = () => {
         />
     );
 };
+
+export default FormEditor

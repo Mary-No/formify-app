@@ -19,7 +19,7 @@ type FillFormPageProps = {
 
 const { Title } = Typography;
 
-export const FillFormPage = ({
+const FillFormPage = ({
                                  isEdit,
                                  existingAnswers,
                                  formId,
@@ -84,3 +84,5 @@ export const FillFormPage = ({
         </Card>
     );
 };
+
+export default FillFormPage;

@@ -17,7 +17,7 @@ const isTopic = (value: unknown): value is Topic =>
     typeof value === 'string' && TOPICS.includes(value as Topic)
 
 
-export const TemplateSearchPage = () => {
+const TemplateSearchPage = () => {
     const screens = useBreakpoint();
     const { filters, setFilters } = useQueryFilters<{
         q?: string
@@ -109,3 +109,5 @@ export const TemplateSearchPage = () => {
         </Row>
     )
 }
+
+export default TemplateSearchPage

@@ -1,10 +1,10 @@
 import { Spin } from "antd";
 import { useParams } from "react-router-dom";
 import { useGetTemplateQuery } from "../app/templateApi";
-import { TemplateBuilder } from "./TemplateBuilder/TemplateBuilder";
+import TemplateBuilder  from "./TemplateBuilder/TemplateBuilder";
 import {useTranslation} from "react-i18next";
 
-export const TemplateEditor = () => {
+const TemplateEditor = () => {
     const { templateId } = useParams();
     const { data, isLoading, error } = useGetTemplateQuery(templateId!);
     const { t } = useTranslation();
@@ -27,3 +27,4 @@ export const TemplateEditor = () => {
     );
 
 }
+export default TemplateEditor;

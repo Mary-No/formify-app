@@ -14,7 +14,7 @@ import ReactQuill from "react-quill";
 const { Title } = Typography;
 
 
-export const StatisticPage = () => {
+const StatisticPage = () => {
     const { t } = useTranslation();
     const { templateId } = useParams();
     const location = useLocation();
@@ -183,3 +183,5 @@ export const StatisticPage = () => {
         </div>
     );
 };
+
+export default StatisticPage

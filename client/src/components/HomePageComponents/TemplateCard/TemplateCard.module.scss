@@ -12,11 +12,18 @@
   color: inherit;
 }
 .description{
-  margin: 15px 0;
+  margin: 10px 0;
   p{
     font-size: 14px;
   }
-
+}
+:global {
+  .ql-tooltip {
+    display: none!important;
+  }
+  .ql-clipboard{
+    display: none!important;
+  }
 }
 .bottomPart{
   display: flex;

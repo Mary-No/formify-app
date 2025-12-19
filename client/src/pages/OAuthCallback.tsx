@@ -4,7 +4,7 @@ import { useAppDispatch } from '../app/hooks';
 import { setUser } from '../app/authSlice';
 import { useLazyGetMeQuery } from '../app/authApi';
 
-export const OAuthCallback = () => {
+const OAuthCallback = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const [triggerGetMe, { data, isSuccess, isError }] = useLazyGetMeQuery();
@@ -34,3 +34,4 @@ export const OAuthCallback = () => {
     return <p>Logging in via Google...</p>;
 };
 
+export default OAuthCallback

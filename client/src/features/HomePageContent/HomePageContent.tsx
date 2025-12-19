@@ -13,10 +13,11 @@ export const HomePageContent = () => {
     const navigate = useNavigate()
     const tagsLimit = screens.lg ? 16 : 6;
 
+
     const { data: tags, isLoading: tagsLoading} = useGetTagsQuery(tagsLimit, {
         skip: screens.lg === undefined,
     })
-    const { data: ov, isLoading: ovLoading,  } = useGetOverviewQuery()
+    const { data: ov, isLoading: ovLoading } = useGetOverviewQuery();
 
     const onTagClick = (tag: string) => navigate(`/search?tags=${encodeURIComponent(tag)}`)
 

@@ -4,7 +4,7 @@ import { useGetTemplateQuery } from "../app/templateApi"
 import { Spin } from "antd"
 import {useTranslation} from "react-i18next";
 
-export const TemplatePage = () => {
+const TemplatePage = () => {
     const { templateId } = useParams()
     const { data, isLoading, error } = useGetTemplateQuery(templateId!)
     const { t } = useTranslation()
@@ -13,3 +13,4 @@ export const TemplatePage = () => {
 
     return <TemplateDetails data={data}/>
 }
+export default TemplatePage

@@ -25,7 +25,7 @@ type TemplateBuilderProps = {
     };
 };
 
-export const TemplateBuilder = ({ editMode = false, initialData }: TemplateBuilderProps) => {
+const TemplateBuilder = ({ editMode = false, initialData }: TemplateBuilderProps) => {
     const [title, setTitle] = useState(initialData?.title ?? '');
     const [description, setDescription] = useState(initialData?.description ?? '');
     const [topic, setTopic] = useState<Topic>(initialData?.topic ?? 'OTHER');
@@ -122,3 +122,5 @@ export const TemplateBuilder = ({ editMode = false, initialData }: TemplateBuild
         </DndProvider>
     )
 }
+
+export default TemplateBuilder

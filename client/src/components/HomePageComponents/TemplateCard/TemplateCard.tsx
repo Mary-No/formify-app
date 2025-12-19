@@ -40,7 +40,7 @@ export const TemplateCard = ({ template }: Props) => {
                 title={<div style={{whiteSpace: 'normal'}}>{truncateWords(template.title, 6)}</div>}
                 description={template.author?.nickname}
             />
-            <ReactQuill className={s.description} value={truncate(template.description, 114, {ellipsis: '...'})} readOnly theme="bubble" />
+            <ReactQuill className={s.description} value={truncate(template.description, 110, {ellipsis: '...'})} readOnly theme="bubble" />
         </Card>
 
     );
