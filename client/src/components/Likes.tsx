@@ -16,15 +16,15 @@ export const Likes = ({ templateId, likesCount, likedByUser, size }: Props) => {
     const onClick = async () => {
         await toggleLike(templateId).unwrap();
     };
+    const iconStyle = { fontSize: size === 'big' ? 24 : 16 };
+
     return (
         <Button
             type="text"
             icon={
-                likedByUser ? (
-                    <HeartFilled style={{ color: 'red', fontSize: size === 'big' ? 24 : 16 }} />
-                ) : (
-                    <HeartOutlined style={{ fontSize: size === 'big' ? 24 : 16 }} />
-                )
+                !isAuthenticated || !likedByUser
+                    ? <HeartOutlined style={iconStyle} />
+                    : <HeartFilled style={{ ...iconStyle, color: 'red' }} />
             }
             onClick={(e) => {
                 e.preventDefault();

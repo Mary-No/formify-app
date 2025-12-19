@@ -5,24 +5,18 @@ import s from './HomePageContent.module.scss'
 import { TagCloud } from "../../components/HomePageComponents/TagCloud/TagCloud.tsx"
 import {PopularAndLatestTemplates} from "../../components/HomePageComponents/PopularAndLatestTemplates/PopularAndLatestTemplates.tsx";
 import { useGetOverviewQuery } from "../../app/templateApi.ts"
-import {useAppSelector} from "../../app/hooks.ts";
-import {useEffect} from "react";
+
 
 export const HomePageContent = () => {
     const { useBreakpoint } = Grid;
     const screens = useBreakpoint();
     const navigate = useNavigate()
+    const tagsLimit = screens.lg ? 16 : 6;
 
-    const { data: tags, isLoading: tagsLoading} = useGetTagsQuery(!screens.lg ? 6 : 16)
-    const { data: ov, isLoading: ovLoading, refetch } = useGetOverviewQuery()
-
-    const isAuthenticated = useAppSelector(state => state.auth.isAuthenticated);
-
-    useEffect(() => {
-        if (isAuthenticated) {
-            refetch();
-        }
-    }, [isAuthenticated, refetch]);
+    const { data: tags, isLoading: tagsLoading} = useGetTagsQuery(tagsLimit, {
+        skip: screens.lg === undefined,
+    })
+    const { data: ov, isLoading: ovLoading,  } = useGetOverviewQuery()
 
     const onTagClick = (tag: string) => navigate(`/search?tags=${encodeURIComponent(tag)}`)
 
